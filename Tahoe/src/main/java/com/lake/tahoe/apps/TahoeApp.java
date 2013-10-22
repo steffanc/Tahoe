@@ -1,4 +1,4 @@
-package com.lake.tahoe.applications;
+package com.lake.tahoe.apps;
 
 import com.orm.SugarApp;
 
