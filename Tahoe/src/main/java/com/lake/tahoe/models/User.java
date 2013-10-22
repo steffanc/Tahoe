@@ -19,7 +19,7 @@ public class User extends SugarRecord<User> {
         super(ctx);
 
         this.name = name;
-        this email = email;
+        this.email = email;
     }
 
 }
