@@ -12,28 +12,29 @@ public class User extends SugarRecord<User> {
 	String name;
 	String email;
 
-	int mode;
-
 	Long latitude;
 	Long longitude;
 
 	int connectionId;
 
-	public static enum mode {
+	public static enum Mode {
 		MODE_CLIENT, MODE_VENDOR
 	}
 
-	;
+	Mode mode;
 
 	public User(Context ctx) {
 		super(ctx);
 	}
 
-	public User(Context ctx, String name, String email) {
+	public User(Context ctx, String name,
+	            String email,
+	            Mode mode) {
 		super(ctx);
 
 		this.name = name;
 		this.email = email;
+		this.mode = mode;
 	}
 
 	public String getName() {
@@ -52,11 +53,11 @@ public class User extends SugarRecord<User> {
 		this.email = email;
 	}
 
-	public int getMode() {
+	public Mode getMode() {
 		return mode;
 	}
 
-	public void setMode(int mode) {
+	public void setMode(Mode mode) {
 		this.mode = mode;
 	}
 
