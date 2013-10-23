@@ -39,14 +39,6 @@ public class Request extends SugarRecord<Request> {
 		this.state = State.OPEN;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public User getClient() {
 		return client;
 	}
