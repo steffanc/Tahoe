@@ -1,87 +1,39 @@
 package com.lake.tahoe.models;
 
-import android.content.Context;
-
-import com.orm.SugarRecord;
+import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 
 /**
  * Created on 10/21/13.
  */
 
-public class User extends SugarRecord<User> {
-	String name;
-	String email;
+@ParseClassName("User")
+public class User extends ParseUser {
 
-	Long latitude;
-	Long longitude;
-
-	int connectionId;
-
-	public static enum Mode {
-		MODE_CLIENT, MODE_VENDOR
+	public static enum Type {
+		CLIENT, // buys things
+		VENDOR  // sells things
 	}
 
-	Mode mode;
-
-	public User(Context ctx) {
-		super(ctx);
+	public User() {
+		super();
 	}
 
-	public User(Context ctx, String name,
-	            String email,
-	            Mode mode) {
-		super(ctx);
-
-		this.name = name;
-		this.email = email;
-		this.mode = mode;
+	public Type getType() {
+		return Type.valueOf(getString("type"));
 	}
 
-	public String getName() {
-		return name;
+	public void setType(Type type) {
+		put("type", type.toString());
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public ParseGeoPoint getLocation() {
+		return (ParseGeoPoint) get("location");
 	}
 
-	public String getEmail() {
-		return email;
+	public void setLocation(Double latitude, Double longitude) {
+		put("location", new ParseGeoPoint(latitude, longitude));
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Mode getMode() {
-		return mode;
-	}
-
-	public void setMode(Mode mode) {
-		this.mode = mode;
-	}
-
-	public Long getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Long latitude) {
-		this.latitude = latitude;
-	}
-
-	public Long getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Long longitude) {
-		this.longitude = longitude;
-	}
-
-	public int getConnectionId() {
-		return connectionId;
-	}
-
-	public void setConnectionId(int connectionId) {
-		this.connectionId = connectionId;
-	}
 }

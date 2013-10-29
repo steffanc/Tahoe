@@ -1,19 +1,13 @@
 package com.lake.tahoe.models;
 
-import android.content.Context;
-
-import com.orm.SugarRecord;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
 /**
  * Created by steffan on 10/21/13.
  */
-
-public class Request extends SugarRecord<Request> {
-    User client;
-    User vendor;
-    String title;
-    String description;
-	int bid;
+@ParseClassName("Request")
+public class Request extends ParseObject {
 
 	enum State {
 		OPEN, ACTIVE, PENDING, FULFILLED, CANCELLED
@@ -21,69 +15,56 @@ public class Request extends SugarRecord<Request> {
 
 	State state;
 
-	public Request(Context ctx) {
-		super(ctx);
-	}
-
-	public Request(Context ctx,
-	               User client,
-	               String title,
-	               String description,
-	               int bid) {
-		super(ctx);
-
-		this.client = client;
-		this.title = title;
-		this.description = description;
-		this.bid = bid;
-		this.state = State.OPEN;
+	public Request() {
+		super();
 	}
 
 	public User getClient() {
-		return client;
+		return (User) getParseObject("client");
 	}
 
 	public void setClient(User client) {
-		this.client = client;
+		put("client", client);
 	}
 
 	public User getVendor() {
-		return vendor;
+		return (User) getParseObject("vendor");
 	}
 
 	public void setVendor(User vendor) {
-		this.vendor = vendor;
+		put("vendor", vendor);
 	}
 
 	public String getTitle() {
-		return title;
+		return getString("title");
 	}
 
 	public void setTitle(String title) {
-		this.title = title;
+		put("title", title);
 	}
 
 	public String getDescription() {
-		return description;
+		return getString("description");
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		put("description", description);
 	}
 
-	public int getBid() {
-		return bid;
+	public int getCents() {
+		return getInt("cents");
 	}
 
-	public void setBid(int bid) {
-		this.bid = bid;
+	public void setCents(Integer cents) {
+		put("cents", cents);
 	}
 
 	public State getState() {
-		return state;
+		return State.valueOf(getString("state"));
 	}
 
 	public void setState(State state) {
-		this.state = state;
+		put("state", state.toString());
 	}
+
 }
