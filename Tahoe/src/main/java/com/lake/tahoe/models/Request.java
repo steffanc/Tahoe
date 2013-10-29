@@ -10,10 +10,33 @@ import com.parse.ParseObject;
 public class Request extends ParseObject {
 
 	enum State {
-		OPEN, ACTIVE, PENDING, FULFILLED, CANCELLED
-	}
 
-	State state;
+		/**
+		 * Client creates a new Request
+		 */
+		OPEN,
+
+		/**
+		 * Vendor accepts Request
+		 */
+		ACTIVE,
+
+		/**
+		 * Vendor completes Request
+		 */
+		PENDING,
+
+		/**
+		 * Vendor receives Payment
+		 */
+		FULFILLED,
+
+		/**
+		 * Vendor cancels Payment
+		 */
+		CANCELLED
+
+	}
 
 	public Request() {
 		super();

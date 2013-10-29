@@ -2,8 +2,10 @@ package com.lake.tahoe.apps;
 
 import android.app.Application;
 import com.lake.tahoe.R;
+import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.parse.Parse;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 /**
@@ -19,6 +21,7 @@ public class TahoeApp extends Application {
 
 	public void setupParseSdk() {
 		ParseUser.registerSubclass(User.class);
+		ParseObject.registerSubclass(Request.class);
 		Parse.initialize(this, getString(R.string.parse_client_id), getString(R.string.parse_key));
 	}
 

@@ -12,8 +12,17 @@ import com.parse.ParseUser;
 public class User extends ParseUser {
 
 	public static enum Type {
-		CLIENT, // buys things
-		VENDOR  // sells things
+
+		/**
+		 * Buys services or things from Vendors
+		 */
+		CLIENT,
+
+		/**
+		 * Sells services or things to Clients
+		 */
+		VENDOR
+
 	}
 
 	public User() {
@@ -34,6 +43,10 @@ public class User extends ParseUser {
 
 	public void setLocation(Double latitude, Double longitude) {
 		put("location", new ParseGeoPoint(latitude, longitude));
+	}
+
+	public static User getCurrentUser() {
+		return (User) ParseUser.getCurrentUser();
 	}
 
 }
