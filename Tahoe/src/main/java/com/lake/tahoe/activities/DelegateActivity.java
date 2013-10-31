@@ -2,15 +2,13 @@ package com.lake.tahoe.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import com.lake.tahoe.models.User;
 
 public class DelegateActivity extends Activity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
+	protected void onResume() {
+		super.onResume();
 
 		// check if user is logged in
 		User currentUser = User.getCurrentUser();

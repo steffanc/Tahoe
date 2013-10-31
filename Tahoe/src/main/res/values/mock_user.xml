@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="mock_username">Jonathan</string>
+	<string name="mock_password">tahoe</string>
+	<string name="mock_email">jazoff@gmail.com</string>
+	<string name="mock_type">VENDOR</string>
+</resources>
