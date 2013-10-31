@@ -22,8 +22,8 @@ public abstract class GooglePlayServicesActivity extends FragmentActivity {
 	protected abstract void onGooglePlayServicesError(Throwable t);
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (ConnectionResult.SUCCESS == resultCode) onGooglePlayServicesReady();
 		else spawnGooglePlayDialog(resultCode);
