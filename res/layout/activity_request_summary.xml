@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<com.lake.tahoe.views.CustomTextView
+		style="@style/Headline1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Roboto Headline1"
+		android:id="@+id/textView1"/>
+
+	<com.lake.tahoe.views.CustomTextView
+		style="@style/Headline2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Roboto Headline2"
+		android:id="@+id/textView1"/>
+
+	<com.lake.tahoe.views.CustomTextView
+		style="@style/Headline3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Roboto Headline3"
+		android:id="@+id/textView1"/>
+
+    <!-- These styles below are meant to confirm that we are indeed using a different typeface. -->
+	
+	<com.lake.tahoe.views.CustomTextView
+		android:textSize="30sp"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Droid Headline1"
+		android:id="@+id/textView1"/>
+
+	<com.lake.tahoe.views.CustomTextView
+		android:textSize="26sp"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Droid Headline2"
+		android:id="@+id/textView1"/>
+
+	<com.lake.tahoe.views.CustomTextView
+		android:textSize="24sp"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Droid Headline3"
+		android:id="@+id/textView1"/>
+
+</LinearLayout>
