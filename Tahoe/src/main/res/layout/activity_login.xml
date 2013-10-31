@@ -13,4 +13,11 @@
 			android:layout_height="wrap_content"
 			android:text="This is the login activity. Create accounts or log in here!"/>
 
+	<!-- TODO We should probably have an indeterminate
+	progress bar here. It should be invisible when the
+	login button is shown, and visible when trying to
+	login or signup. A label describing what stage of
+	the login we're in might be nice too -->
+
+
 </RelativeLayout>
