@@ -2,15 +2,22 @@ package com.lake.tahoe.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+
 import com.lake.tahoe.R;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
+import com.lake.tahoe.utils.ManifestReader;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LoginActivity extends Activity implements HandlesErrors, View.OnClickListener {
 
@@ -24,7 +31,8 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 	@Override
 	public void onClick(View v) {
 		// TODO: Show a spinner, or at least disable the button. Right now it hangs out for a bit when the user returns.
-		ParseFacebookUtils.logIn(this, new OnLogIn());
+		String fbPermissions = (String) ManifestReader.getPackageMetaData(getApplicationContext(), "com.facebook.sdk.FB_PERMISSIONS");
+		ParseFacebookUtils.logIn(Arrays.asList(fbPermissions.split(",")), this, new OnLogIn());
 	}
 
 	@Override
