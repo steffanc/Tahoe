@@ -37,4 +37,37 @@
 		<item name="android:background">@drawable/blue_tooltip</item>
 	</style>
 
+	<!-- Currently fontAssetName only apply to CustomTextView's -->
+
+	<style name="Roboto">
+		<item name="fontAssetName">Roboto/Roboto-Regular</item>
+	</style>
+
+	<style name="RobotoHeadline" parent="Roboto">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">@color/white</item>
+	</style>
+
+	<style name="Headline1" parent="RobotoHeadline">
+		<item name="android:textSize">72sp</item>
+	</style>
+
+	<style name="Headline2" parent="RobotoHeadline">
+		<item name="android:textSize">40sp</item>
+	</style>
+
+	<style name="Headline3" parent="RobotoHeadline">
+		<item name="android:textSize">36sp</item>
+	</style>
+
+	<style name="Header" parent="RobotoHeadline">
+		<item name="android:textSize">24sp</item>
+	</style>
+
+	<style name="MapSnippet">
+		<item name="android:layout_height">150dp</item>
+		<item name="android:layout_width">fill_parent</item>
+	</style>
+
 </resources>
+

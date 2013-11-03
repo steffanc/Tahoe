@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/left_arrow"
+		android:layout_alignParentLeft="true"
+		android:id="@+id/leftSection">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/left_arrow"
+			android:id="@+id/leftArrow"
+			android:tag="@string/leftArrow"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/x_mark"
+			android:tag="@string/xMark"
+			android:id="@+id/xMark"
+			android:visibility="gone"/>
+
+	</LinearLayout>
+
+	<com.lake.tahoe.views.CustomTextView
+		android:id="@+id/actionBarHeadline"
+		style="@style/Header"
+		android:layout_toRightOf="@+id/leftSection"
+		android:layout_toLeftOf="@+id/rightSection"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:gravity="center"
+		android:layout_centerInParent="true"/>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:id="@+id/rightSection">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/check_mark"
+			android:id="@+id/checkMark"
+			android:tag="@string/checkMark"
+			android:visibility="gone"/>
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/right_arrow"
+			android:id="@+id/rightArrow"
+			android:tag="@string/rightArrow"
+			android:visibility="gone"/>
+	</LinearLayout>
+
+</RelativeLayout>
