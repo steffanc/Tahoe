@@ -1,6 +1,8 @@
 package com.lake.tahoe.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 /**
@@ -40,6 +42,7 @@ public class Request extends ParseObject {
 
 	public Request() {
 		super();
+		setState(State.OPEN);
 	}
 
 	public User getClient() {
@@ -88,6 +91,14 @@ public class Request extends ParseObject {
 
 	public void setState(State state) {
 		put("state", state.toString());
+	}
+
+	public ParseGeoPoint getLocation() {
+		return getClient().getLocation();
+	}
+
+	public LatLng getGoogleMapsLocation() {
+		return getClient().getGoogleMapsLocation();
 	}
 
 }

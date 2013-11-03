@@ -1,5 +1,6 @@
 package com.lake.tahoe.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -39,6 +40,15 @@ public class User extends ParseUser {
 
 	public ParseGeoPoint getLocation() {
 		return getParseGeoPoint("location");
+	}
+
+	public LatLng getGoogleMapsLocation() {
+		ParseGeoPoint pGP = getLocation();
+		LatLng latlng = null;
+		if (pGP != null) {
+			latlng = new LatLng(pGP.getLatitude(), pGP.getLongitude());
+		}
+		return latlng;
 	}
 
 	public void setLocation(Double latitude, Double longitude) {

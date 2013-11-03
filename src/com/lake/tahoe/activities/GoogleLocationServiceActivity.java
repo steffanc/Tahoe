@@ -8,6 +8,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.lake.tahoe.models.User;
 
 /**
@@ -20,6 +22,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 
 	public static final int DEFAULT_INTERVAL_MS = 5000;
 	public static final int DEFAULT_FASTEST_INTERVAL_MS = 1000;
+	public static final int USER_ZOOM_LEVEL = 15;
 
 	private LocationClient locationClient;
 	private LocationRequest locationRequest;
@@ -62,6 +65,19 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 			connectionResult.startResolutionForResult(this, GOOGLE_PLAY_SERVICES_REQUEST_CODE);
 		} catch (IntentSender.SendIntentException e) {
 			onLocationTrackingFailed(e);
+		}
+	}
+
+	public void zoomToUser(GoogleMap map) {
+		User myUser = User.getCurrentUser();
+		Location location = locationClient.getLastLocation();
+
+		if (location != null) {
+			myUser.setLocation(location.getLatitude(), location.getLongitude());
+			myUser.saveEventually();
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+					myUser.getGoogleMapsLocation(),
+					USER_ZOOM_LEVEL));
 		}
 	}
 
