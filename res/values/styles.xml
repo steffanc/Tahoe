@@ -49,14 +49,18 @@
 	</style>
 
 	<style name="Headline1" parent="RobotoHeadline">
-		<item name="android:textSize">30sp</item>
+		<item name="android:textSize">72sp</item>
 	</style>
 
 	<style name="Headline2" parent="RobotoHeadline">
-		<item name="android:textSize">26sp</item>
+		<item name="android:textSize">40sp</item>
 	</style>
 
 	<style name="Headline3" parent="RobotoHeadline">
+		<item name="android:textSize">36sp</item>
+	</style>
+
+	<style name="Header" parent="RobotoHeadline">
 		<item name="android:textSize">24sp</item>
 	</style>
 

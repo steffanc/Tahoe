@@ -17,7 +17,7 @@ import com.lake.tahoe.utils.Typefaces;
  * Time: 5:36 PM
  */
 // Taken from https://github.com/mafshin/CustomTextView
-	
+
 public class CustomTextView extends TextView {
     public CustomTextView(Context context) {
         super(context);
