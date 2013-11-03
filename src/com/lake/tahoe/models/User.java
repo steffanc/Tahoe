@@ -38,7 +38,7 @@ public class User extends ParseUser {
 	}
 
 	public ParseGeoPoint getLocation() {
-		return (ParseGeoPoint) get("location");
+		return getParseGeoPoint("location");
 	}
 
 	public void setLocation(Double latitude, Double longitude) {
