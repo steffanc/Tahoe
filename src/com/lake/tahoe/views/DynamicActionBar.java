@@ -21,7 +21,6 @@ import com.lake.tahoe.R;
 public class DynamicActionBar {
 
 	ActionBar actionBar;
-	Activity activity;
 
 	String curTitle;
 	int curColorId;
@@ -54,7 +53,6 @@ public class DynamicActionBar {
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);
 		actionBar.setCustomView(actionBarLayout);
-		this.activity = activity;
 	}
 
 	public void setBackgroundColor(int colorId) {
@@ -110,5 +108,4 @@ public class DynamicActionBar {
 	public void setVisibility(ImageView image, int visibility) {
 		image.setVisibility(visibility);
 	}
-
 }

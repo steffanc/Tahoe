@@ -3,4 +3,7 @@
     <string name="app_name">Tahoe</string>
 	<string name="gps_dialog_title">Location Updates</string>
 	<string name="select_client">Select a Client</string>
+	<string name="what_you_want">What are you looking for\?</string>
+	<string name="whats_the_reward">What\'s the reward?</string>
+	<string name="anything_else">Anything else\?</string>
 </resources>
