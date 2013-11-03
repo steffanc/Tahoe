@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.lake.tahoe.R;
 import com.lake.tahoe.fragments.SimpleDialogFragment;
@@ -15,7 +16,7 @@ public abstract class GooglePlayServicesActivity extends FragmentActivity {
 	/**
 	 * The request code for a device requesting Google Play services
 	 */
-	private final static int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 666;
+	protected final static int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 666;
 
 	protected abstract void onGooglePlayServicesReady();
 
@@ -33,29 +34,23 @@ public abstract class GooglePlayServicesActivity extends FragmentActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == GOOGLE_PLAY_SERVICES_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) onGooglePlayServicesReady();
-			else onGooglePlayServicesError(new GooglePlayException("Google Play Services Required"));
+			else onGooglePlayServicesError(new GooglePlayServicesNotAvailableException(resultCode));
 		}
 	}
 
-	private void spawnGooglePlayDialog(int resultCode) {
+	protected void spawnGooglePlayDialog(int resultCode) {
 
 		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
 			resultCode, this, GOOGLE_PLAY_SERVICES_REQUEST_CODE
 		);
 
 		if (errorDialog == null)
-			onGooglePlayServicesError(new GooglePlayException("Unable to install Google Play Services"));
+			onGooglePlayServicesError(new GooglePlayServicesNotAvailableException(resultCode));
 
 		SimpleDialogFragment errorFragment = new SimpleDialogFragment();
 		errorFragment.setDialog(errorDialog);
 		errorFragment.show(getSupportFragmentManager(), getString(R.string.gps_dialog_title));
 
-	}
-
-	private static class GooglePlayException extends Exception {
-		private GooglePlayException(String detailMessage) {
-			super(detailMessage);
-		}
 	}
 
 }
