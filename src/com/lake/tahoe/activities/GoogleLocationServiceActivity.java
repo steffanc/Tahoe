@@ -22,6 +22,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 
 	public static final int DEFAULT_INTERVAL_MS = 5000;
 	public static final int DEFAULT_FASTEST_INTERVAL_MS = 1000;
+	public static final int USER_ZOOM_LEVEL = 15;
 
 	private LocationClient locationClient;
 	private LocationRequest locationRequest;
@@ -76,7 +77,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 			myUser.saveEventually();
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(
 					myUser.getGoogleMapsLocation(),
-					15));
+					USER_ZOOM_LEVEL));
 		}
 	}
 

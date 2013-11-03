@@ -94,12 +94,11 @@ public class Request extends ParseObject {
 	}
 
 	public ParseGeoPoint getLocation() {
-		return (ParseGeoPoint) getClient().get("location");
+		return getClient().getLocation();
 	}
 
 	public LatLng getGoogleMapsLocation() {
-		ParseGeoPoint pGP = (ParseGeoPoint) getClient().get("location");
-		return new LatLng(pGP.getLatitude(), pGP.getLongitude());
+		return getClient().getGoogleMapsLocation();
 	}
 
 }

@@ -18,14 +18,11 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	TextView tvTitle;
 	GoogleMap map;
 
-	private final static String tvTitleString = "Select a Client";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_map);
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
-		tvTitle.setText(tvTitleString);
 	}
 
 	@Override

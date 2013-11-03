@@ -39,12 +39,16 @@ public class User extends ParseUser {
 	}
 
 	public ParseGeoPoint getLocation() {
-		return (ParseGeoPoint) get("location");
+		return getParseGeoPoint("location");
 	}
 
 	public LatLng getGoogleMapsLocation() {
-		ParseGeoPoint pGP = (ParseGeoPoint) get("location");
-		return new LatLng(pGP.getLatitude(), pGP.getLongitude());
+		ParseGeoPoint pGP = getLocation();
+		LatLng latlng = null;
+		if (pGP != null) {
+			latlng = new LatLng(pGP.getLatitude(), pGP.getLongitude());
+		}
+		return latlng;
 	}
 
 	public void setLocation(Double latitude, Double longitude) {
