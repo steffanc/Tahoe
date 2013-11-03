@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="leftArrow">left</string>
+	<string name="rightArrow">right</string>
+	<string name="checkMark">checkMark</string>
+	<string name="xMark">xMark</string>
+</resources>
