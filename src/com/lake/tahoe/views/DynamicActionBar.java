@@ -20,8 +20,6 @@ public class DynamicActionBar {
 
 	ActionBar actionBar;
 
-	Boolean leftArrowShowing = true;
-	Boolean rightArrowShowing = true;
 	String curText;
 	int curColorId;
 
@@ -56,27 +54,20 @@ public class DynamicActionBar {
 		textView.setText(headline);
 	}
 
-	public void showLeftArrow(Boolean show) {
-		this.leftArrowShowing = show;
-
+	public void setLeftArrowVisibility(int visibility) {
 		ImageView leftArrow = (ImageView) actionBar.getCustomView().findViewById(R.id.leftArrow);
 
-		this.showArrow(leftArrow, show);
+		this.setVisibility(leftArrow, visibility);
 	}
 
-	public void showRightArrow(Boolean show) {
-		this.rightArrowShowing = show;
+	public void setRightArrowVisibility(int visibility) {
 
 		ImageView rightArrow = (ImageView) actionBar.getCustomView().findViewById(R.id.rightArrow);
 
-		this.showArrow(rightArrow, show);
+		this.setVisibility(rightArrow, visibility);
 	}
 
-	public void showArrow(ImageView arrow, Boolean show) {
-		if (show) {
-			arrow.setVisibility(View.VISIBLE);
-		} else {
-			arrow.setVisibility(View.INVISIBLE);
-		}
+	public void setVisibility(ImageView arrow, int visibility) {
+		arrow.setVisibility(visibility);
 	}
 }
