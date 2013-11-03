@@ -2,14 +2,20 @@ package com.lake.tahoe.widgets;
 
 import android.graphics.Bitmap;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 /**
  * Created by rhu on 11/2/13.
  */
+
+
+// XXX unfortunately we can't subclass Marker, MarkerOptions, Bitmap or BitmapDescriptor
+// so this is the best we can do, generate a new SpeechBubble every time we need an update
 public class SpeechBubble {
 
 	public static enum ColorType {
@@ -18,18 +24,9 @@ public class SpeechBubble {
 		BLACK
 	}
 
-	String text;
-	ColorType color;
-
-	LatLng coordinates;
-
-	public SpeechBubble(String name, LatLng coordinates, ColorType color) {
-		this.text = name;
-		this.coordinates = coordinates;
-		this.color = color;
-	}
-
-	public Bitmap generateBitmap(IconGenerator iconGenerator) {
+	private static Bitmap generateBitmap(IconGenerator iconGenerator,
+	                                     String text,
+	                                     ColorType color) {
 
 		// TODO: extend IconGenerator to use our speech bubbles, since it doesn't
 		// appear to have the color black!
@@ -44,41 +41,19 @@ public class SpeechBubble {
 			iconGenerator.setStyle(IconGenerator.STYLE_DEFAULT);
 		}
 
-		return iconGenerator.makeIcon(this.text);
+		return iconGenerator.makeIcon(text);
 	}
 
-	public MarkerOptions generateMarker(IconGenerator iconGenerator) {
-		Bitmap bitmap = this.generateBitmap(iconGenerator);
-		MarkerOptions options =
-				new MarkerOptions()
-						.position(this.coordinates)
-						.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-		return options;
+	public static BitmapDescriptor generateMarkerBitmap(IconGenerator iconGenerator,
+	                                                    String text,
+	                                                    ColorType color) {
+		Bitmap bitmap = SpeechBubble.generateBitmap(
+				iconGenerator,
+				text,
+				color
+		);
 
+		return BitmapDescriptorFactory.fromBitmap(bitmap);
 	}
-	public ColorType getColor() {
-		return color;
-	}
-
-	public void setColor(ColorType color) {
-		this.color = color;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public LatLng getCoordinates() {
-		return coordinates;
-	}
-
-	public void setCoordinates(LatLng coordinates) {
-		this.coordinates = coordinates;
-	}
-
 
 }
