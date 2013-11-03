@@ -40,9 +40,10 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		User user = User.getCurrentUser();
 		request = Helpers.createMockRequest();
 		request.setVendor(user);
-		String facebookId = user.getFacebookId();
 		profilePictureView = (ProfilePictureView)findViewById(R.id.pvProfile);
-		profilePictureView.setProfileId(facebookId);
+		profilePictureView.setProfileId(user.getFacebookId());
+
+		getActionBar().setTitle(user.getName());
 	}
 
 	@Override
@@ -57,6 +58,8 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
+		map.getUiSettings().setZoomControlsEnabled(false);
+		map.getUiSettings().setMyLocationButtonEnabled(false);
 	}
 
 	@Override

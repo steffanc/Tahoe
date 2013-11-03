@@ -63,6 +63,22 @@ public class User extends ParseUser {
 		put("facebookId", facebookId);
 	}
 
+	public String getEmail() {
+		return getString("email");
+	}
+
+	public void setEmail(String email) {
+		put("email", email);
+	}
+
+	public String getName() {
+		return getString("name");
+	}
+
+	public void setName(String name) {
+		put("name", name);
+	}
+
 	public static User getCurrentUser() {
 		return (User) ParseUser.getCurrentUser();
 	}
