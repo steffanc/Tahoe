@@ -28,6 +28,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	TextView tvTitle;
 	GoogleMap map;
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
+	IconGenerator iconGenerator = new IconGenerator(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,39 +72,39 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		request1.setClient(client1);
 		request1.setCents(100);
 
-		SpeechBubble speechBubble = new SpeechBubble(
-				"$" + Integer.toString(request1.getCents()),
-				request1.getGoogleMapsLocation(),
+		MarkerOptions markerOptions =
+				new MarkerOptions()
+						.position(request1.getGoogleMapsLocation());
+
+		String title = "$" + Integer.toString(request1.getCents());
+		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
+				iconGenerator,
+				title,
 				SpeechBubble.ColorType.BLACK
 		);
-
-		MarkerOptions markerOptions = speechBubble.generateMarker(new IconGenerator(this));
+		markerOptions.title(title);
+		markerOptions.icon(bitmapDescriptor);
 
 		Marker marker = map.addMarker(markerOptions);
-
 		markerRequestMap.put(marker,request1);
-
 		map.setOnMarkerClickListener(new OnMarkerClick());
 	}
 
 	// TODO probably move this up to the google location service parent class
-	// TODO consider making speech bubble a subclass of marker
 	// TODO go through other markers and make them non blue when one is clicked
 	private class OnMarkerClick implements GoogleMap.OnMarkerClickListener {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 			Request request = markerRequestMap.get(marker);
-			SpeechBubble speechBubble = new SpeechBubble(
-					"$" + Integer.toString(request.getCents()),
-					request.getGoogleMapsLocation(),
+
+			BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
+					iconGenerator,
+					marker.getTitle(),
 					SpeechBubble.ColorType.BLUE
 			);
-
-			Bitmap bitmap = speechBubble.generateBitmap(new IconGenerator(getBaseContext()));
-			BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
 			marker.setIcon(bitmapDescriptor);
 
-			getActionBar().setTitle("$" + request.getCents() + " | " + request.getTitle());
+			getActionBar().setTitle(marker.getTitle() + " | " + request.getTitle());
 			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(4, 46, 60)));
 			return true;
 		}
