@@ -5,6 +5,10 @@ import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
+
 /**
  * Created by steffan on 10/21/13.
  */
@@ -79,6 +83,11 @@ public class Request extends ParseObject {
 
 	public int getCents() {
 		return getInt("cents");
+	}
+
+	public String getDisplayDollars() {
+		NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		return numberFormat.format((double)getCents()/100);
 	}
 
 	public void setCents(Integer cents) {

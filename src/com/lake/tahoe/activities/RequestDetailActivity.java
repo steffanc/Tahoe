@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
@@ -47,7 +48,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		getActionBar().setTitle(user.getName());
 
 		TextView tvCost = (TextView) findViewById(R.id.tvCost);
-		tvCost.setText(Integer.toString(request.getCents()));
+		tvCost.setText(request.getDisplayDollars());
 
 		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
 		tvTitle.setText(request.getTitle());
@@ -59,8 +60,12 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.vendor_menu, menu);
+		getMenuInflater().inflate(R.menu.vendor_menu, menu);
 		return true;
+	}
+
+	public void onConfirmClick(MenuItem menuItem) {
+		// TODO go to next activity
 	}
 
 	@Override

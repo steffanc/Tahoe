@@ -22,7 +22,7 @@ public class Helpers {
 				"I'd enjoy, I decided on a beer. Please, I need a beer."
 		);
 		request1.setClient(client1);
-		request1.setCents(100);
+		request1.setCents(150);
 
 		return request1;
 	}
