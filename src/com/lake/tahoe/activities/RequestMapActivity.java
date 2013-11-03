@@ -7,7 +7,7 @@ import com.lake.tahoe.R;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 
-public class RequestMapActivity extends GooglePlayServicesActivity implements HandlesErrors {
+public class RequestMapActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,11 @@ public class RequestMapActivity extends GooglePlayServicesActivity implements Ha
 
 	@Override
 	protected void onGooglePlayServicesError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
+	protected void onLocationTrackingFailed(Throwable t) {
 		onError(t);
 	}
 
