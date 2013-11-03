@@ -39,6 +39,20 @@ If you get NoClassDef exceptions for the Google Play or Facebook, make sure you 
 
    ![image](https://f.cloud.github.com/assets/326857/1445231/b6f6fe84-421b-11e3-99b0-51480a7cf002.png)
 
+8. Add AndroidMapsUtils as a module:
+
+   Google Play Services module + google-play-services.jar need to be added as dependencies to AndroidMaps Utils
+
+   ![image](https://f.cloud.github.com/assets/326857/1460286/fd328750-4424-11e3-835f-b7efdfb9438d.png)
+
+9. Mark this module as export as library:
+
+   ![image](https://f.cloud.github.com/assets/326857/1460289/53013c30-4425-11e3-8998-09cf07ca4010.png)
+
+10. Add to the dependency list:
+
+   ![image](https://f.cloud.github.com/assets/326857/1460291/6194cb2c-4425-11e3-892a-aee02664356a.png)
+
 Other stuff
 -----------
 * Verify that you can traverse the libs/ dir (there should be + signs).
