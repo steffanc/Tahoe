@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import com.lake.tahoe.models.User;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 public class DelegateActivity extends Activity {
 
@@ -13,6 +14,7 @@ public class DelegateActivity extends Activity {
 
 		// check if user is logged in
 		User currentUser = User.getCurrentUser();
+
 		if (currentUser == null || !ParseFacebookUtils.isLinked(currentUser)) {
 			startLoginActivity();
 			return;

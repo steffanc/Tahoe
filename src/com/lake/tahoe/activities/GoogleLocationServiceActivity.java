@@ -85,7 +85,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 	public void onLocationChanged(Location location) {
 		User user = User.getCurrentUser();
 		if (user == null) return;
-		user.setLocation(location.getLatitude(), location.getLatitude());
+		user.setLocation(location.getLatitude(), location.getLongitude());
 		user.saveEventually();
 	}
 
