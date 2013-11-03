@@ -1,7 +1,11 @@
 package com.lake.tahoe.activities;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -19,7 +23,6 @@ import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.widgets.SpeechBubble;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class RequestMapActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 	TextView tvTitle;
@@ -33,6 +36,17 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		tvTitle = (TextView) findViewById(R.id.tvTitle);
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setTitle(R.string.select_client);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.vendor_menu, menu);
+		return true;
+	}
+
+	public void onConfirmClick(MenuItem menuItem) {
+		// TODO go to next activity
 	}
 
 	@Override
@@ -78,18 +92,19 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	private class OnMarkerClick implements GoogleMap.OnMarkerClickListener {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
-			// TODO start new activity here
 			Request request = markerRequestMap.get(marker);
 			SpeechBubble speechBubble = new SpeechBubble(
 					"$" + Integer.toString(request.getCents()),
 					request.getGoogleMapsLocation(),
 					SpeechBubble.ColorType.BLUE
 			);
+
 			Bitmap bitmap = speechBubble.generateBitmap(new IconGenerator(getBaseContext()));
 			BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
 			marker.setIcon(bitmapDescriptor);
 
-			getActionBar().setTitle(request.getTitle());
+			getActionBar().setTitle("$" + request.getCents() + " | " + request.getTitle());
+			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(4, 46, 60)));
 			return true;
 		}
 	}
@@ -108,5 +123,4 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	public void onError(Throwable t) {
 		ErrorUtil.log(this, t);
 	}
-
 }
