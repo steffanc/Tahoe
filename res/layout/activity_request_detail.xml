@@ -9,7 +9,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="150dp"
 		android:orientation="horizontal"
-		android:layout_alignParentLeft="true"
 		android:layout_alignParentTop="true">
 
 		<com.facebook.widget.ProfilePictureView
@@ -31,7 +30,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="100dp"
 		android:orientation="horizontal"
-		android:layout_alignParentLeft="true"
 		android:layout_below="@+id/llHeader">
 
 		<TextView

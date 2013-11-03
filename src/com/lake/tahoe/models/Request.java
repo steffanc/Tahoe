@@ -86,7 +86,8 @@ public class Request extends ParseObject {
 	}
 
 	public String getDisplayDollars() {
-		NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		// TODO potentially move this helper to a separate currency class for reusability
+		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
 		return numberFormat.format((double)getCents()/100);
 	}
 

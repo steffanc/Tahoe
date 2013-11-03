@@ -10,12 +10,15 @@ import android.widget.TextView;
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.Helpers;
+import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseFacebookUtils;
 
 import org.json.JSONException;
@@ -27,6 +30,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	ProfilePictureView profilePictureView;
 	GoogleMap map;
 	Request request;
+	IconGenerator iconGenerator = new IconGenerator(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,15 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
+
+		MarkerOptions markerOptions = createRequestMarkerOptions(
+				request,
+				iconGenerator,
+				SpeechBubble.ColorType.BLUE
+		);
+		map.addMarker(markerOptions);
+
+		zoomToUser(request.getClient(), map);
 	}
 
 	@Override

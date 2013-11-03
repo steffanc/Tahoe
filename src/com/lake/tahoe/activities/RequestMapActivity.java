@@ -59,25 +59,17 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		super.onConnected(dataBundle);
-		zoomToUser(map);
+		zoomToUser(User.getCurrentUser(), map);
 
-		Request request1 = Helpers.createMockRequest();
-
-		MarkerOptions markerOptions =
-				new MarkerOptions()
-						.position(request1.getGoogleMapsLocation());
-
-		String title = "$" + Integer.toString(request1.getCents());
-		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
+		Request request = Helpers.createMockRequest();
+		MarkerOptions markerOptions = createRequestMarkerOptions(
+				request,
 				iconGenerator,
-				title,
 				SpeechBubble.ColorType.BLACK
 		);
-		markerOptions.title(title);
-		markerOptions.icon(bitmapDescriptor);
 
 		Marker marker = map.addMarker(markerOptions);
-		markerRequestMap.put(marker,request1);
+		markerRequestMap.put(marker,request);
 		map.setOnMarkerClickListener(new OnMarkerClick());
 	}
 
