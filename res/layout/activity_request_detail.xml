@@ -12,19 +12,46 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentTop="true">
 
-	<com.facebook.widget.ProfilePictureView
-		android:id="@+id/pvProfile"
-		android:layout_width="150dp"
-		android:layout_height="match_parent"
-		android:layout_alignParentLeft="true"
-		android:layout_marginRight="2dp"/>
+		<com.facebook.widget.ProfilePictureView
+			android:id="@+id/pvProfile"
+			android:layout_width="150dp"
+			android:layout_height="match_parent"
+			android:layout_marginRight="2dp"/>
 
-	<fragment
-		android:id="@+id/map"
-		class="com.google.android.gms.maps.SupportMapFragment"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
+		<fragment
+			android:id="@+id/map"
+			class="com.google.android.gms.maps.SupportMapFragment"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
 
 	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/llSummary"
+		android:layout_width="match_parent"
+		android:layout_height="100dp"
+		android:orientation="horizontal"
+		android:layout_alignParentLeft="true"
+		android:layout_below="@+id/llHeader">
+
+		<TextView
+			android:id="@+id/tvCost"
+			android:layout_height="match_parent"
+			android:layout_width="150dp"
+			android:gravity="center"/>
+
+		<TextView
+			android:id="@+id/tvTitle"
+			android:layout_height="match_parent"
+			android:layout_width="fill_parent"
+			android:gravity="center"/>
+
+	</LinearLayout>
+
+	<TextView
+		android:id="@+id/tvDescription"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_below="@+id/llSummary"/>
 
 </RelativeLayout>

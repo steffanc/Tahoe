@@ -34,6 +34,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setTitle(R.string.select_client);
 
+		// TODO make this use real intents
 //		Intent i = getIntent();
 //		Request request = i.getSerializableExtra("request");
 
@@ -44,6 +45,15 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		profilePictureView.setProfileId(user.getFacebookId());
 
 		getActionBar().setTitle(user.getName());
+
+		TextView tvCost = (TextView) findViewById(R.id.tvCost);
+		tvCost.setText(Integer.toString(request.getCents()));
+
+		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+		tvTitle.setText(request.getTitle());
+
+		TextView tvDescription = (TextView) findViewById(R.id.tvDescription);
+		tvDescription.setText(request.getDescription());
 	}
 
 	@Override

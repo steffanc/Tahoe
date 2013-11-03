@@ -16,6 +16,11 @@ public class Helpers {
 
 		Request request1 = new Request();
 		request1.setTitle("Beer Wanted");
+		request1.setDescription(
+				"It's a beautiful day, I've got a sandwich, " +
+				"but I lack a beverage. When considering what beverage " +
+				"I'd enjoy, I decided on a beer. Please, I need a beer."
+		);
 		request1.setClient(client1);
 		request1.setCents(100);
 
