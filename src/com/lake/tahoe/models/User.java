@@ -55,6 +55,14 @@ public class User extends ParseUser {
 		put("location", new ParseGeoPoint(latitude, longitude));
 	}
 
+	public String getFacebookId() {
+		return getString("facebookId");
+	}
+
+	public void setFacebookId(String facebookId) {
+		put("facebookId", facebookId);
+	}
+
 	public static User getCurrentUser() {
 		return (User) ParseUser.getCurrentUser();
 	}

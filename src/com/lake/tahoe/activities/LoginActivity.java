@@ -5,9 +5,16 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.ProfilePictureView;
 import com.lake.tahoe.R;
+import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.ManifestReader;
@@ -15,6 +22,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,9 +53,30 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 	private class OnLogIn extends LogInCallback {
 		@Override
 		public void done(ParseUser parseUser, ParseException e) {
-			if (e == null) finish();
-			else onError(e);
+			if (e == null) {
+				getGraphData();
+			} else {
+				onError(e);
+			}
 		}
+	}
+
+	private void getGraphData() {
+		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser graphUser, Response response) {
+						if (graphUser != null) {
+							User currentUser = User.getCurrentUser();
+							currentUser.setFacebookId(graphUser.getId());
+							currentUser.saveEventually();
+						} else if (response.getError() != null) {
+							Log.d("ERROR", response.getError().toString());
+						}
+						finish();
+					}
+				});
+		request.executeAsync();
 	}
 
 	/**

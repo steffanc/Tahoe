@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<LinearLayout
+		android:id="@+id/llHeader"
+		android:layout_width="match_parent"
+		android:layout_height="150dp"
+		android:orientation="horizontal"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentTop="true">
+
+	<com.facebook.widget.ProfilePictureView
+		android:id="@+id/pvProfile"
+		android:layout_width="150dp"
+		android:layout_height="match_parent"
+		android:layout_alignParentLeft="true" />
+
+	<fragment
+		android:id="@+id/map"
+		class="com.google.android.gms.maps.SupportMapFragment"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+	</LinearLayout>
+
+</RelativeLayout>
