@@ -49,7 +49,10 @@ public class SpeechBubble {
 
 	public MarkerOptions generateMarker(IconGenerator iconGenerator) {
 		Bitmap bitmap = this.generateBitmap(iconGenerator);
-		MarkerOptions options = new MarkerOptions().position(this.coordinates).icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+		MarkerOptions options =
+				new MarkerOptions()
+						.position(this.coordinates)
+						.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
 		return options;
 
 	}

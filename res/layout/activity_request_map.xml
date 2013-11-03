@@ -11,16 +11,6 @@
 
 	<!-- TODO change text size to use a style so we don't have to repeat this everywhere -->
 
-	<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/select_client"
-			android:gravity="center"
-			android:id="@+id/tvTitle"
-			android:textSize="20sp"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentLeft="true"/>
-	
 	<fragment
 			android:id="@+id/map"
 			class="com.google.android.gms.maps.SupportMapFragment"
