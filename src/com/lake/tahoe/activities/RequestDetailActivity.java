@@ -1,12 +1,9 @@
 package com.lake.tahoe.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -18,10 +15,8 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.Helpers;
+import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseFacebookUtils;
-
-import org.json.JSONException;
 
 /**
  * Created by steffan on 11/3/13.
@@ -79,15 +74,10 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
-
-		MarkerOptions markerOptions = createRequestMarkerOptions(
-				request,
-				iconGenerator,
-				SpeechBubble.ColorType.BLUE
-		);
+		MarkerOptions markerOptions = MapUtil.getSpeechBubbleMarkerOptions(
+			request, iconGenerator, SpeechBubble.ColorType.BLUE);
 		map.addMarker(markerOptions);
-
-		zoomToUser(request.getClient(), map);
+		MapUtil.panAndZoomToUser(map, request.getClient(), MapUtil.DEFAULT_ZOOM_LEVEL);
 	}
 
 	@Override

@@ -2,11 +2,18 @@ package com.lake.tahoe.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import com.lake.tahoe.models.User;
+import com.parse.ParseAnalytics;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
 
 public class DelegateActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		ParseAnalytics.trackAppOpened(getIntent());
+	}
 
 	@Override
 	protected void onResume() {
