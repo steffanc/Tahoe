@@ -51,6 +51,11 @@
 			android:name="com.facebook.sdk.ApplicationId"
 			android:value="\ 539374156131745" />
 
+		<!-- comma delimited permissions -->
+		<meta-data
+			android:name="com.facebook.sdk.FB_PERMISSIONS"
+			android:value="\ email"/>
+
 	</application>
 
 </manifest>

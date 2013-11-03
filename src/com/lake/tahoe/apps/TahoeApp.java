@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.ManifestReader;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
@@ -19,7 +20,7 @@ public class TahoeApp extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Bundle config = getMetaData();
+		Bundle config = ManifestReader.getPackageMetaData(TahoeApp.this);
 		setupParseSdk(config);
 		setupFacebookSdk(config);
 	}
@@ -35,17 +36,4 @@ public class TahoeApp extends Application {
 		ParseObject.registerSubclass(Request.class);
 		Parse.initialize(this, parseClientId, parseApiKey);
 	}
-
-	public Bundle getMetaData() {
-		try {
-			PackageManager manager = getPackageManager();
-			if (manager == null) return null;
-			String packageName = getPackageName();
-			ApplicationInfo info = manager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-			return info == null ? null : info.metaData;
-		} catch(PackageManager.NameNotFoundException ex) {
-			return null;
-		}
-	}
-
 }
