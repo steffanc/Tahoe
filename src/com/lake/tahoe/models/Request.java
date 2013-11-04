@@ -46,7 +46,11 @@ public class Request extends ParseObject {
 
 	public Request() {
 		super();
-		setState(State.OPEN);
+	}
+
+	public Request(State state) {
+		super();
+		setState(state);
 	}
 
 	public User getClient() {
