@@ -15,7 +15,7 @@ import java.util.Locale;
 @ParseClassName("Request")
 public class Request extends ParseObject {
 
-	enum State {
+	public enum State {
 
 		/**
 		 * Client creates a new Request
@@ -46,7 +46,11 @@ public class Request extends ParseObject {
 
 	public Request() {
 		super();
-		setState(State.OPEN);
+	}
+
+	public Request(State state) {
+		super();
+		setState(state);
 	}
 
 	public User getClient() {
