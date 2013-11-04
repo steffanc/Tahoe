@@ -17,6 +17,7 @@ import com.parse.ParseUser;
 public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
 	GoogleMap map;
+	Request request;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		TextView amt = (TextView) findViewById(R.id.rewardText);
 		TextView description = (TextView) findViewById(R.id.anythingElseText);
 
-		Request request = new Request();
+		request = new Request(Request.State.OPEN);
 		request.setTitle(title.getText().toString());
 		request.setDescription(description.getText().toString());
 
