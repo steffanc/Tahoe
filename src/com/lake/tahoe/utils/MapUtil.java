@@ -39,6 +39,11 @@ public class MapUtil {
 		return getSpeechBubbleMarkerOptions(request.getGoogleMapsLocation(), title, iconGenerator, colorType);
 	}
 
+	public static MarkerOptions getSpeechBubbleMarkerOptions(User user, IconGenerator iconGenerator, SpeechBubble.ColorType colorType) {
+		String title = user.getName();
+		return getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(), title, iconGenerator, colorType);
+	}
+
 	public static MarkerOptions getSpeechBubbleMarkerOptions(LatLng coordinates, String title, IconGenerator iconGenerator, SpeechBubble.ColorType colorType) {
 		MarkerOptions markerOptions = new MarkerOptions().position(coordinates);
 		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(iconGenerator, title, colorType);

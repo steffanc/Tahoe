@@ -42,7 +42,7 @@
 		<activity android:name=".activities.RequestCreateActivity" />
 		<activity android:name=".activities.RequestMapActivity" />
 		<activity android:name=".activities.RequestDetailActivity" />
-		<activity android:name=".activities.RequestFulfillActivity" />
+		<activity android:name=".activities.RequestFulFillActivity" />
 
 		<activity android:name="com.facebook.LoginActivity" android:label="@string/app_name" />
 

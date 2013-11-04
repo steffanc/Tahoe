@@ -69,7 +69,7 @@ public class RequestFulFillActivity extends GoogleLocationServiceActivity implem
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
 
-		MarkerOptions markerOptions = MapUtil.getUserSpeechBubbleMarkerOptions(
+		MarkerOptions markerOptions = MapUtil.getSpeechBubbleMarkerOptions(
 				request.getClient(),
 				iconGenerator,
 				SpeechBubble.ColorType.BLUE

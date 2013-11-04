@@ -67,7 +67,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
 
-		MarkerOptions markerOptions = MapUtil.getRequestSpeechBubbleMarkerOptions(
+		MarkerOptions markerOptions = MapUtil.getSpeechBubbleMarkerOptions(
 				request,
 				iconGenerator,
 				SpeechBubble.ColorType.BLUE

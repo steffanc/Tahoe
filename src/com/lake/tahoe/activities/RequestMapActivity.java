@@ -80,7 +80,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		map.setOnMarkerClickListener(new OnMarkerClick());
 
 		Request request = Helpers.createMockRequest();
-		MarkerOptions markerOptions = MapUtil.getRequestSpeechBubbleMarkerOptions(
+		MarkerOptions markerOptions = MapUtil.getSpeechBubbleMarkerOptions(
 				request,
 				iconGenerator,
 				SpeechBubble.ColorType.BLACK
