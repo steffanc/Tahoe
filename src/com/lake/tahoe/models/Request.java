@@ -15,7 +15,7 @@ import java.util.Locale;
 @ParseClassName("Request")
 public class Request extends ParseObject {
 
-	enum State {
+	public enum State {
 
 		/**
 		 * Client creates a new Request
