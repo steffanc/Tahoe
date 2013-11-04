@@ -83,6 +83,8 @@ run.  It's often easy to get confused of stack traces:
 
 * Add your hash also to the Google API console (https://code.google.com/apis/console/b/1/?pli=1#project:261246281766:access)```
 
+* Setup your GPS coordinates in Genymotion.
+
 Fonts styling
 -------------
 
@@ -91,3 +93,4 @@ We are using the Roboto font styles.
 Use <com.lake.tahoe.CustomTextView> and <com.lake.tahoe.CustomEditText> instead of TextView and EditText so you
 can keep our fonts consistent in the app.  If you need to extend to other Android Views, take a look at the views/
 directory.
+
