@@ -1,8 +1,13 @@
 package com.lake.tahoe.activities;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,7 +27,7 @@ import com.lake.tahoe.widgets.SpeechBubble;
 /**
  * Created by steffan on 11/3/13.
  */
-public class RequestDetailActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+public class RequestFulFillActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 	ProfilePictureView profilePictureView;
 	GoogleMap map;
 	Request request;
@@ -32,7 +37,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_request_detail);
+		setContentView(R.layout.activity_request_fulfill);
 
 		// TODO make this use real intents
 //		Intent i = getIntent();
@@ -41,22 +46,21 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		User user = User.getCurrentUser();
 		request = Helpers.createMockRequest();
 		request.setVendor(user);
+
 		profilePictureView = (ProfilePictureView)findViewById(R.id.pvProfile);
 		profilePictureView.setProfileId(user.getFacebookId());
 
-		TextView tvCost = (TextView) findViewById(R.id.tvCost);
-		tvCost.setText(request.getDisplayDollars());
+		TextView tvName = (TextView) findViewById(R.id.tvName);
+		tvName.setText(user.getName());
 
-		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-		tvTitle.setText(request.getTitle());
+		// TODO calculate the real distance of users
+		TextView tvDistance = (TextView) findViewById(R.id.tvDistance);
+		tvDistance.setText("200m");
 
-		TextView tvDescription = (TextView) findViewById(R.id.tvDescription);
-		tvDescription.setText(request.getDescription());
-
-		bar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		bar.setTitle(user.getName());
+		bar = new DynamicActionBar(this, getResources().getColor(R.color.light_blue));
+		bar.setTitle(request.getTitle());
+		bar.setRightArrowVisibility(View.VISIBLE, null);
 		bar.setXMarkVisibility(View.VISIBLE, null);
-		bar.setCheckMarkVisibility(View.VISIBLE, null);
 	}
 
 	@Override
@@ -67,12 +71,13 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
 
-		MarkerOptions markerOptions = MapUtil.getRequestSpeechBubbleMarkerOptions(
-				request,
+		MarkerOptions markerOptions = MapUtil.getUserSpeechBubbleMarkerOptions(
+				request.getClient(),
 				iconGenerator,
 				SpeechBubble.ColorType.BLUE
 		);
 		map.addMarker(markerOptions);
+
 		MapUtil.panAndZoomToUser(map, request.getClient(), MapUtil.DEFAULT_ZOOM_LEVEL);
 	}
 
@@ -91,3 +96,4 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		ErrorUtil.log(this, t);
 	}
 }
+

@@ -12,6 +12,7 @@ public class Helpers {
 		// TODO remove this sample data in the future
 		// TODO move this initialization to the constructor
 		User client1 = new User();
+		client1.setName("Herp Derpington");
 		client1.setLocation(37.7583, -122.4275);
 
 		Request request1 = new Request();

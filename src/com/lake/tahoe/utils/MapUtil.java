@@ -29,13 +29,41 @@ public class MapUtil {
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
 	}
 
-	public static MarkerOptions getSpeechBubbleMarkerOptions(Request request, IconGenerator iconGenerator, SpeechBubble.ColorType colorType) {
-		MarkerOptions markerOptions = new MarkerOptions().position(request.getGoogleMapsLocation());
-		String title = request.getDisplayDollars();
-		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(iconGenerator, title, colorType);
+	private static MarkerOptions getSpeechBubbleMarkerOptions(String title,
+	                                                          LatLng latLng,
+	                                                          IconGenerator iconGenerator,
+	                                                          SpeechBubble.ColorType colorType) {
+		MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
+				iconGenerator,
+				title,
+				colorType
+		);
 		markerOptions.title(title);
 		markerOptions.icon(bitmapDescriptor);
 		return markerOptions;
+	}
+
+	public static MarkerOptions getUserSpeechBubbleMarkerOptions(User user,
+	                                                             IconGenerator iconGenerator,
+	                                                             SpeechBubble.ColorType colorType) {
+		return getSpeechBubbleMarkerOptions(
+				user.getName(),
+				user.getGoogleMapsLocation(),
+				iconGenerator,
+				colorType
+		);
+	}
+
+	public static MarkerOptions getRequestSpeechBubbleMarkerOptions(Request request,
+	                                                                IconGenerator iconGenerator,
+	                                                                SpeechBubble.ColorType colorType) {
+		return getSpeechBubbleMarkerOptions(
+				request.getDisplayDollars(),
+				request.getGoogleMapsLocation(),
+				iconGenerator,
+				colorType
+		);
 	}
 
 }

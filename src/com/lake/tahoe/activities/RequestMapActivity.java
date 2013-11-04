@@ -1,14 +1,11 @@
 package com.lake.tahoe.activities;
 
-import android.app.ActionBar;
 import android.content.BroadcastReceiver;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -19,7 +16,12 @@ import com.lake.tahoe.R;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.*;
+import com.lake.tahoe.utils.ErrorUtil;
+import com.lake.tahoe.utils.HandlesErrors;
+import com.lake.tahoe.utils.Helpers;
+import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.PushUtil;
+import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	HandlesErrors {
 	
 	GoogleMap map;
-	ActionBar actionBar;
+	DynamicActionBar bar;
 	BroadcastReceiver subscription;
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
 	IconGenerator iconGenerator = new IconGenerator(this);
@@ -39,11 +41,9 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_map);
-		actionBar = getActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayShowHomeEnabled(false);
-			actionBar.setTitle(R.string.select_client);
-		}
+
+		bar = new DynamicActionBar(this, getResources().getColor(R.color.black));
+		bar.setTitle(getResources().getString(R.string.select_client));
 	}
 
 	@Override
@@ -73,27 +73,22 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.vendor_menu, menu);
-		return true;
-	}
-
-	public void onConfirmClick(MenuItem menuItem) {
-		// TODO go to next activity
-	}
-
-	@Override
 	protected void onGooglePlayServicesReady() {
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-		Request request = Helpers.createMockRequest();
-		MarkerOptions markerOptions = MapUtil.getSpeechBubbleMarkerOptions(
-				request, iconGenerator, SpeechBubble.ColorType.BLACK);
-		Marker marker = map.addMarker(markerOptions);
-		markerRequestMap.put(marker, request);
 		map.setMyLocationEnabled(true);
 		map.setOnMarkerClickListener(new OnMarkerClick());
+
+		Request request = Helpers.createMockRequest();
+		MarkerOptions markerOptions = MapUtil.getRequestSpeechBubbleMarkerOptions(
+				request,
+				iconGenerator,
+				SpeechBubble.ColorType.BLACK
+		);
+		Marker marker = map.addMarker(markerOptions);
+		markerRequestMap.put(marker, request);
+
+		MapUtil.panAndZoomToCurrentUser(map, MapUtil.DEFAULT_ZOOM_LEVEL);
 	}
 
 	/**
@@ -125,10 +120,9 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 			);
 			marker.setIcon(bitmapDescriptor);
 
-			if (actionBar != null) {
-				actionBar.setTitle(marker.getTitle() + " | " + request.getTitle());
-				actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(4, 46, 60)));
-			}
+			bar.setTitle(marker.getTitle() + " | " + request.getTitle());
+			bar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
+			bar.setCheckMarkVisibility(View.VISIBLE, null);
 			return true;
 		}
 	}
@@ -147,5 +141,4 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	public void onError(Throwable t) {
 		ErrorUtil.log(this, t);
 	}
-
 }
