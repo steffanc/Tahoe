@@ -1,8 +1,10 @@
 package com.lake.tahoe.models;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -25,6 +27,9 @@ public class User extends ParseUser {
 		VENDOR
 
 	}
+
+	public static final int MAX_DISTANCE = 20;
+	public static final int MAX_ITEMS = 50;
 
 	public User() {
 		super();
@@ -81,6 +86,19 @@ public class User extends ParseUser {
 
 	public static User getCurrentUser() {
 		return (User) ParseUser.getCurrentUser();
+	}
+
+	public void findNearbyUsers(User.Type userType, FindCallback<ParseUser> handler) {
+		ParseGeoPoint userLocation = this.getLocation();
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+
+		query.whereContains("type", userType.toString());
+		query.whereExists("name");  // filter out blank names
+		query.whereNotEqualTo("objectId", this.getObjectId());  // exclude self
+		query.whereWithinMiles("location", userLocation, MAX_DISTANCE);
+		query.setLimit(MAX_ITEMS);
+
+		query.findInBackground(handler);
 	}
 
 }
