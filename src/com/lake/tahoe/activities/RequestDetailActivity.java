@@ -1,16 +1,15 @@
 package com.lake.tahoe.activities;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
@@ -20,20 +19,46 @@ import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.Helpers;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParseFacebookUtils;
 
-import java.util.HashMap;
+import org.json.JSONException;
 
-public class RequestMapActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+/**
+ * Created by steffan on 11/3/13.
+ */
+public class RequestDetailActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+	ProfilePictureView profilePictureView;
 	GoogleMap map;
-	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
+	Request request;
 	IconGenerator iconGenerator = new IconGenerator(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_request_map);
+		setContentView(R.layout.activity_request_detail);
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setTitle(R.string.select_client);
+
+		// TODO make this use real intents
+//		Intent i = getIntent();
+//		Request request = i.getSerializableExtra("request");
+
+		User user = User.getCurrentUser();
+		request = Helpers.createMockRequest();
+		request.setVendor(user);
+		profilePictureView = (ProfilePictureView)findViewById(R.id.pvProfile);
+		profilePictureView.setProfileId(user.getFacebookId());
+
+		getActionBar().setTitle(user.getName());
+
+		TextView tvCost = (TextView) findViewById(R.id.tvCost);
+		tvCost.setText(request.getDisplayDollars());
+
+		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+		tvTitle.setText(request.getTitle());
+
+		TextView tvDescription = (TextView) findViewById(R.id.tvDescription);
+		tvDescription.setText(request.getDescription());
 	}
 
 	@Override
@@ -52,43 +77,17 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
-	}
+		map.getUiSettings().setZoomControlsEnabled(false);
+		map.getUiSettings().setMyLocationButtonEnabled(false);
 
-	@Override
-	public void onConnected(Bundle dataBundle) {
-		super.onConnected(dataBundle);
-		zoomToUser(User.getCurrentUser(), map);
-
-		Request request = Helpers.createMockRequest();
 		MarkerOptions markerOptions = createRequestMarkerOptions(
 				request,
 				iconGenerator,
-				SpeechBubble.ColorType.BLACK
+				SpeechBubble.ColorType.BLUE
 		);
+		map.addMarker(markerOptions);
 
-		Marker marker = map.addMarker(markerOptions);
-		markerRequestMap.put(marker,request);
-		map.setOnMarkerClickListener(new OnMarkerClick());
-	}
-
-	// TODO probably move this up to the google location service parent class
-	// TODO go through other markers and make them non blue when one is clicked
-	private class OnMarkerClick implements GoogleMap.OnMarkerClickListener {
-		@Override
-		public boolean onMarkerClick(Marker marker) {
-			Request request = markerRequestMap.get(marker);
-
-			BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
-					iconGenerator,
-					marker.getTitle(),
-					SpeechBubble.ColorType.BLUE
-			);
-			marker.setIcon(bitmapDescriptor);
-
-			getActionBar().setTitle(marker.getTitle() + " | " + request.getTitle());
-			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(4, 46, 60)));
-			return true;
-		}
+		zoomToUser(request.getClient(), map);
 	}
 
 	@Override

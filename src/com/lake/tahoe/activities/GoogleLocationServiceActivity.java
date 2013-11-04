@@ -1,8 +1,11 @@
 package com.lake.tahoe.activities;
 
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -10,7 +13,13 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
+import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.widgets.SpeechBubble;
 
 /**
  * Only subclass this activity if you want to track the current geo to the user
@@ -68,17 +77,31 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 		}
 	}
 
-	public void zoomToUser(GoogleMap map) {
-		User myUser = User.getCurrentUser();
-		Location location = locationClient.getLastLocation();
-
-		if (location != null) {
-			myUser.setLocation(location.getLatitude(), location.getLongitude());
-			myUser.saveEventually();
+	public void zoomToUser(User user, GoogleMap map) {
+		LatLng latLng = user.getGoogleMapsLocation();
+		if (latLng != null) {
 			map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-					myUser.getGoogleMapsLocation(),
+					latLng,
 					USER_ZOOM_LEVEL));
 		}
+	}
+
+	public MarkerOptions createRequestMarkerOptions(Request request,
+	                                                IconGenerator iconGenerator,
+	                                                SpeechBubble.ColorType colorType) {
+		MarkerOptions markerOptions =
+				new MarkerOptions()
+						.position(request.getGoogleMapsLocation());
+		String title = request.getDisplayDollars();
+		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
+				iconGenerator,
+				title,
+				colorType
+		);
+		markerOptions.title(title);
+		markerOptions.icon(bitmapDescriptor);
+
+		return markerOptions;
 	}
 
 	@Override
