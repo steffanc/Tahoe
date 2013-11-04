@@ -9,6 +9,11 @@ import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.FindCallback;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 /**
  * Created on 11/3/13.
@@ -30,8 +35,12 @@ public class MapUtil {
 	}
 
 	public static MarkerOptions getSpeechBubbleMarkerOptions(Request request, IconGenerator iconGenerator, SpeechBubble.ColorType colorType) {
-		MarkerOptions markerOptions = new MarkerOptions().position(request.getGoogleMapsLocation());
 		String title = request.getDisplayDollars();
+		return getSpeechBubbleMarkerOptions(request.getGoogleMapsLocation(), title, iconGenerator, colorType);
+	}
+
+	public static MarkerOptions getSpeechBubbleMarkerOptions(LatLng coordinates, String title, IconGenerator iconGenerator, SpeechBubble.ColorType colorType) {
+		MarkerOptions markerOptions = new MarkerOptions().position(coordinates);
 		BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(iconGenerator, title, colorType);
 		markerOptions.title(title);
 		markerOptions.icon(bitmapDescriptor);
