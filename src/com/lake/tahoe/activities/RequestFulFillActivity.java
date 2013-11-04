@@ -68,8 +68,6 @@ public class RequestFulFillActivity extends GoogleLocationServiceActivity implem
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
-		map.getUiSettings().setZoomControlsEnabled(false);
-		map.getUiSettings().setMyLocationButtonEnabled(false);
 
 		MarkerOptions markerOptions = MapUtil.getUserSpeechBubbleMarkerOptions(
 				request.getClient(),

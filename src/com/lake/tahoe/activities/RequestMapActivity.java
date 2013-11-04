@@ -115,12 +115,12 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 
 			BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
 					iconGenerator,
-					marker.getTitle(),
+					request.getDisplayDollars(),
 					SpeechBubble.ColorType.BLUE
 			);
 			marker.setIcon(bitmapDescriptor);
 
-			bar.setTitle(marker.getTitle() + " | " + request.getTitle());
+			bar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
 			bar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
 			bar.setCheckMarkVisibility(View.VISIBLE, null);
 			return true;

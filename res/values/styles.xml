@@ -37,6 +37,11 @@
 		<item name="android:background">@drawable/blue_tooltip</item>
 	</style>
 
+	<style name="FBProfilePicture">
+		<item name="android:layout_width">150dp</item>
+		<item name="android:layout_height">match_parent</item>
+	</style>
+
 	<!-- Currently fontAssetName only apply to CustomTextView's -->
 
 	<style name="Roboto">

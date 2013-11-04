@@ -39,7 +39,6 @@ public class MapUtil {
 				title,
 				colorType
 		);
-		markerOptions.title(title);
 		markerOptions.icon(bitmapDescriptor);
 		return markerOptions;
 	}
