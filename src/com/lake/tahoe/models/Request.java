@@ -67,7 +67,8 @@ public class Request extends ParseObject {
 	}
 
 	public void setVendor(User vendor) {
-		put("vendor", vendor);
+		if (vendor == null) remove("vendor");
+		else put("vendor", vendor);
 	}
 
 	public String getTitle() {

@@ -58,7 +58,7 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 	private void startRequestPendingActivity() {
 		//TODO Both clients and vendors can see a subclass of this activity
 		if (currentUser.getType().equals(User.Type.VENDOR))
-			;//startActivity(new Intent(this, RequestPendingVendorActivity.class));
+			startActivity(new Intent(this, RequestPendingVendorActivity.class));
 		else
 			startActivity(new Intent(this, RequestPendingClientActivity.class));
 	}

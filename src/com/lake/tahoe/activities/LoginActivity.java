@@ -13,10 +13,7 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.ManifestReader;
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
+import com.parse.*;
 
 import java.util.Arrays;
 
@@ -51,33 +48,28 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 	}
 
 	private void getGraphData() {
-		Request.newMeRequest(
-			ParseFacebookUtils.getSession(),
-			new LoginGraphUserCallback()
-		).executeAsync();
+		Request.newMeRequest(ParseFacebookUtils.getSession(), new OnGraphData()).executeAsync();
 	}
 
-	private class LoginGraphUserCallback implements Request.GraphUserCallback {
-
-		@Override
-		public void onCompleted(GraphUser graphUser, Response response) {
-
+	private class OnGraphData implements Request.GraphUserCallback {
+		@Override public void onCompleted(GraphUser graphUser, Response response) {
 			if (response.getError() != null)
 				onError(new FacebookException(response.getError().toString()));
-
 			if (graphUser != null) {
 				User currentUser = User.getCurrentUser();
 				currentUser.setFacebookId(graphUser.getId());
 				currentUser.setName(graphUser.getFirstName());
 				currentUser.setEmail((String) graphUser.getProperty("email"));
-				currentUser.setType(User.Type.CLIENT); // client by default
-				currentUser.saveEventually();
+				currentUser.saveInBackground(new OnUserSaved());
 			}
-
-			finish();
-
 		}
+	}
 
+	class OnUserSaved extends SaveCallback {
+		@Override public void done(ParseException e) {
+			if (e == null)  finish();
+			else onError(e);
+		}
 	}
 
 	/**

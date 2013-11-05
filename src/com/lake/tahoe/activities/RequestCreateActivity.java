@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.lake.tahoe.R;
@@ -12,7 +13,9 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.views.DynamicActionBar;
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
@@ -62,7 +65,19 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		User client = (User) ParseUser.getCurrentUser();
 
 		request.setClient(client);
-		request.saveEventually();
+		request.saveEventually(new OnRequestCreated());
+	}
+
+	class OnRequestCreated extends SaveCallback {
+		@Override public void done(ParseException e) {
+			//TODO: startRequestOpenActivity
+			if (e == null) Toast.makeText(
+					RequestCreateActivity.this,
+					"Request " + request.getObjectId() + " Created!",
+					Toast.LENGTH_SHORT).show();
+			else onError(e);
+
+		}
 	}
 
 	protected void onGooglePlayServicesReady() {

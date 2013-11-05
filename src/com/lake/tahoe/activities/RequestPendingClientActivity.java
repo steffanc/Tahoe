@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.lake.tahoe.R;
+import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.utils.ManifestReader;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import org.json.JSONException;
 
 import java.security.InvalidParameterException;
 
@@ -67,6 +71,8 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 	}
 
 	public void startPaypalActivity() {
+		fulfillRequest();
+		/*
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(PaymentActivity.EXTRA_CLIENT_ID, metadata.getString("com.paypal.sdk.CLIENT_ID"));
 		intent.putExtra(PaymentActivity.EXTRA_PAYPAL_ENVIRONMENT, metadata.getString("com.paypal.sdk.ENVIRONMENT"));
@@ -74,6 +80,7 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 		intent.putExtra(PaymentActivity.EXTRA_RECEIVER_EMAIL, pendingRequest.getVendor().getEmail());
 		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, pendingRequest.getPaypalPayment());
 		startActivityForResult(intent, PAYPAL_PAYMENT_REQUEST_CODE);
+		*/
 	}
 
 	@Override
@@ -106,13 +113,35 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 
 	}
 
+	@Override
+	public void onRequestUpdated(Request request) {
+		if (pendingRequest == null)
+			return;
+		if (!request.getObjectId().equals(pendingRequest.getObjectId()))
+			return;
+		if (!request.getState().equals(Request.State.PENDING))
+			finish();
+	}
+
 	public void fulfillRequest() {
 		pendingRequest.setState(Request.State.FULFILLED);
-		pendingRequest.saveEventually();
-		tvPay.setVisibility(View.INVISIBLE);
-		tvSurText.setText("");
-		tvSubText.setText("Payment Complete!");
-		ivCheck.setVisibility(View.VISIBLE);
+		pendingRequest.saveInBackground(new OnFulfilledRequest());
+	}
+
+	class OnFulfilledRequest extends SaveCallback {
+		@Override public void done(ParseException e) {
+			if (e != null) {
+				onError(e);
+			} else try {
+				RequestUpdateChannel.publish(RequestPendingClientActivity.this, pendingRequest);
+				tvSurText.setText("");
+				ivCheck.setVisibility(View.VISIBLE);
+				tvPay.setVisibility(View.INVISIBLE);
+				tvSubText.setText("Payment Complete!");
+			} catch (JSONException e1) {
+				onError(e);
+			}
+		}
 	}
 
 }
