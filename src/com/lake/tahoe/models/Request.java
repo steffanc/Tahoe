@@ -1,6 +1,13 @@
 package com.lake.tahoe.models;
 
+import android.content.Intent;
+
 import com.google.android.gms.maps.model.LatLng;
+import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.ModelFindCallback;
+import com.lake.tahoe.callbacks.ModelGetCallback;
+import com.lake.tahoe.intents.Constants;
+import com.parse.GetCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -129,4 +136,12 @@ public class Request extends ParseObject {
 		return ParseQuery.getQuery(Request.class);
 	}
 
+	public static void getByObjectId(String requestId, ModelCallback<Request> callback) {
+		ParseQuery<Request> query = Request.getRequestQuery();
+
+		query.whereEqualTo("objectId", requestId);
+		query.include("client");
+
+		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
+	}
 }

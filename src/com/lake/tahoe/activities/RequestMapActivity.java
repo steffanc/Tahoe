@@ -1,6 +1,7 @@
 package com.lake.tahoe.activities;
 
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,22 +12,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.callbacks.ParseResultCallback;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
-import com.lake.tahoe.utils.Helpers;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.HashMap;
@@ -36,19 +33,22 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	HandlesErrors {
 	
 	GoogleMap map;
-	DynamicActionBar bar;
+	DynamicActionBar actionBar;
 	BroadcastReceiver subscription;
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
 	IconGenerator iconGenerator = new IconGenerator(this);
 	boolean mapReadyToPan = false;
+
+	final int DETAIL_REQUEST = 0;
+	public String REQUEST_ID = "requestId";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_map);
 
-		bar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		bar.setTitle(getResources().getString(R.string.select_client));
+		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
+		actionBar.setTitle(getResources().getString(R.string.select_client));
 	}
 
 	@Override
@@ -131,7 +131,12 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	private class OnMarkerClick implements GoogleMap.OnMarkerClickListener {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
-			Request request = markerRequestMap.get(marker);
+			final Request request = markerRequestMap.get(marker);
+
+			if (request == null) {
+				Log.d("debug", "Ignoring tag since it's not in the Hash...must be clicking on You");
+				return true;
+			}
 
 			BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
 					iconGenerator,
@@ -140,11 +145,22 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 			);
 			marker.setIcon(bitmapDescriptor);
 
-			bar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
-			bar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
-			bar.setCheckMarkVisibility(View.VISIBLE, null);
+			actionBar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
+			actionBar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
+			actionBar.setRightArrowVisibility(View.VISIBLE, new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					RequestMapActivity.this.launchDetailActivityIntent(request);
+				}
+			});
 			return true;
 		}
+	}
+
+	public void launchDetailActivityIntent(Request request) {
+		Intent i = new Intent(RequestMapActivity.this, RequestDetailActivity.class);
+		i.putExtra(REQUEST_ID, request.getObjectId());
+		startActivityForResult(i, DETAIL_REQUEST);
 	}
 
 	@Override
