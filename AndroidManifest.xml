@@ -52,13 +52,10 @@
 		<activity android:name=".activities.RequestCreateActivity" />
 		<activity android:name=".activities.RequestMapActivity" />
 		<activity android:name=".activities.RequestDetailActivity" />
-		<activity android:name=".activities.RequestFulFillActivity" />
-		<activity android:name=".activities.PendingPaymentActivity">
-			<!-- <intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter> -->
-		</activity>
+		<activity android:name=".activities.RequestActiveActivity" />
+		<activity android:name=".activities.RequestActiveVendorActivity" />
+		<activity android:name=".activities.RequestActiveClientActivity" />
+		<activity android:name=".activities.PendingPaymentActivity" />
 
 		<!-- external activities -->
 
