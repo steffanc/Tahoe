@@ -41,7 +41,7 @@ public class User extends ParseUser {
 
 	public Type getType() {
 		String type = getString("type");
-		return type != null ? Type.valueOf(type) : null;
+		return type != null ? Type.valueOf(type) : Type.CLIENT;
 	}
 
 	public void setType(Type type) {

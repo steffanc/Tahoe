@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -99,7 +100,8 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	public void onLocationChanged(Location location) {
 		super.onLocationChanged(location);
 		if (mapReadyToPan) {
-			MapUtil.panAndZoomToCurrentUser(map, MapUtil.DEFAULT_ZOOM_LEVEL);
+			LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+			MapUtil.panAndZoomToPoint(map, point, MapUtil.DEFAULT_ZOOM_LEVEL);
 			mapReadyToPan = false;
 		}
 	}

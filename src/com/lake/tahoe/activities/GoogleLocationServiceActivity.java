@@ -60,8 +60,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 	public void onConnectionFailed(ConnectionResult connectionResult) {
 		if (!connectionResult.hasResolution()) {
 			spawnGooglePlayDialog(connectionResult.getErrorCode());
-			return;
-		} try {
+		} else try {
 			connectionResult.startResolutionForResult(this, GOOGLE_PLAY_SERVICES_REQUEST_CODE);
 		} catch (IntentSender.SendIntentException e) {
 			onLocationTrackingFailed(e);
@@ -83,7 +82,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 		user.saveEventually();
 
 		try {
-			UserUpdateChannel.publish(user);
+			UserUpdateChannel.publish(this, user);
 		} catch (JSONException e) {
 			onLocationTrackingFailed(e);
 		}

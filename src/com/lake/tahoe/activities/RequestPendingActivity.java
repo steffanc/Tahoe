@@ -1,22 +1,28 @@
 package com.lake.tahoe.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
+import com.lake.tahoe.utils.PushUtil;
 
 /**
  * Created on 11/5/13.
  */
 public abstract class RequestPendingActivity extends Activity implements
 		HandlesErrors,
+		RequestUpdateChannel.HandlesRequestUpdates,
 		ModelCallback<Request> {
+
+	BroadcastReceiver subscription;
 
 	protected TextView tvSurText;
 	protected TextView tvSubText;
@@ -48,6 +54,26 @@ public abstract class RequestPendingActivity extends Activity implements
 
 		user.getUnfinishedRequest(this);
 
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		subscription = RequestUpdateChannel.subscribe(this, this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (subscription != null) {
+			PushUtil.unsubscribe(this, subscription);
+			subscription = null;
+		}
+	}
+
+	@Override
+	public void onRequestUpdateError(Throwable t) {
+		onError(t);
 	}
 
 	@Override
