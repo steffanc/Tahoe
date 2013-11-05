@@ -3,44 +3,73 @@ package com.lake.tahoe.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.parse.ParseAnalytics;
 import com.parse.ParseFacebookUtils;
 
-public class DelegateActivity extends Activity {
+public class DelegateActivity extends Activity implements ModelCallback<Request> {
+
+	User currentUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ParseAnalytics.trackAppOpened(getIntent());
 	}
 
 	@Override
 	protected void onResume() {
+
 		super.onResume();
 
 		// check if user is logged in
-		User currentUser = User.getCurrentUser();
+		currentUser = User.getCurrentUser();
 
+		// if not logged in, then redirect to the login activity
 		if (currentUser == null || !ParseFacebookUtils.isLinked(currentUser)) {
 			startLoginActivity();
 			return;
 		}
 
-		/* TODO: Check if the user has a Request with state = OPEN|ACTIVE|PENDING
-		    If so, both vendors and clients should be delegated to the correct Activity.
-		    This will prevent clients from exiting the app to avoid payment
-		*/
+		// otherwise, see if the user has an unfinished request
+		currentUser.getUnfinishedRequest(this);
 
-		// TODO: leave this hardcoded for now; change it in future signup activity
-		currentUser.setType(User.Type.VENDOR);
+	}
 
-		if (currentUser.getType() == User.Type.VENDOR) {
+	@Override
+	public void onModelFound(Request request) {
+		if (request.getState().equals(Request.State.OPEN))
+			startRequestOpenActivity();
+		else if (request.getState().equals(Request.State.ACTIVE))
+			startRequestActiveActivity();
+		else if (request.getState().equals(Request.State.PENDING))
+			startRequestPendingActivity();
+	}
+
+	@Override
+	public void onModelError(Throwable t) {
+		// no request found, drop into first view
+		if (currentUser.getType() == User.Type.VENDOR)
 			startRequestMapActivity();
-		} else {
+		else
 			startRequestCreateActivity();
-		}
+	}
 
+	private void startRequestPendingActivity() {
+		//TODO Both clients and vendors can see a subclass of this activity
+		//startActivity(new Intent(this, RequestPendingClientActivity.class));
+		//startActivity(new Intent(this, RequestPendingVendorActivity.class));
+	}
+
+	private void startRequestOpenActivity() {
+		//TODO Only clients can see this activity
+		//startActivity(new Intent(this, RequestOpenActivity.class));
+	}
+
+	private void startRequestActiveActivity() {
+		//TODO Both clients and vendors can see a subclass of this activity
+		//startActivity(new Intent(this, RequestActiveClientActivity.class));
+		//startActivity(new Intent(this, RequestActiveVendorActivity.class));
 	}
 
 	private void startRequestCreateActivity() {

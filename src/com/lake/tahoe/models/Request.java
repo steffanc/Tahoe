@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.paypal.android.sdk.payments.PayPalPayment;
 
 import java.math.BigDecimal;
@@ -121,6 +122,10 @@ public class Request extends ParseObject {
 
 	public LatLng getGoogleMapsLocation() {
 		return getClient().getGoogleMapsLocation();
+	}
+
+	public static ParseQuery<Request> getRequestQuery() {
+		return ParseQuery.getQuery(Request.class);
 	}
 
 }

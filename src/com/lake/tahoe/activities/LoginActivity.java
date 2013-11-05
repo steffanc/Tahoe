@@ -3,8 +3,8 @@ package com.lake.tahoe.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import com.facebook.FacebookException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
@@ -45,32 +45,39 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 	private class OnLogIn extends LogInCallback {
 		@Override
 		public void done(ParseUser parseUser, ParseException e) {
-			if (e == null) {
-				getGraphData();
-			} else {
-				onError(e);
-			}
+			if (e == null) getGraphData();
+			else onError(e);
 		}
 	}
 
 	private void getGraphData() {
-		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
-				new Request.GraphUserCallback() {
-					@Override
-					public void onCompleted(GraphUser graphUser, Response response) {
-						if (graphUser != null) {
-							User currentUser = User.getCurrentUser();
-							currentUser.setFacebookId(graphUser.getId());
-							currentUser.setName(graphUser.getFirstName());
-							currentUser.setEmail((String)graphUser.getProperty("email"));
-							currentUser.saveEventually();
-						} else if (response.getError() != null) {
-							Log.d("ERROR", response.getError().toString());
-						}
-						finish();
-					}
-				});
-		request.executeAsync();
+		Request.newMeRequest(
+			ParseFacebookUtils.getSession(),
+			new LoginGraphUserCallback()
+		).executeAsync();
+	}
+
+	private class LoginGraphUserCallback implements Request.GraphUserCallback {
+
+		@Override
+		public void onCompleted(GraphUser graphUser, Response response) {
+
+			if (response.getError() != null)
+				onError(new FacebookException(response.getError().toString()));
+
+			if (graphUser != null) {
+				User currentUser = User.getCurrentUser();
+				currentUser.setFacebookId(graphUser.getId());
+				currentUser.setName(graphUser.getName());
+				currentUser.setEmail((String) graphUser.getProperty("email"));
+				currentUser.setType(User.Type.CLIENT); // client by default
+				currentUser.saveEventually();
+			}
+
+			finish();
+
+		}
+
 	}
 
 	/**
