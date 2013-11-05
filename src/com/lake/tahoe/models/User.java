@@ -1,11 +1,10 @@
 package com.lake.tahoe.models;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.parse.FindCallback;
-import com.parse.ParseClassName;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.ModelFindCallback;
+import com.lake.tahoe.callbacks.ModelGetCallback;
+import com.parse.*;
 
 /**
  * Created on 10/21/13.
@@ -88,17 +87,28 @@ public class User extends ParseUser {
 		return (User) ParseUser.getCurrentUser();
 	}
 
-	public void findNearbyUsers(User.Type userType, FindCallback<ParseUser> handler) {
-		ParseGeoPoint userLocation = this.getLocation();
-		ParseQuery<ParseUser> query = ParseUser.getQuery();
+	public static ParseQuery<User> getUserQuery() {
+		return ParseQuery.getQuery(User.class);
+	}
 
+	public void findNearbyUsers(User.Type userType, ModelCallback<User> callback) {
+		ParseGeoPoint userLocation = this.getLocation();
+		ParseQuery<User> query = getUserQuery();
 		query.whereContains("type", userType.toString());
 		query.whereExists("name");  // filter out blank names
 		query.whereNotEqualTo("objectId", this.getObjectId());  // exclude self
 		query.whereWithinMiles("location", userLocation, MAX_DISTANCE);
 		query.setLimit(MAX_ITEMS);
+		query.findInBackground(new ModelFindCallback<User>(callback));
+	}
 
-		query.findInBackground(handler);
+	public void getUnfinishedRequest(ModelCallback<Request> callback) {
+		String type = getType().toString().toLowerCase();
+		ParseQuery<Request> query = Request.getRequestQuery();
+		query.whereNotEqualTo("state", Request.State.FULFILLED.toString());
+		query.whereNotEqualTo("state", Request.State.CANCELLED.toString());
+		query.whereEqualTo(type, this);
+		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
 	}
 
 }
