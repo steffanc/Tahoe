@@ -8,14 +8,14 @@
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:src="@drawable/left_arrow"
 		android:layout_alignParentLeft="true"
+		android:layout_centerInParent="true"
 		android:id="@+id/leftSection">
 
 		<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/left_arrow"
+			android:src="@drawable/navigation_previous_item"
 			android:id="@+id/leftArrow"
 			android:tag="@string/leftArrow"
 			android:visibility="gone"/>
@@ -23,7 +23,7 @@
 		<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/x_mark"
+			android:src="@drawable/navigation_cancel"
 			android:tag="@string/xMark"
 			android:id="@+id/xMark"
 			android:visibility="gone"/>
@@ -44,12 +44,13 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
+		android:layout_centerInParent="true"
 		android:id="@+id/rightSection">
 
 		<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/check_mark"
+			android:src="@drawable/navigation_accept"
 			android:id="@+id/checkMark"
 			android:tag="@string/checkMark"
 			android:visibility="gone"/>
@@ -57,7 +58,7 @@
 		<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/right_arrow"
+			android:src="@drawable/navigation_next_item"
 			android:id="@+id/rightArrow"
 			android:tag="@string/rightArrow"
 			android:visibility="gone"/>
