@@ -74,7 +74,8 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 		if (user == null) return;
 		
 		ParseGeoPoint last = user.getLocation();
-		if (last.getLatitude() == location.getLatitude() && 
+		if (last != null &&
+			last.getLatitude() == location.getLatitude() &&
 		    last.getLongitude() == location.getLongitude())
 				return;
 

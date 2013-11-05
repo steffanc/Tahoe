@@ -49,7 +49,7 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 	@Override
 	public void onModelError(Throwable t) {
 		// no request found, drop into first view
-		if (currentUser.getType() == User.Type.VENDOR)
+		if (currentUser.getType().equals(User.Type.VENDOR))
 			startRequestMapActivity();
 		else
 			startRequestCreateActivity();
@@ -57,8 +57,10 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 
 	private void startRequestPendingActivity() {
 		//TODO Both clients and vendors can see a subclass of this activity
-		//startActivity(new Intent(this, RequestPendingClientActivity.class));
-		//startActivity(new Intent(this, RequestPendingVendorActivity.class));
+		if (currentUser.getType().equals(User.Type.VENDOR))
+			;//startActivity(new Intent(this, RequestPendingVendorActivity.class));
+		else
+			startActivity(new Intent(this, RequestPendingClientActivity.class));
 	}
 
 	private void startRequestOpenActivity() {
