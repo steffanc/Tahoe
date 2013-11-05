@@ -14,7 +14,9 @@ public class ModelGetCallback<T extends ParseObject> extends GetCallback<T> {
 
 	@Override
 	public void done(T model, ParseException e) {
-		if (e != null) callback.onModelError(e);
-		callback.onModelFound(model);
+		if (e != null) 
+			callback.onModelError(e);
+		if (model != null)
+			callback.onModelFound(model);
 	}
 }
