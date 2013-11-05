@@ -39,6 +39,8 @@ public class RequestActiveVendorActivity extends RequestActiveActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Forward to real activity once implemented
+				request.setState(Request.State.PENDING);
+				request.saveEventually();
 				// Intent i = new Intent(this, RequestPendingVendorActivity.class);
 				// startActivity(i);
 			}
