@@ -14,6 +14,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
+import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.ParseResultCallback;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
@@ -24,6 +26,8 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.HashMap;
 
@@ -80,14 +84,28 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		map.setMyLocationEnabled(true);
 		map.setOnMarkerClickListener(new OnMarkerClick());
 
-		Request request = Helpers.createMockRequest();
-		MarkerOptions markerOptions = MapUtil.getSpeechBubbleMarkerOptions(
-				request,
-				iconGenerator,
-				SpeechBubble.ColorType.BLACK
-		);
-		Marker marker = map.addMarker(markerOptions);
-		markerRequestMap.put(marker, request);
+		ModelCallback<Request> markerFactoryCallback = new ModelCallback<Request>() {
+
+			@Override
+			public void onModelFound(Request request) {
+
+				Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(request.getClient(),
+						iconGenerator, SpeechBubble.ColorType.BLACK));
+				markerRequestMap.put(marker, request);
+
+			}
+
+			@Override
+			public void onModelError(Throwable e) {
+				RequestMapActivity.this.onError(e);
+			}
+		};
+
+		User user = (User) ParseUser.getCurrentUser();
+		user.findNearbyRequests(Request.State.OPEN, markerFactoryCallback);
+
+		map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
+				getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
 
 		MapUtil.panAndZoomToCurrentUser(map, MapUtil.DEFAULT_ZOOM_LEVEL);
 	}

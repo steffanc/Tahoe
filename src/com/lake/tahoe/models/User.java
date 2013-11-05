@@ -11,6 +11,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
+
 /**
  * Created on 10/21/13.
  */
@@ -121,4 +122,14 @@ public class User extends ParseUser {
 		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
 	}
 
+	public void findNearbyRequests(Request.State requestState, ModelCallback<Request> callback) {
+		ParseQuery<Request> query = Request.getRequestQuery();
+
+		// FIXME -- join on user location for proximity querying too
+		query.whereContains("state", requestState.toString());
+		query.whereExists("client");
+		query.include("client");
+
+		query.findInBackground(new ModelFindCallback<Request>(callback));
+	}
 }
