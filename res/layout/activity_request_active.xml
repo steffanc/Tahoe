@@ -18,15 +18,15 @@
 		android:orientation="horizontal">
 
 		<com.facebook.widget.ProfilePictureView
-			style="@style/FBProfilePicture"
-			android:id="@+id/pvProfile" />
+			android:id="@+id/pvProfile"
+			style="@style/FBProfilePicture" />
 
 		<LinearLayout
 			android:id="@+id/llClientText"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:orientation="vertical"
-			android:paddingLeft="5dp"
+			android:paddingLeft="10dp"
 			android:background="@color/light_blue">
 
 			<com.lake.tahoe.views.CustomTextView
@@ -46,7 +46,5 @@
 				android:layout_width="match_parent" />
 
 		</LinearLayout>
-
 	</LinearLayout>
-
 </RelativeLayout>

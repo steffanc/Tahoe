@@ -3,9 +3,13 @@ package com.lake.tahoe.models;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 /**
  * Created on 10/21/13.
@@ -100,5 +104,4 @@ public class User extends ParseUser {
 
 		query.findInBackground(handler);
 	}
-
 }

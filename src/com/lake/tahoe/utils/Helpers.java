@@ -22,13 +22,13 @@ public class Helpers {
 		request.setCents(150);
 
 		User client = new User();
-		client.setName("Herp Derpington");
+		client.setName("Herp");
 		client.setLocation(37.7583, -122.4275);
 		client.setEmail("jazoff-facilitator@gmail.com");
 		request.setClient(client);
 
 		User vendor = new User();
-		vendor.setName("Derp Herpington");
+		vendor.setName("Derp");
 		vendor.setLocation(37.7583, -122.4275);
 		vendor.setEmail("jazoff+vendor@gmail.com");
 		request.setVendor(vendor);
