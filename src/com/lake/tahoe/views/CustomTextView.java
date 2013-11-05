@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 
 import com.lake.tahoe.R;
@@ -35,12 +34,12 @@ public class CustomTextView extends TextView {
     }
 
 	public static void applyAttributes(Context context, TextView v, AttributeSet attrs) {
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomTextView);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
 		final int N = a.getIndexCount();
 		for (int i = 0; i < N; i++) {
 			int attr = a.getIndex(i);
 			switch (attr) {
-				case R.styleable.CustomTextView_fontAssetName:
+				case R.styleable.CustomFont_fontAssetName:
 					try {
 						Typeface font = Typefaces.get(context, a.getString(attr));
 						if (font != null) {
