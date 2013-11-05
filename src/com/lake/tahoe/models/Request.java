@@ -4,10 +4,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.paypal.android.sdk.payments.PayPalPayment;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Currency;
-import java.util.Locale;
 
 /**
  * Created by steffan on 10/21/13.
@@ -91,8 +91,16 @@ public class Request extends ParseObject {
 
 	public String getDisplayDollars() {
 		// TODO potentially move this helper to a separate currency class for reusability
-		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-		return numberFormat.format((double)getCents()/100);
+		return NumberFormat.getCurrencyInstance().format(getDollars());
+	}
+
+	public BigDecimal getDollars() {
+		return new BigDecimal(getCents() / 100.0);
+	}
+
+	public PayPalPayment getPaypalPayment() {
+		String currency = NumberFormat.getCurrencyInstance().getCurrency().getCurrencyCode();
+		return new PayPalPayment(getDollars(), currency, getTitle());
 	}
 
 	public void setCents(Integer cents) {

@@ -32,7 +32,7 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 	@Override
 	public void onClick(View v) {
 		// TODO: Show a spinner, or at least disable the button. Right now it hangs out for a bit when the user returns.
-		String fbPermissions = (String) ManifestReader.getPackageMetaData(getApplicationContext(), "com.facebook.sdk.FB_PERMISSIONS");
+		String fbPermissions = (String) ManifestReader.getPackageMetaData(getApplicationContext(), "com.facebook.sdk.PERMISSIONS");
 		ParseFacebookUtils.logIn(Arrays.asList(fbPermissions.split(",")), this, new OnLogIn());
 	}
 
