@@ -53,6 +53,11 @@
 		<item name="android:textColor">@color/white</item>
 	</style>
 
+	<style name="RobotoThinHeadline" parent="Roboto">
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textSize">25sp</item>
+	</style>
+
 	<style name="Headline1" parent="RobotoHeadline">
 		<item name="android:textSize">72sp</item>
 	</style>

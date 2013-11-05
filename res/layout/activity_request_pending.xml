@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/light_blue"
+		tools:context=".activities.RequestPendingActivity">
+
+	<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/x_mark"
+			android:id="@+id/ivCancel"
+			android:visibility="gone"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_margin="10dp" />
+
+	<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/check_mark"
+			android:id="@+id/ivCheck"
+			android:visibility="gone"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_margin="10dp" />
+
+	<LinearLayout
+			android:gravity="center"
+			android:layout_centerInParent="true"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+		<com.lake.tahoe.views.CustomTextView
+				android:id="@+id/tvSurText"
+				style="@style/RobotoThinHeadline"
+				android:gravity="center_horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+		<com.lake.tahoe.views.CustomTextView
+				android:id="@+id/tvDollars"
+				style="@style/Headline2"
+				android:gravity="center_horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+		<com.lake.tahoe.views.CustomTextView
+				android:id="@+id/tvSubText"
+				style="@style/RobotoThinHeadline"
+				android:gravity="center_horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+	</LinearLayout>
+
+	<TextView
+			android:id="@+id/tvPay"
+			style="@style/RobotoThinHeadline"
+			android:gravity="center"
+			android:layout_marginBottom="10dp"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:drawableRight="@drawable/right_arrow"
+			android:text="@string/proceed_to_payment"
+			android:visibility="invisible" />
+
+</RelativeLayout>

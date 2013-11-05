@@ -4,9 +4,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelFindCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
-import com.parse.*;
+import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created on 10/21/13.
@@ -37,7 +40,8 @@ public class User extends ParseUser {
 	}
 
 	public Type getType() {
-		return Type.valueOf(getString("type"));
+		String type = getString("type");
+		return type != null ? Type.valueOf(type) : null;
 	}
 
 	public void setType(Type type) {
@@ -107,11 +111,14 @@ public class User extends ParseUser {
 	public void getUnfinishedRequest(ModelCallback<Request> callback) {
 		String type = getType().toString().toLowerCase();
 		ParseQuery<Request> query = Request.getRequestQuery();
-		query.whereNotEqualTo("state", Request.State.FULFILLED.toString());
-		query.whereNotEqualTo("state", Request.State.CANCELLED.toString());
+		ArrayList<String> states = new ArrayList<String>();
+		states.add(Request.State.FULFILLED.toString());
+		states.add(Request.State.CANCELLED.toString());
+		query.whereNotContainedIn("state", states);
 		query.whereEqualTo(type, this);
 		query.include("vendor");
 		query.include("client");
 		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
 	}
+
 }
