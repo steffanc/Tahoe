@@ -110,6 +110,8 @@ public class User extends ParseUser {
 		query.whereNotEqualTo("state", Request.State.FULFILLED.toString());
 		query.whereNotEqualTo("state", Request.State.CANCELLED.toString());
 		query.whereEqualTo(type, this);
+		query.include("vendor");
+		query.include("client");
 		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
 	}
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.lake.tahoe.R;
+import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
@@ -13,36 +14,38 @@ import com.lake.tahoe.views.DynamicActionBar;
 /**
  * Created by steffan on 11/4/13.
  */
-public class RequestActiveClientActivity extends RequestActiveActivity {
-	Request request;
+public class RequestActiveClientActivity extends RequestActiveActivity implements ModelCallback<Request> {
+	Request request = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// TODO Get real request
-		request = Helpers.createMockRequest();
-		request.setClient(User.getCurrentUser());
-
-		createViews(request.getVendor());
-
+		User.getCurrentUser().getUnfinishedRequest(this);
 		bar = new DynamicActionBar(this, getResources().getColor(R.color.light_blue));
-		bar.setTitle(request.getVendor().getName() + " to the rescue!");
-		bar.setXMarkVisibility(View.VISIBLE, null);
-		bar.setRightArrowVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Forward to real activity once implemented
-//				Intent i = new Intent(this, RequestPendingClientActivity.class);
-//				startActivity(i);
-			}
-		});
 	}
 
 	@Override
-	protected void onGooglePlayServicesReady() {
-		super.onGooglePlayServicesReady();
-		createMapViews(request.getVendor());
+	public void onModelFound(Request _request) {
+		if (_request.getState() == Request.State.PENDING) {
+			// TODO Forward to real activity once implemented
+			// Intent i = new Intent(this, RequestPendingClientActivity.class);
+			// startActivity(i);
+			return;
+		} else if (request == null) {
+			request = _request;
+			User vendor = request.getClient();
+			createViews(vendor);
+			createMapViews(vendor);
+
+			bar.setTitle(request.getVendor().getName() + " to the rescue!");
+			bar.setXMarkVisibility(View.VISIBLE, null);
+		}
+		User.getCurrentUser().getUnfinishedRequest(this);
+	}
+
+	@Override
+	public void onModelError(Throwable t) {
+		onError(t);
 	}
 
 	@Override

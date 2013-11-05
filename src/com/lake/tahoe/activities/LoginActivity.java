@@ -68,7 +68,7 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 			if (graphUser != null) {
 				User currentUser = User.getCurrentUser();
 				currentUser.setFacebookId(graphUser.getId());
-				currentUser.setName(graphUser.getName());
+				currentUser.setName(graphUser.getFirstName());
 				currentUser.setEmail((String) graphUser.getProperty("email"));
 				currentUser.setType(User.Type.CLIENT); // client by default
 				currentUser.saveEventually();
