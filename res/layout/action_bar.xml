@@ -10,6 +10,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true"
 		android:layout_centerInParent="true"
+		android:gravity="center"
 		android:id="@+id/leftSection">
 
 		<ImageView
@@ -28,6 +29,12 @@
 			android:id="@+id/xMark"
 			android:visibility="gone"/>
 
+		<com.lake.tahoe.views.CustomButton
+			android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/userTypeButton"
+			android:visibility="gone"/>
+
 	</LinearLayout>
 
 	<com.lake.tahoe.views.CustomTextView
@@ -37,7 +44,6 @@
 		android:layout_toLeftOf="@+id/rightSection"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:gravity="center"
 		android:layout_centerInParent="true"/>
 
 	<LinearLayout
@@ -45,6 +51,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
 		android:layout_centerInParent="true"
+		android:gravity="center"
 		android:id="@+id/rightSection">
 
 		<ImageView
