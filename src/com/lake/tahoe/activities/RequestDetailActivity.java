@@ -21,8 +21,6 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 /**
@@ -44,11 +42,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 
 		User user = User.getCurrentUser();
 
-		profilePictureView = (ProfilePictureView)findViewById(R.id.pvProfile);
-		profilePictureView.setProfileId(user.getFacebookId());
-
 		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		actionBar.setTitle(user.getName());
 		actionBar.setXMarkVisibility(View.VISIBLE, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -61,11 +55,15 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 			public void onClick(View v) {
 				Log.d("debug", "Setting Request to Active");
 				request.setState(Request.State.ACTIVE);
+				request.setVendor(User.getCurrentUser());
 				request.saveEventually(new SaveCallback() {
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
-							Intent i = new Intent(RequestDetailActivity.this, RequestActiveVendorActivity.class);
+							Intent i = new Intent(
+									RequestDetailActivity.this,
+									RequestActiveVendorActivity.class
+							);
 							i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 							startActivity(i);
 						} else {
@@ -78,6 +76,12 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	}
 
 	public void updateRequestDetail() {
+		User client = request.getClient();
+		profilePictureView = (ProfilePictureView)findViewById(R.id.pvProfile);
+		profilePictureView.setProfileId(client.getFacebookId());
+
+		actionBar.setTitle(client.getName());
+
 		TextView tvCost = (TextView) findViewById(R.id.tvCost);
 		tvCost.setText(request.getDisplayDollars());
 
@@ -93,7 +97,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 				SpeechBubble.ColorType.BLUE
 		);
 		map.addMarker(markerOptions);
-		MapUtil.panAndZoomToUser(map, request.getClient(), MapUtil.DEFAULT_ZOOM_LEVEL);
+		MapUtil.panAndZoomToUser(map, client, MapUtil.DEFAULT_ZOOM_LEVEL);
 	}
 
 	@Override
