@@ -39,7 +39,8 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 
 	@Override
 	public void onModelFound(Request request) {
-		if (request.getState().equals(Request.State.OPEN))
+		if (request.getState().equals(Request.State.OPEN) && currentUser.getType().equals(User.Type.CLIENT))
+			// Only clients can see this activity
 			startRequestOpenActivity();
 		else if (request.getState().equals(Request.State.ACTIVE))
 			startRequestActiveActivity();
