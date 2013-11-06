@@ -7,12 +7,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.Currency;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
+import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
+import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -52,11 +56,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 
 		String amtText = amt.getText().toString();
 
-		if (amtText == null || "".equals(amtText)) {
-			return;
-		}
-
-		Float amount = Float.valueOf(amtText);
+		Float amount = Currency.getAmount(amtText);
 
 		if (amount > 0) {
 			request.setCents((int) (amount * 100));
@@ -87,6 +87,13 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 	    map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
+
+		User user = User.getCurrentUser();
+		MapUtil.panAndZoomToUser(map, user, MapUtil.DEFAULT_ZOOM_LEVEL);
+
+		IconGenerator iconGenerator = new IconGenerator(this);
+		map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
+						getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
 	}
 
 	@Override

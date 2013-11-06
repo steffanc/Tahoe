@@ -18,4 +18,13 @@ public class Currency {
 		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
 		return numberFormat.format(amount);
 	}
+
+	public static float getAmount(String amtText) {
+		if (amtText == null || "".equals(amtText)) {
+			return 0;
+		}
+
+		Float amount = Float.valueOf(amtText);
+		return amount;
+	}
 }
