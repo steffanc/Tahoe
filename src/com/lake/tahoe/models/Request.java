@@ -1,13 +1,8 @@
 package com.lake.tahoe.models;
 
-import android.content.Intent;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.callbacks.ModelFindCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
-import com.lake.tahoe.intents.Constants;
-import com.parse.GetCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;

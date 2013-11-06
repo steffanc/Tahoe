@@ -1,5 +1,6 @@
 package com.lake.tahoe.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -27,9 +28,8 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 	@Override
 	public void onModelFound(Request _request) {
 		if (_request.getState() == Request.State.PENDING) {
-			// TODO Forward to real activity once implemented
-			// Intent i = new Intent(this, RequestPendingClientActivity.class);
-			// startActivity(i);
+			Intent i = new Intent(this, RequestPendingClientActivity.class);
+			startActivity(i);
 			return;
 		} else if (request == null) {
 			request = _request;

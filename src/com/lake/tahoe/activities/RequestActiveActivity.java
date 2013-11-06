@@ -41,7 +41,7 @@ public class RequestActiveActivity extends GoogleLocationServiceActivity impleme
 
 		// TODO calculate the real distance of users
 		TextView tvDistance = (TextView) findViewById(R.id.tvDistance);
-		tvDistance.setText("200m");
+		tvDistance.setText("0.56mi");
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.lake.tahoe.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,9 +45,8 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 			public void onClick(View v) {
 				request.setState(Request.State.PENDING);
 				request.saveEventually();
-				// TODO Forward to real activity once implemented
-				// Intent i = new Intent(this, RequestPendingVendorActivity.class);
-				// startActivity(i);
+				Intent i = new Intent(getBaseContext(), RequestPendingVendorActivity.class);
+				startActivity(i);
 			}
 		});
 	}
