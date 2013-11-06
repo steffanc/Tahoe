@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import android.widget.Toast;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.maps.android.ui.IconGenerator;
@@ -37,10 +38,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		actionBar.setCheckMarkVisibility(View.VISIBLE, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// String comparisons are ugly,
-				if (v.getTag().toString().equals(getString(R.string.checkMark))) {
-					createRequest();
-				}
+				createRequest();
+			
 			}
 		});
 	}
@@ -69,7 +68,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 	}
 
 	class OnRequestCreated extends SaveCallback {
-		@Override public void done(ParseException e) {
+		@Override
+		public void done(ParseException e) {
 			//TODO: startRequestOpenActivity
 			if (e == null) Toast.makeText(
 					RequestCreateActivity.this,
@@ -84,7 +84,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-	    map.setMyLocationEnabled(true);
+		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -93,7 +93,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 
 		IconGenerator iconGenerator = new IconGenerator(this);
 		map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
-						getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
+				getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
 	}
 
 	@Override
