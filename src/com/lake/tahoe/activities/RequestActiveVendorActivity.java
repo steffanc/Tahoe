@@ -40,7 +40,13 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 		createMapViews(client);
 
 		bar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
-		bar.setXMarkVisibility(View.VISIBLE, null);
+		bar.setXMarkVisibility(View.VISIBLE, new View.OnClickListener () {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
 		bar.setRightArrowVisibility(View.VISIBLE, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
