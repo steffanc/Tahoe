@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
 import com.parse.ParseClassName;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -117,10 +116,6 @@ public class Request extends ParseObject {
 
 	public void setState(State state) {
 		put("state", state.toString());
-	}
-
-	public ParseGeoPoint getLocation() {
-		return getClient().getLocation();
 	}
 
 	public LatLng getGoogleMapsLocation() {

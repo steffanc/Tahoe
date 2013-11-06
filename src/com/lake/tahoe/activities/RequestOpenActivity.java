@@ -1,11 +1,13 @@
 package com.lake.tahoe.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
@@ -19,7 +21,9 @@ import com.lake.tahoe.widgets.SpeechBubble;
 public class RequestOpenActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
 	GoogleMap map;
+	Marker marker;
 	IconGenerator iconGenerator;
+	boolean mapReadyToPan = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,6 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
-		MapUtil.panAndZoomToCurrentUser(map, MapUtil.DEFAULT_ZOOM_LEVEL);
 
 		iconGenerator = new IconGenerator(RequestOpenActivity.this);
 
@@ -62,16 +65,32 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 			}
 		};
 
-		User user = User.getCurrentUser();
-		user.findNearbyUsers(User.Type.VENDOR, markerFactoryCallback);
+		User.getCurrentUser().findOthersByType(User.Type.VENDOR, markerFactoryCallback);
 
-		map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
-				getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
+		mapReadyToPan = true;
+
 	}
 
 	@Override
 	public void onError(Throwable t) {
 		ErrorUtil.log(this, t);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		super.onLocationChanged(location);
+		LatLng position = MapUtil.locationToLatLng(location);
+		if (mapReadyToPan) {
+			mapReadyToPan = false;
+			marker = map.addMarker(
+				MapUtil.getSpeechBubbleMarkerOptions(position,
+					getResources().getString(R.string.you),
+					iconGenerator, SpeechBubble.ColorType.PURPLE
+				));
+			MapUtil.panAndZoomToLocation(map, location, MapUtil.DEFAULT_ZOOM_LEVEL);
+		} else if (marker != null && !marker.getPosition().equals(position)) {
+			marker.setPosition(position);
+		}
 	}
 
 	@Override

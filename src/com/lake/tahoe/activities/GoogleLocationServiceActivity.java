@@ -10,7 +10,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.User;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.SaveCallback;
 import org.json.JSONException;
 
 /**
@@ -69,7 +71,8 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 
 	@Override
 	public void onLocationChanged(Location location) {
-		User user = User.getCurrentUser();
+
+		final User user = User.getCurrentUser();
 		if (user == null) return;
 		
 		ParseGeoPoint last = user.getLocation();
@@ -79,13 +82,18 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 				return;
 
 		user.setLocation(location.getLatitude(), location.getLongitude());
-		user.saveEventually();
+		user.saveInBackground(new SaveCallback() {
+			@Override public void done(ParseException e) {
+				if (e != null) {
+					onLocationTrackingFailed(e);
+				} else try {
+					UserUpdateChannel.publish(GoogleLocationServiceActivity.this, user);
+				} catch (JSONException ex) {
+					onLocationTrackingFailed(ex);
+				}
+			}
+		});
 
-		try {
-			UserUpdateChannel.publish(this, user);
-		} catch (JSONException e) {
-			onLocationTrackingFailed(e);
-		}
 	}
 
 	@Override

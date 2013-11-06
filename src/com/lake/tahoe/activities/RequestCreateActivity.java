@@ -1,14 +1,16 @@
 package com.lake.tahoe.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.Request;
@@ -26,6 +28,7 @@ import com.parse.SaveCallback;
 public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
 	GoogleMap map;
+	Marker marker;
 	Request request;
 
 	public static final int NEW_REQUEST = 0;
@@ -34,9 +37,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_create);
-
 		DynamicActionBar actionBar = new DynamicActionBar(RequestCreateActivity.this, getResources().getColor(R.color.black));
-
 		actionBar.setTitle("Create a Request");
 		actionBar.setCheckMarkVisibility(View.VISIBLE, new View.OnClickListener() {
 			@Override
@@ -114,7 +115,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
 		if (requestCode == NEW_REQUEST && resultCode == RESULT_CANCELED) {
 			Log.d("debug", "Cancelling the request");
 			request.setState(Request.State.CANCELLED);
@@ -123,21 +123,28 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 	}
 
 	protected void onGooglePlayServicesReady() {
-
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
+	}
 
-		User user = User.getCurrentUser();
-
+	@Override
+	public void onLocationChanged(Location location) {
+		super.onLocationChanged(location);
 		IconGenerator iconGenerator = new IconGenerator(this);
-
-		if (user.getGoogleMapsLocation() != null) {
-			map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
-					getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
+		LatLng position = MapUtil.locationToLatLng(location);
+		if (marker == null) {
+			marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
+				position,
+				getResources().getString(R.string.you),
+				iconGenerator, SpeechBubble.ColorType.PURPLE
+			));
+		} else {
+			marker.setPosition(position);
 		}
+		MapUtil.panAndZoomToLocation(map, location, MapUtil.DEFAULT_ZOOM_LEVEL);
 	}
 
 	@Override
