@@ -20,8 +20,10 @@ import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 /**
  * Created by steffan on 11/3/13.
@@ -59,10 +61,18 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 			public void onClick(View v) {
 				Log.d("debug", "Setting Request to Active");
 				request.setState(Request.State.ACTIVE);
-				//request.saveEventually();
-				//Intent i = new Intent(RequestDetailActivity.this, RequestActivity.class);
-				//i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-				//startActivity(i);
+				request.saveEventually(new SaveCallback() {
+					@Override
+					public void done(ParseException e) {
+						if (e == null) {
+							Intent i = new Intent(RequestDetailActivity.this, RequestActiveVendorActivity.class);
+							i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+							startActivity(i);
+						} else {
+							onError(e);
+						}
+					}
+				});
 			}
 		});
 	}
