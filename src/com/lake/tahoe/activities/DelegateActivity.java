@@ -3,6 +3,7 @@ package com.lake.tahoe.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
@@ -70,8 +71,12 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 
 	private void startRequestActiveActivity() {
 		//TODO Both clients and vendors can see a subclass of this activity
-		//startActivity(new Intent(this, RequestActiveClientActivity.class));
-		//startActivity(new Intent(this, RequestActiveVendorActivity.class));
+		if (currentUser.getType().equals(User.Type.VENDOR)) {
+			startActivity(new Intent(this, RequestActiveVendorActivity.class));
+		} else {
+			startActivity(new Intent(this, RequestActiveClientActivity.class));
+		}
+
 	}
 
 	private void startRequestCreateActivity() {
