@@ -37,8 +37,13 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 			createViews(vendor);
 			createMapViews(vendor);
 
-			bar.setTitle(request.getVendor().getName() + " to the rescue!");
-			bar.setXMarkVisibility(View.VISIBLE, null);
+			if (request.getVendor() == null) {
+				onError(new IllegalStateException("Bad request with no vendor"));
+			}
+			else {
+				bar.setTitle(request.getVendor().getName() + " to the rescue!");
+				bar.setXMarkVisibility(View.VISIBLE, null);
+			}
 		}
 		User.getCurrentUser().getUnfinishedRequest(this);
 	}
