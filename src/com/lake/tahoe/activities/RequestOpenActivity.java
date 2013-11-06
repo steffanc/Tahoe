@@ -1,5 +1,6 @@
 package com.lake.tahoe.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -11,24 +12,36 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.channels.RequestUpdateChannel;
+import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
-public class RequestOpenActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+public class RequestOpenActivity extends GoogleLocationServiceActivity implements HandlesErrors, RequestUpdateChannel.HandlesRequestUpdates, ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
 	IconGenerator iconGenerator;
 	boolean mapReadyToPan = false;
+	BroadcastReceiver subscription;
+	Request openRequest;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_open);
+
+		User user = User.getCurrentUser();
+
+		if (user == null) {
+			finish();
+			return;
+		}
 
 		DynamicActionBar actionBar = new DynamicActionBar(RequestOpenActivity.this, getResources().getColor(R.color.black));
 
@@ -41,6 +54,64 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 				finish();
 			}
 		});
+
+		user.getUnfinishedRequest(this);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		subscription = RequestUpdateChannel.subscribe(this, this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (subscription != null) {
+			PushUtil.unsubscribe(this, subscription);
+			subscription = null;
+		}
+	}
+
+	@Override
+	public void onModelFound(Request request) {
+		if (!request.getState().equals(Request.State.OPEN)) finish();
+		else {
+			onOpenRequest(request);
+		}
+	}
+
+	@Override
+	public void onModelError(Throwable t) {
+		finish();
+	}
+
+	protected void onOpenRequest(Request request) {
+		openRequest = request;
+	}
+
+	@Override
+	public void onRequestUpdateError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
+	public void onRequestUpdated(Request request) {
+		if (openRequest == null)
+			return;
+		if (!request.getObjectId().equals(openRequest.getObjectId()))
+			return;
+		if (request.getState().equals(Request.State.OPEN))
+			return;
+		if (request.getState().equals(Request.State.ACTIVE))
+			startRequestActiveActivity();
+
+		onError(new IllegalStateException("Illegal Request State: " + request.getState().toString()));
+	}
+
+	protected void startRequestActiveActivity() {
+		Intent i = new Intent(RequestOpenActivity.this, RequestActiveClientActivity.class);
+		startActivity(i);
 	}
 
 	protected void onGooglePlayServicesReady() {
