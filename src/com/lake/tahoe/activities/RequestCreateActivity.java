@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -46,7 +45,32 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 
 			}
 		});
+
+		actionBar.setButtonText(User.Type.VENDOR.toString());
+		actionBar.setButtonVisibility(View.VISIBLE, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				User currentUser = User.getCurrentUser();
+				currentUser.setType(User.Type.VENDOR);
+				currentUser.saveEventually(new onUserChanged());
+			}
+		});
+
 	}
+
+	class onUserChanged extends SaveCallback {
+		@Override
+		public void done(ParseException e) {
+			//TODO: startRequestOpenActivity
+			if (e == null) {
+				Intent i = new Intent(RequestCreateActivity.this, DelegateActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				startActivity(i);
+			} else onError(e);
+
+		}
+	}
+
 
 	public void createRequest() {
 		TextView title = (TextView) findViewById(R.id.wantText);
@@ -107,11 +131,13 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		map.getUiSettings().setMyLocationButtonEnabled(false);
 
 		User user = User.getCurrentUser();
-		MapUtil.panAndZoomToUser(map, user, MapUtil.DEFAULT_ZOOM_LEVEL);
 
 		IconGenerator iconGenerator = new IconGenerator(this);
-		map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
-				getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
+
+		if (user.getGoogleMapsLocation() != null) {
+			map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
+					getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
+		}
 	}
 
 	@Override
