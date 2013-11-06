@@ -103,10 +103,13 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 			return;
 		if (request.getState().equals(Request.State.OPEN))
 			return;
-		if (request.getState().equals(Request.State.ACTIVE))
-			startRequestActiveActivity();
 
-		onError(new IllegalStateException("Illegal Request State: " + request.getState().toString()));
+		if (request.getState().equals(Request.State.ACTIVE)) {
+			startRequestActiveActivity();
+		}
+		else {
+			onError(new IllegalStateException("Illegal Request State: " + request.getState().toString()));
+		}
 	}
 
 	protected void startRequestActiveActivity() {
