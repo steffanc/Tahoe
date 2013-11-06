@@ -49,7 +49,10 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 					@Override
 					public void done(ParseException e) {
 						if (e==null) {
-							Intent i = new Intent(getBaseContext(), RequestPendingVendorActivity.class);
+							Intent i = new Intent(
+									RequestActiveVendorActivity.this,
+									RequestPendingVendorActivity.class
+							);
 							startActivity(i);
 						} else {
 							onError(e);
