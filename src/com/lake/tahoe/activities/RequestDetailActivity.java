@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
@@ -22,6 +23,8 @@ import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
+
+import org.json.JSONException;
 
 /**
  * Created by steffan on 11/3/13.
@@ -60,6 +63,12 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
+							try {
+								RequestUpdateChannel.publish(RequestDetailActivity.this, request);
+							} catch (JSONException e1) {
+								onError(e1);
+							}
+
 							Intent i = new Intent(
 									RequestDetailActivity.this,
 									RequestActiveVendorActivity.class
