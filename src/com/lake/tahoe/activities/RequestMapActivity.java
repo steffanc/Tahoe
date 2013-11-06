@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -24,6 +23,7 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -34,6 +34,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		UserUpdateChannel.HandlesUserUpdates, HandlesErrors {
 
 	GoogleMap map;
+	Marker marker;
 	DynamicActionBar actionBar;
 	BroadcastReceiver subscription;
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
@@ -93,7 +94,8 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	public void onUserUpdated(User user) {
 		//TODO: show the updated user on the map!
-		Log.d("USER UPDATE", user.getLocation().toString());
+		ParseGeoPoint loc = user.getLocation();
+		Log.d("USER UPDATE", loc == null ? "no location" : loc.toString());
 	}
 
 	@Override
@@ -134,12 +136,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		User user = (User) ParseUser.getCurrentUser();
 		user.findNearbyRequests(Request.State.OPEN, markerFactoryCallback);
 
-		if (user.getGoogleMapsLocation() != null) {
-			map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
-					getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
-			MapUtil.panAndZoomToCurrentUser(map, MapUtil.DEFAULT_ZOOM_LEVEL);
-		}
-
+		mapReadyToPan = true;
 
 	}
 
@@ -150,10 +147,14 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	public void onLocationChanged(Location location) {
 		super.onLocationChanged(location);
+		LatLng position = MapUtil.locationToLatLng(location);
 		if (mapReadyToPan) {
-			LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-			MapUtil.panAndZoomToPoint(map, point, MapUtil.DEFAULT_ZOOM_LEVEL);
 			mapReadyToPan = false;
+			MapUtil.panAndZoomToLocation(map, location, MapUtil.DEFAULT_ZOOM_LEVEL);
+			marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(position,
+					getResources().getString(R.string.you), iconGenerator, SpeechBubble.ColorType.PURPLE));
+		} else if (marker != null && !marker.getPosition().equals(position)) {
+			marker.setPosition(position);
 		}
 	}
 

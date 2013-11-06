@@ -33,9 +33,6 @@ public class User extends ParseUser {
 
 	}
 
-	public static final int MAX_DISTANCE = 20;
-	public static final int MAX_ITEMS = 50;
-
 	public User() {
 		super();
 	}
@@ -98,14 +95,11 @@ public class User extends ParseUser {
 		return ParseQuery.getQuery(User.class);
 	}
 
-	public void findNearbyUsers(User.Type userType, ModelCallback<User> callback) {
-		ParseGeoPoint userLocation = this.getLocation();
+	public void findOthersByType(User.Type userType, ModelCallback<User> callback) {
 		ParseQuery<User> query = getUserQuery();
 		query.whereContains("type", userType.toString());
 		query.whereExists("name");  // filter out blank names
 		query.whereNotEqualTo("objectId", this.getObjectId());  // exclude self
-		query.whereWithinMiles("location", userLocation, MAX_DISTANCE);
-		query.setLimit(MAX_ITEMS);
 		query.findInBackground(new ModelFindCallback<User>(callback));
 	}
 
