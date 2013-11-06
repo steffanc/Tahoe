@@ -60,7 +60,8 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 				currentUser.setFacebookId(graphUser.getId());
 				currentUser.setName(graphUser.getFirstName());
 				currentUser.setEmail((String) graphUser.getProperty("email"));
-				currentUser.saveInBackground(new OnUserSaved());
+				currentUser.setType(User.Type.CLIENT);
+				currentUser.saveEventually(new OnUserSaved());
 			}
 		}
 	}
