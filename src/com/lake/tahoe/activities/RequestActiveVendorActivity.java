@@ -1,5 +1,6 @@
 package com.lake.tahoe.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.lake.tahoe.views.DynamicActionBar;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -43,10 +45,20 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 			@Override
 			public void onClick(View v) {
 				request.setState(Request.State.PENDING);
-				request.saveEventually();
-				// TODO Forward to real activity once implemented
-				// Intent i = new Intent(this, RequestPendingVendorActivity.class);
-				// startActivity(i);
+				request.saveEventually(new SaveCallback() {
+					@Override
+					public void done(ParseException e) {
+						if (e==null) {
+							Intent i = new Intent(
+									RequestActiveVendorActivity.this,
+									RequestPendingVendorActivity.class
+							);
+							startActivity(i);
+						} else {
+							onError(e);
+						}
+					}
+				});
 			}
 		});
 	}
