@@ -1,6 +1,8 @@
 package com.lake.tahoe.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,6 +29,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 	GoogleMap map;
 	Request request;
 
+	public static final int NEW_REQUEST = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,7 +43,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 			@Override
 			public void onClick(View v) {
 				createRequest();
-			
+
 			}
 		});
 	}
@@ -71,12 +75,26 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		@Override
 		public void done(ParseException e) {
 			//TODO: startRequestOpenActivity
-			if (e == null) Toast.makeText(
-					RequestCreateActivity.this,
-					"Request " + request.getObjectId() + " Created!",
-					Toast.LENGTH_SHORT).show();
-			else onError(e);
+			if (e == null) {
+				Toast.makeText(
+						RequestCreateActivity.this,
+						"Request " + request.getObjectId() + " Created!",
+						Toast.LENGTH_SHORT).show();
+				Intent i = new Intent(RequestCreateActivity.this, RequestOpenActivity.class);
+				startActivityForResult(i, NEW_REQUEST);
+			} else onError(e);
 
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == NEW_REQUEST && resultCode == RESULT_CANCELED) {
+			Log.d("debug", "Cancelling the request");
+			request.setState(Request.State.CANCELLED);
+			request.saveEventually();
 		}
 	}
 

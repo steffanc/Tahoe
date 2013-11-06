@@ -65,7 +65,7 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 
 	private void startRequestOpenActivity() {
 		//TODO Only clients can see this activity
-		//startActivity(new Intent(this, RequestOpenActivity.class));
+		startActivity(new Intent(this, RequestOpenActivity.class));
 	}
 
 	private void startRequestActiveActivity() {
