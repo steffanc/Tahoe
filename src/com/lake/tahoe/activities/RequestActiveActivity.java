@@ -1,9 +1,7 @@
 package com.lake.tahoe.activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
-
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -20,7 +18,7 @@ import com.lake.tahoe.widgets.SpeechBubble;
 /**
  * Created by steffan on 11/3/13.
  */
-public class RequestActiveActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+public abstract class RequestActiveActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 	GoogleMap map;
 	DynamicActionBar bar;
 	ProfilePictureView profilePictureView;

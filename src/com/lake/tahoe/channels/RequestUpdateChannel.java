@@ -17,7 +17,7 @@ public class RequestUpdateChannel implements
 	private static final String OBJECT_ID_KEY = "object_id";
 
 	public static interface HandlesRequestUpdates {
-		public void onRequestUpdated(Request user);
+		public void onRequestUpdated(Request request);
 		public void onRequestUpdateError(Throwable t);
 	}
 

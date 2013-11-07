@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
+import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.Currency;
@@ -24,6 +24,7 @@ import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import org.json.JSONException;
 
 public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
@@ -101,10 +102,11 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		public void done(ParseException e) {
 			//TODO: startRequestOpenActivity
 			if (e == null) {
-				Toast.makeText(
-						RequestCreateActivity.this,
-						"Request " + request.getObjectId() + " Created!",
-						Toast.LENGTH_SHORT).show();
+				try {
+					UserUpdateChannel.publish(RequestCreateActivity.this, User.getCurrentUser());
+				} catch (JSONException e1) {
+					onError(e1);
+				}
 				Intent i = new Intent(RequestCreateActivity.this, RequestOpenActivity.class);
 				startActivityForResult(i, NEW_REQUEST);
 			} else onError(e);

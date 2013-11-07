@@ -2,22 +2,17 @@ package com.lake.tahoe.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.Helpers;
 import com.lake.tahoe.views.DynamicActionBar;
-import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.SaveCallback;
-
-import java.util.List;
+import org.json.JSONException;
 
 /**
  * Created by steffan on 11/4/13.
@@ -55,6 +50,11 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 					@Override
 					public void done(ParseException e) {
 						if (e==null) {
+							try {
+								RequestUpdateChannel.publish(RequestActiveVendorActivity.this, request);
+							} catch (JSONException e1) {
+								onError(e1);
+							}
 							Intent i = new Intent(
 									RequestActiveVendorActivity.this,
 									RequestPendingVendorActivity.class
