@@ -44,12 +44,15 @@
 
 	<!-- Currently fontAssetName only apply to CustomTextView's -->
 
+	<style name="RobotoBold">
+		<item name="fontAssetName">Roboto/Roboto-Bold</item>
+	</style>
+
 	<style name="Roboto">
 		<item name="fontAssetName">Roboto/Roboto-Regular</item>
 	</style>
 
-	<style name="RobotoHeadline" parent="Roboto">
-		<item name="android:textStyle">bold</item>
+	<style name="RobotoHeadline" parent="RobotoBold">
 		<item name="android:textColor">@color/white</item>
 	</style>
 
@@ -81,6 +84,25 @@
 	<style name="MapSnippet">
 		<item name="android:layout_height">150dp</item>
 		<item name="android:layout_width">fill_parent</item>
+	</style>
+
+	<style name="NoActionBar">
+		<item name="android:windowActionBar">false</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
+
+	<style name="LoginTitleText" parent="RobotoBold">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">70sp</item>
+	</style>
+
+	<style name="LoginTitleTextWhite" parent="LoginTitleText">
+		<item name="android:textColor">@color/white</item>
+	</style>
+
+	<style name="LoginTitleTextBlue" parent="LoginTitleText">
+		<item name="android:textColor">@color/light_blue</item>
 	</style>
 
 </resources>
