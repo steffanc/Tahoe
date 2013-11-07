@@ -30,7 +30,7 @@ import com.parse.SaveCallback;
 import java.util.HashMap;
 
 public class RequestMapActivity extends GoogleLocationServiceActivity implements
-		UserUpdateChannel.HandlesUserUpdates, HandlesErrors {
+		UserUpdateChannel.HandlesUserUpdates, HandlesErrors, ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
@@ -60,6 +60,25 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 				currentUser.saveEventually(new onUserChanged());
 			}
 		});
+	}
+
+	@Override
+	public void onModelFound(Request request) {
+
+		if (request.getClient() == null) {
+			onError(new IllegalStateException("Request does not have a Client"));
+
+		} else {
+
+			Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(request.getClient(),
+					iconGenerator, SpeechBubble.ColorType.BLACK));
+			markerRequestMap.put(marker, request);
+		}
+	}
+
+	@Override
+	public void onModelError(Throwable e) {
+		RequestMapActivity.this.onError(e);
 	}
 
 	class onUserChanged extends SaveCallback {
@@ -96,8 +115,9 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 			return;
 		if (user.getObjectId().equals(User.getCurrentUser().getObjectId()))
 			return;
-		if (user.getType().equals(User.Type.CLIENT))
-			map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user, iconGenerator, SpeechBubble.ColorType.BLACK));
+		if (!user.getType().equals(User.Type.CLIENT))
+			return;
+		user.getUnfinishedRequest(this);
 	}
 
 	@Override
@@ -112,31 +132,8 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		map.setMyLocationEnabled(true);
 		map.setOnMarkerClickListener(new OnMarkerClick());
 
-		ModelCallback<Request> markerFactoryCallback = new ModelCallback<Request>() {
-
-			@Override
-			public void onModelFound(Request request) {
-
-				if (request.getClient() == null) {
-					onError(new IllegalStateException("Request does not have a Client"));
-					return;
-
-				} else {
-
-					Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(request.getClient(),
-							iconGenerator, SpeechBubble.ColorType.BLACK));
-					markerRequestMap.put(marker, request);
-				}
-			}
-
-			@Override
-			public void onModelError(Throwable e) {
-				RequestMapActivity.this.onError(e);
-			}
-		};
-
 		User user = (User) ParseUser.getCurrentUser();
-		user.findNearbyRequests(Request.State.OPEN, markerFactoryCallback);
+		user.findNearbyRequests(Request.State.OPEN, this);
 
 		mapReadyToPan = true;
 
