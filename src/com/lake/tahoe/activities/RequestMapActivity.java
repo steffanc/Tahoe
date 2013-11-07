@@ -23,7 +23,6 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -93,9 +92,12 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 
 	@Override
 	public void onUserUpdated(User user) {
-		//TODO: show the updated user on the map!
-		ParseGeoPoint loc = user.getLocation();
-		Log.d("USER UPDATE", loc == null ? "no location" : loc.toString());
+		if (user == null)
+			return;
+		if (user.getObjectId().equals(User.getCurrentUser().getObjectId()))
+			return;
+		if (user.getType().equals(User.Type.CLIENT))
+			map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user, iconGenerator, SpeechBubble.ColorType.BLACK));
 	}
 
 	@Override
