@@ -49,28 +49,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		});
 
 		actionBar.setButtonText(User.Type.VENDOR.toString());
-		actionBar.setButtonVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				User currentUser = User.getCurrentUser();
-				currentUser.setType(User.Type.VENDOR);
-				currentUser.saveEventually(new onUserChanged());
-			}
-		});
 
-	}
-
-	class onUserChanged extends SaveCallback {
-		@Override
-		public void done(ParseException e) {
-			//TODO: startRequestOpenActivity
-			if (e == null) {
-				Intent i = new Intent(RequestCreateActivity.this, DelegateActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-				startActivity(i);
-			} else onError(e);
-
-		}
 	}
 
 

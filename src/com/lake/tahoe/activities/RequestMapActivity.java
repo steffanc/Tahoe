@@ -23,9 +23,7 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.HashMap;
 
@@ -52,14 +50,6 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		actionBar.setTitle(getResources().getString(R.string.select_client));
 
 		actionBar.setButtonText(User.Type.CLIENT.toString());
-		actionBar.setButtonVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				User currentUser = User.getCurrentUser();
-				currentUser.setType(User.Type.CLIENT);
-				currentUser.saveEventually(new onUserChanged());
-			}
-		});
 	}
 
 	@Override
@@ -79,19 +69,6 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	public void onModelError(Throwable e) {
 		RequestMapActivity.this.onError(e);
-	}
-
-	class onUserChanged extends SaveCallback {
-		@Override
-		public void done(ParseException e) {
-			//TODO: startRequestOpenActivity
-			if (e == null) {
-				Intent i = new Intent(RequestMapActivity.this, DelegateActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-				startActivity(i);
-			} else onError(e);
-
-		}
 	}
 
 	@Override
