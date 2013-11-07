@@ -71,8 +71,6 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 	}
 
 	public void startPaypalActivity() {
-		fulfillRequest();
-		/*
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(PaymentActivity.EXTRA_CLIENT_ID, metadata.getString("com.paypal.sdk.CLIENT_ID"));
 		intent.putExtra(PaymentActivity.EXTRA_PAYPAL_ENVIRONMENT, metadata.getString("com.paypal.sdk.ENVIRONMENT"));
@@ -80,7 +78,6 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 		intent.putExtra(PaymentActivity.EXTRA_RECEIVER_EMAIL, pendingRequest.getVendor().getEmail());
 		intent.putExtra(PaymentActivity.EXTRA_PAYMENT, pendingRequest.getPaypalPayment());
 		startActivityForResult(intent, PAYPAL_PAYMENT_REQUEST_CODE);
-		*/
 	}
 
 	@Override
