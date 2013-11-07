@@ -46,7 +46,7 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 
 		ivCheck.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				finish();
+				returnToDelegateActivity();
 			}
 		});
 
@@ -117,7 +117,7 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 		if (!request.getObjectId().equals(pendingRequest.getObjectId()))
 			return;
 		if (!request.getState().equals(Request.State.PENDING))
-			finish();
+			returnToDelegateActivity();
 	}
 
 	public void fulfillRequest() {

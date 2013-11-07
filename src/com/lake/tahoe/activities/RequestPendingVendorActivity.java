@@ -24,7 +24,7 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 		ivCheck.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+				returnToDelegateActivity();
 			}
 		});
 
@@ -73,7 +73,7 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 					onError(e);
 				} else try {
 					RequestUpdateChannel.publish(RequestPendingVendorActivity.this, pendingRequest);
-					finish();
+					returnToDelegateActivity();
 				} catch (JSONException ex) {
 					onError(e);
 				}
