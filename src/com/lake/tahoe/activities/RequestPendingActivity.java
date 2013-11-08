@@ -2,7 +2,6 @@ package com.lake.tahoe.activities;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,12 +31,6 @@ public abstract class RequestPendingActivity extends Activity implements
 
 	protected ImageView ivCheck;
 	protected ImageView ivCancel;
-
-	protected void returnToDelegateActivity() {
-		Intent intent = new Intent(this, DelegateActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

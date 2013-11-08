@@ -3,11 +3,8 @@ package com.lake.tahoe.activities;
 import android.os.Bundle;
 import android.view.View;
 import com.lake.tahoe.R;
-import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
-import com.parse.ParseException;
-import com.parse.SaveCallback;
-import org.json.JSONException;
+import com.lake.tahoe.utils.AsyncStateUtil;
 
 /**
  * Created on 11/5/13.
@@ -22,19 +19,21 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 		super.onCreate(savedInstanceState);
 
 		ivCheck.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				returnToDelegateActivity();
+			@Override public void onClick(View v) {
+				startMapActivity();
 			}
 		});
 
 		ivCancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+			@Override public void onClick(View v) {
 				abortRequest();
 			}
 		});
 
+	}
+
+	public void startMapActivity() {
+		AsyncStateUtil.startActivity(this, RequestMapActivity.class);
 	}
 
 	@Override
@@ -67,18 +66,7 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 	public void abortRequest() {
 		pendingRequest.setVendor(null);
 		pendingRequest.setState(Request.State.OPEN);
-		pendingRequest.saveInBackground(new SaveCallback() {
-			@Override public void done(ParseException e) {
-				if (e != null) {
-					onError(e);
-				} else try {
-					RequestUpdateChannel.publish(RequestPendingVendorActivity.this, pendingRequest);
-					returnToDelegateActivity();
-				} catch (JSONException ex) {
-					onError(e);
-				}
-			}
-		});
+		AsyncStateUtil.saveAndStartActivity(pendingRequest, this, RequestMapActivity.class, this);
 	}
 
 }

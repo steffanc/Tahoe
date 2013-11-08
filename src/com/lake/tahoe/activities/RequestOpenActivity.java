@@ -15,10 +15,7 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
-import com.lake.tahoe.utils.MapUtil;
-import com.lake.tahoe.utils.PushUtil;
+import com.lake.tahoe.utils.*;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
@@ -27,6 +24,7 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 	GoogleMap map;
 	Marker marker;
 	IconGenerator iconGenerator;
+	DynamicActionBar actionBar;
 	boolean mapReadyToPan = false;
 	BroadcastReceiver subscription;
 	Request openRequest;
@@ -43,17 +41,8 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 			return;
 		}
 
-		DynamicActionBar actionBar = new DynamicActionBar(RequestOpenActivity.this, getResources().getColor(R.color.black));
-
+		actionBar = new DynamicActionBar(RequestOpenActivity.this, getResources().getColor(R.color.black));
 		actionBar.setTitle(getString(R.string.waiting_for_vendors));
-		actionBar.setXMarkVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent();
-				setResult(RESULT_CANCELED, i);
-				finish();
-			}
-		});
 
 		user.getUnfinishedRequest(this);
 	}
@@ -75,10 +64,10 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 	@Override
 	public void onModelFound(Request request) {
-		if (!request.getState().equals(Request.State.OPEN)) finish();
-		else {
+		if (!request.getState().equals(Request.State.OPEN))
+			finish();
+		else
 			onOpenRequest(request);
-		}
 	}
 
 	@Override
@@ -88,6 +77,16 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 	protected void onOpenRequest(Request request) {
 		openRequest = request;
+		actionBar.setCancelAction(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				cancelRequest();
+			}
+		});
+	}
+
+	public void cancelRequest() {
+		openRequest.setState(Request.State.CANCELLED);
+		AsyncStateUtil.saveAndStartActivity(openRequest, this, RequestCreateActivity.class, this);
 	}
 
 	@Override

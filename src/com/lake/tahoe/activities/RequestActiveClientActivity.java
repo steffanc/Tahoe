@@ -10,11 +10,7 @@ import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.PushUtil;
-import com.lake.tahoe.views.DynamicActionBar;
 
-/**
- * Created by steffan on 11/4/13.
- */
 public class RequestActiveClientActivity extends RequestActiveActivity implements ModelCallback<Request>, RequestUpdateChannel.HandlesRequestUpdates {
 
 	BroadcastReceiver subscription;
@@ -68,7 +64,6 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		User.getCurrentUser().getUnfinishedRequest(this);
-		bar = new DynamicActionBar(this, getResources().getColor(R.color.light_blue));
 	}
 
 	@Override
@@ -84,10 +79,13 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 		createViews(vendor);
 		createMapViews(vendor);
 
-		if (request.getVendor() == null)
+		if (request.getVendor() == null) {
 			onError(new IllegalStateException("Bad request with no vendor"));
-		else
-			bar.setTitle(request.getVendor().getName() + " to the rescue!");
+		} else {
+			String title = String.format(getString(R.string.to_the_rescue, request.getVendor().getName()));
+			getDynamicActionBar().setTitle(title);
+		}
+
 	}
 
 	@Override

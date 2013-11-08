@@ -15,80 +15,100 @@ import com.lake.tahoe.R;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.Currency;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
-import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.*;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import org.json.JSONException;
+
+import java.util.InputMismatchException;
 
 public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
 	GoogleMap map;
 	Marker marker;
 	Request request;
+	TextView title;
+	TextView amt;
+	TextView description;
 
 	public static final int NEW_REQUEST = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_create);
-		DynamicActionBar actionBar = new DynamicActionBar(RequestCreateActivity.this, getResources().getColor(R.color.black));
-		actionBar.setTitle("Create a Request");
-		actionBar.setCheckMarkVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createRequest();
+		DynamicActionBar actionBar = new DynamicActionBar(RequestCreateActivity.this);
 
+		amt = (TextView) findViewById(R.id.rewardText);
+		title = (TextView) findViewById(R.id.wantText);
+		description = (TextView) findViewById(R.id.anythingElseText);
+
+		actionBar.setTitle(getString(R.string.create_a_request));
+
+		actionBar.setAcceptAction(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				createRequest();
 			}
 		});
 
-		actionBar.setButtonText(User.Type.VENDOR.toString());
+		actionBar.setLeftAction(R.drawable.ic_action_vendor_mode, new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				convertToVendor();
+			}
+		});
 
+	}
+
+	private void convertToVendor() {
+		User user = User.getCurrentUser();
+		user.setType(User.Type.VENDOR);
+		AsyncStateUtil.saveAndStartActivity(user, this, RequestMapActivity.class, this);
 	}
 
 
 	public void createRequest() {
-		TextView title = (TextView) findViewById(R.id.wantText);
-		TextView amt = (TextView) findViewById(R.id.rewardText);
-		TextView description = (TextView) findViewById(R.id.anythingElseText);
 
-		request = new Request(Request.State.OPEN);
-		request.setTitle(title.getText().toString());
-		request.setDescription(description.getText().toString());
+		CharSequence titleText = title.getText();
+		CharSequence amtText = amt.getText();
 
-		String amtText = amt.getText().toString();
-
-		Float amount = Currency.getAmount(amtText);
-
-		if (amount > 0) {
-			request.setCents((int) (amount * 100));
+		if (titleText == null || amtText == null) {
+			onError(new InputMismatchException(getString(R.string.missing_required_fields)));
+			return;
 		}
 
-		User client = (User) ParseUser.getCurrentUser();
+		request = new Request(Request.State.OPEN);
+		request.setTitle(titleText.toString());
 
-		request.setClient(client);
+		int amount = (int) Currency.getAmount(amtText.toString());
+		if (amount > 0) request.setCents(amount * 100);
+
+		CharSequence descriptionText = amt.getText();
+		if (descriptionText != null)
+			request.setDescription(descriptionText.toString());
+
+		request.setClient(User.getCurrentUser());
 		request.saveEventually(new OnRequestCreated());
+
 	}
 
 	class OnRequestCreated extends SaveCallback {
-		@Override
-		public void done(ParseException e) {
-			//TODO: startRequestOpenActivity
-			if (e == null) {
-				try {
-					UserUpdateChannel.publish(RequestCreateActivity.this, User.getCurrentUser());
-				} catch (JSONException e1) {
-					onError(e1);
-				}
-				Intent i = new Intent(RequestCreateActivity.this, RequestOpenActivity.class);
-				startActivityForResult(i, NEW_REQUEST);
-			} else onError(e);
+		@Override public void done(ParseException e) {
+
+			if (e != null) {
+				onError(e);
+				return;
+			}
+
+			UserUpdateChannel.publish(
+				RequestCreateActivity.this,
+				User.getCurrentUser(),
+				RequestCreateActivity.this
+			);
+
+			Intent i = new Intent(RequestCreateActivity.this, RequestOpenActivity.class);
+			startActivityForResult(i, NEW_REQUEST);
 
 		}
 	}

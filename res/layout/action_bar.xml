@@ -1,75 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	tools:context=".views.DynamicActionBar">
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_centerInParent="true"
-		android:gravity="center"
-		android:id="@+id/leftSection">
-
-		<ImageView
+	<ImageView
+			android:id="@+id/ivLeft"
+			android:layout_marginLeft="5dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/navigation_previous_item"
-			android:id="@+id/leftArrow"
-			android:tag="@string/leftArrow"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/navigation_cancel"
-			android:tag="@string/xMark"
-			android:id="@+id/xMark"
-			android:visibility="gone"/>
-
-		<com.lake.tahoe.views.CustomButton
-			android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/userTypeButton"
-			android:visibility="gone"/>
-
-	</LinearLayout>
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true" />
 
 	<com.lake.tahoe.views.CustomTextView
-		android:id="@+id/actionBarHeadline"
-		style="@style/Header"
-		android:layout_toRightOf="@+id/leftSection"
-		android:layout_toLeftOf="@+id/rightSection"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:layout_width="fill_parent"
-		android:layout_centerInParent="true"/>
+			android:id="@+id/tvTitle"
+			style="@style/Header"
+			android:gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_centerInParent="true" />
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_centerInParent="true"
-		android:gravity="center"
-		android:id="@+id/rightSection">
-
-		<ImageView
+	<ImageView
+			android:id="@+id/ivRight"
+			android:layout_marginRight="5dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/navigation_accept"
-			android:id="@+id/checkMark"
-			android:tag="@string/checkMark"
-			android:visibility="gone"/>
+			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true" />
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/navigation_next_item"
-			android:id="@+id/rightArrow"
-			android:tag="@string/rightArrow"
-			android:visibility="gone"/>
-	</LinearLayout>
+
 
 </RelativeLayout>
