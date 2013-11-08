@@ -43,6 +43,7 @@
 		android:layout_toRightOf="@+id/leftSection"
 		android:layout_toLeftOf="@+id/rightSection"
 		android:layout_height="wrap_content"
+		android:gravity="center"
 		android:layout_width="fill_parent"
 		android:layout_centerInParent="true"/>
 
