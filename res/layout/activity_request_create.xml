@@ -29,7 +29,7 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/whats_the_reward"
 			android:inputType="number"
-			android:digits="0123456789."
+			android:digits="$0123456789."
 			android:id="@+id/rewardText"/>
 
 
