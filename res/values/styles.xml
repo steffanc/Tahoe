@@ -52,7 +52,7 @@
 		<item name="fontAssetName">Roboto/Roboto-Regular</item>
 	</style>
 
-	<style name="RobotoHeadline" parent="RobotoBold">
+	<style name="RobotoHeadline" parent="Roboto">
 		<item name="android:textColor">@color/white</item>
 	</style>
 
