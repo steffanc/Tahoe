@@ -2,10 +2,8 @@ package com.lake.tahoe.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -13,22 +11,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.AsyncStateUtil;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseException;
-import com.parse.SaveCallback;
 
-import org.json.JSONException;
-
-/**
- * Created by steffan on 11/3/13.
- */
 public class RequestDetailActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 	ProfilePictureView profilePictureView;
 	GoogleMap map;
@@ -43,45 +34,20 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_detail);
 
-		User user = User.getCurrentUser();
-
 		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		actionBar.setXMarkVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
+		actionBar.setCancelAction(AsyncStateUtil.finishOnClick(this));
+
+		actionBar.setAcceptAction(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				activateRequest();
 			}
 		});
+	}
 
-		actionBar.setCheckMarkVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d("debug", "Setting Request to Active");
-				request.setState(Request.State.ACTIVE);
-				request.setVendor(User.getCurrentUser());
-				request.saveEventually(new SaveCallback() {
-					@Override
-					public void done(ParseException e) {
-						if (e == null) {
-							try {
-								RequestUpdateChannel.publish(RequestDetailActivity.this, request);
-							} catch (JSONException e1) {
-								onError(e1);
-							}
-
-							Intent i = new Intent(
-									RequestDetailActivity.this,
-									RequestActiveVendorActivity.class
-							);
-							i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-							startActivity(i);
-						} else {
-							onError(e);
-						}
-					}
-				});
-			}
-		});
+	public void activateRequest() {
+		request.setState(Request.State.ACTIVE);
+		request.setVendor(User.getCurrentUser());
+		AsyncStateUtil.saveAndStartActivity(request, this, RequestActiveVendorActivity.class, this);
 	}
 
 	public void updateRequestDetail() {

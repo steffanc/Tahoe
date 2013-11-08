@@ -19,15 +19,22 @@ import com.lake.tahoe.widgets.SpeechBubble;
  * Created by steffan on 11/3/13.
  */
 public abstract class RequestActiveActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+
 	GoogleMap map;
-	DynamicActionBar bar;
+	DynamicActionBar actionBar;
 	ProfilePictureView profilePictureView;
 	IconGenerator iconGenerator = new IconGenerator(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.light_blue));
+		actionBar.setTitle(getString(R.string.loading_details));
 		setContentView(R.layout.activity_request_active);
+	}
+
+	protected DynamicActionBar getDynamicActionBar() {
+		return actionBar;
 	}
 
 	protected void createViews(User user) {

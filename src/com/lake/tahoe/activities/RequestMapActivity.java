@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -17,10 +16,7 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
-import com.lake.tahoe.utils.MapUtil;
-import com.lake.tahoe.utils.PushUtil;
+import com.lake.tahoe.utils.*;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseUser;
@@ -46,10 +42,21 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_map);
 
-		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
+		actionBar = new DynamicActionBar(this);
 		actionBar.setTitle(getResources().getString(R.string.select_client));
 
-		actionBar.setButtonText(User.Type.CLIENT.toString());
+		actionBar.setLeftAction(R.drawable.ic_action_client_mode, new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				convertToClient();
+			}
+		});
+
+	}
+
+	private void convertToClient() {
+		User user = User.getCurrentUser();
+		user.setType(User.Type.CLIENT);
+		AsyncStateUtil.saveAndStartActivity(user, this, RequestCreateActivity.class, this);
 	}
 
 	@Override
@@ -134,19 +141,13 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		}
 	}
 
-	// TODO probably move this up to the google location service parent class
-	//      ^ maybe make a subclass of GoogleLocationServiceActivity called GoogleMapActivity that encapsulates this
-	//        stuff. The GoogleLocationServiceActivity only tracks geo, which may not imply it has a map.
-	// TODO go through other markers and make them non blue when one is clicked
 	private class OnMarkerClick implements GoogleMap.OnMarkerClickListener {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
-			final Request request = markerRequestMap.get(marker);
 
-			if (request == null) {
-				Log.d("debug", "Ignoring tag since it's not in the Hash...must be clicking on You");
+			final Request request = markerRequestMap.get(marker);
+			if (request == null)
 				return true;
-			}
 
 			BitmapDescriptor bitmapDescriptor = SpeechBubble.generateMarkerBitmap(
 					iconGenerator,
@@ -157,10 +158,9 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 
 			actionBar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
 			actionBar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
-			actionBar.setRightArrowVisibility(View.VISIBLE, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					RequestMapActivity.this.launchDetailActivityIntent(request);
+			actionBar.setRightArrowAction(new View.OnClickListener() {
+				@Override public void onClick(View v) {
+					launchDetailActivityIntent(request);
 				}
 			});
 			return true;

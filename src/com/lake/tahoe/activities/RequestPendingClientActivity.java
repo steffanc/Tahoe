@@ -7,13 +7,13 @@ import android.view.View;
 import com.lake.tahoe.R;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
+import com.lake.tahoe.utils.AsyncStateUtil;
 import com.lake.tahoe.utils.ManifestReader;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
-import org.json.JSONException;
 
 import java.security.InvalidParameterException;
 
@@ -46,10 +46,14 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 
 		ivCheck.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				returnToDelegateActivity();
+				startCreateActivity();
 			}
 		});
 
+	}
+
+	public void startCreateActivity() {
+		AsyncStateUtil.startActivity(this, RequestCreateActivity.class);
 	}
 
 	@Override
@@ -117,7 +121,7 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 		if (!request.getObjectId().equals(pendingRequest.getObjectId()))
 			return;
 		if (!request.getState().equals(Request.State.PENDING))
-			returnToDelegateActivity();
+			AsyncStateUtil.startActivity(this, DelegateActivity.class);
 	}
 
 	public void fulfillRequest() {
@@ -125,19 +129,18 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 		pendingRequest.saveInBackground(new OnFulfilledRequest());
 	}
 
+	public void requestFulfilled() {
+		RequestUpdateChannel.publish(this, pendingRequest, this);
+		tvSurText.setText("");
+		ivCheck.setVisibility(View.VISIBLE);
+		tvPay.setVisibility(View.INVISIBLE);
+		tvSubText.setText("Payment Complete!");
+	}
+
 	class OnFulfilledRequest extends SaveCallback {
 		@Override public void done(ParseException e) {
-			if (e != null) {
-				onError(e);
-			} else try {
-				RequestUpdateChannel.publish(RequestPendingClientActivity.this, pendingRequest);
-				tvSurText.setText("");
-				ivCheck.setVisibility(View.VISIBLE);
-				tvPay.setVisibility(View.INVISIBLE);
-				tvSubText.setText("Payment Complete!");
-			} catch (JSONException e1) {
-				onError(e);
-			}
+			if (e == null) requestFulfilled();
+			else onError(e);
 		}
 	}
 

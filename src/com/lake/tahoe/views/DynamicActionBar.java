@@ -2,124 +2,72 @@ package com.lake.tahoe.views;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.lake.tahoe.R;
-
-/**
- * Created by rhu on 11/3/13.
- */
-
-// Inspired from https://github.com/johannilsson/android-actionbar/blob/master/actionbar/src/com/markupartist/android/widget/ActionBar.java
 
 public class DynamicActionBar {
 
+	TextView tvTitle;
+	ImageView ivLeft, ivRight;
 	ActionBar actionBar;
+	Activity activity;
 
-	String curTitle;
-	int curColorId;
+	public DynamicActionBar(Activity activity) {
+		this(activity, activity.getResources().getColor(R.color.black));
+	}
 
-	public DynamicActionBar(Activity activity, int colorId) {
-
-	/* Example usage:
-
-		DynamicActionBar bar = new DynamicActionBar(RequestCreateActivity.this, getResources().getColor(R.color.dark_blue));
-
-		bar.setTitle("Here we go");
-		bar.setLeftArrowVisibility(View.VISIBLE, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(RequestCreateActivity.this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
-			}
-		});
-
-	   Everything is invisible by default.  Explicitly set what you need.
-	 */
-
-		// http://stackoverflow.com/questions/12132370/is-there-any-difference-between-getlayoutinflater-and-getsystemservicecontex
-		LayoutInflater inflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final ViewGroup actionBarLayout = (ViewGroup) inflater.inflate(R.layout.action_bar, null);
-
-		actionBar = activity.getActionBar();
-		this.setBackgroundColor(colorId);
-
+	public DynamicActionBar(Activity activity, int colorResourceId) {
+		if ((actionBar = activity.getActionBar()) == null)
+			throw new UnsupportedOperationException("ActionBar is not supported on this platform");
+		this.activity = activity;
+		this.setBackgroundColor(colorResourceId);
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setCustomView(actionBarLayout);
+		actionBar.setCustomView(activity.getLayoutInflater().inflate(R.layout.action_bar, null));
+		ivLeft  = (ImageView) actionBar.getCustomView().findViewById(R.id.ivLeft);
+		ivRight = (ImageView) actionBar.getCustomView().findViewById(R.id.ivRight);
+		tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tvTitle);
 	}
 
-	public void setBackgroundColor(int colorId) {
-		this.curColorId = colorId;
-		actionBar.setBackgroundDrawable(new ColorDrawable(colorId));
+	public void setBackgroundColor(int colorResourceId) {
+		actionBar.setBackgroundDrawable(new ColorDrawable(colorResourceId));
 	}
 
-	public void setTitle(String headline) {
-
-		this.curTitle = headline;
-
-		if (headline == null) {
-			return;
-		}
-		TextView textView = (TextView) actionBar.getCustomView().findViewById(R.id.actionBarHeadline);
-		textView.setText(headline);
+	public void setTitle(String title) {
+		tvTitle.setText(title);
 	}
 
-	public void setCheckMarkVisibility(int visibility, View.OnClickListener handler) {
-		ImageView checkMark = (ImageView) actionBar.getCustomView().findViewById(R.id.checkMark);
-		this.setVisibility(checkMark, visibility);
-		this.setHandler(checkMark, visibility, handler);
+	public void setCancelAction(View.OnClickListener listener) {
+		setLeftAction(R.drawable.navigation_cancel, listener);
 	}
 
-	public void setXMarkVisibility(int visibility, View.OnClickListener handler) {
-		ImageView xMark = (ImageView) actionBar.getCustomView().findViewById(R.id.xMark);
-
-		this.setVisibility(xMark, visibility);
-		this.setHandler(xMark, visibility, handler);
+	public void setAcceptAction(View.OnClickListener listener) {
+		setRightAction(R.drawable.navigation_accept, listener);
 	}
 
-	public void setLeftArrowVisibility(int visibility, View.OnClickListener handler) {
-		ImageView leftArrow = (ImageView) actionBar.getCustomView().findViewById(R.id.leftArrow);
-
-		this.setVisibility(leftArrow, visibility);
-		this.setHandler(leftArrow, visibility, handler);
+	public void setLeftArrowAction(View.OnClickListener listener) {
+		setLeftAction(R.drawable.navigation_previous_item, listener);
 	}
 
-	public void setRightArrowVisibility(int visibility, View.OnClickListener handler) {
-
-		ImageView rightArrow = (ImageView) actionBar.getCustomView().findViewById(R.id.rightArrow);
-
-		this.setVisibility(rightArrow, visibility);
-		this.setHandler(rightArrow, visibility, handler);
+	public void setRightArrowAction(View.OnClickListener listener) {
+		setRightAction(R.drawable.navigation_next_item, listener);
 	}
 
-	public void setHandler(View view, int visibility, View.OnClickListener handler) {
-		if (handler != null && visibility == View.VISIBLE) {
-			view.setOnClickListener(handler);
-		}
+	public void setLeftAction(int drawableResourceId, View.OnClickListener listener) {
+		setAction(ivLeft, drawableResourceId, listener);
 	}
 
-	public void setVisibility(View view, int visibility) {
-		view.setVisibility(visibility);
+	public void setRightAction(int drawableResourceId, View.OnClickListener listener) {
+		setAction(ivRight, drawableResourceId, listener);
 	}
 
-	public void setButtonText(String text) {
-		CustomButton button = (CustomButton) actionBar.getCustomView().findViewById(R.id.userTypeButton);
-		button.setText(text);
-	}
-
-	public void setButtonVisibility(int visibility, View.OnClickListener handler) {
-
-		CustomButton button = (CustomButton) actionBar.getCustomView().findViewById(R.id.userTypeButton);
-
-		this.setVisibility(button, visibility);
-		this.setHandler(button, visibility, handler);
+	private void setAction(ImageView imageView, int drawableResourceId, View.OnClickListener listener) {
+		imageView.setImageDrawable(activity.getResources().getDrawable(drawableResourceId));
+		imageView.setOnClickListener(listener);
 	}
 
 }

@@ -5,6 +5,7 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.receivers.JsonDataReceiver;
+import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.PushUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,10 +57,15 @@ public class UserUpdateChannel implements
 		return PushUtil.subscribe(context, CHANNEL_NAME, new UserUpdateChannel(handler));
 	}
 
-	public static void publish(Context context, User user) throws JSONException {
-		JSONObject payload = new JSONObject();
-		payload.put(OBJECT_ID_KEY, user.getObjectId());
-		PushUtil.publish(context, CHANNEL_NAME, payload);
+	public static void publish(Context context, User user, HandlesErrors errorHandler) {
+		try {
+			JSONObject payload = new JSONObject();
+			payload.put(OBJECT_ID_KEY, user.getObjectId());
+			PushUtil.publish(context, CHANNEL_NAME, payload);
+		} catch (JSONException e) {
+			if (errorHandler!= null)
+				errorHandler.onError(e);
+		}
 	}
 
 }

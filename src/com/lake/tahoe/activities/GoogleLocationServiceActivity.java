@@ -13,7 +13,6 @@ import com.lake.tahoe.models.User;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.SaveCallback;
-import org.json.JSONException;
 
 /**
  * Only subclass this activity if you want to track the current geo to the user
@@ -84,17 +83,14 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 		user.setLocation(location.getLatitude(), location.getLongitude());
 		user.saveInBackground(new SaveCallback() {
 			@Override public void done(ParseException e) {
-				if (e != null) {
-					onLocationTrackingFailed(e);
-				} else try {
-					UserUpdateChannel.publish(GoogleLocationServiceActivity.this, user);
-				} catch (JSONException ex) {
-					onLocationTrackingFailed(ex);
-				}
+				if (e != null) onLocationTrackingFailed(e);
+				else UserUpdateChannel.publish(GoogleLocationServiceActivity.this, user, null);
 			}
 		});
 
 	}
+
+
 
 	@Override
 	public void onDisconnected() { }
