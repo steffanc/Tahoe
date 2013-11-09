@@ -13,10 +13,14 @@ import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.AsyncStateUtil;
 import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.ManifestReader;
-import com.parse.*;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 import java.util.Arrays;
 
@@ -70,22 +74,20 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 		@Override public void onCompleted(GraphUser graphUser, Response response) {
 			if (response.getError() != null)
 				onError(new FacebookException(response.getError().toString()));
-			if (graphUser != null) {
-				User currentUser = User.getCurrentUser();
-				currentUser.setFacebookId(graphUser.getId());
-				currentUser.setName(graphUser.getFirstName());
-				currentUser.setEmail((String) graphUser.getProperty("email"));
-				currentUser.setType(User.Type.CLIENT);
-				currentUser.saveEventually(new OnUserSaved());
-			}
+			if (graphUser != null)
+				applyGraphData(graphUser);
 		}
 	}
 
-	class OnUserSaved extends SaveCallback {
-		@Override public void done(ParseException e) {
-			if (e == null)  finish();
-			else onError(e);
-		}
+	private void applyGraphData(GraphUser graphUser) {
+		User currentUser = User.getCurrentUser();
+		currentUser.setFacebookId(graphUser.getId());
+		currentUser.setName(graphUser.getFirstName());
+		currentUser.setEmail((String) graphUser.getProperty("email"));
+		if (currentUser.getType().equals(User.Type.CLIENT))
+			AsyncStateUtil.saveAndStartActivity(currentUser, this, RequestCreateActivity.class, this);
+		else
+			AsyncStateUtil.saveAndStartActivity(currentUser, this, RequestMapActivity.class, this);
 	}
 
 	/**

@@ -60,7 +60,7 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 	public void showRequestComplete() {
 		ivCancel.setVisibility(View.INVISIBLE);
 		ivCheck.setVisibility(View.VISIBLE);
-		tvSubText.setText("Payment Received!");
+		tvSubText.setText(getString(R.string.payment_received));
 	}
 
 	public void abortRequest() {
