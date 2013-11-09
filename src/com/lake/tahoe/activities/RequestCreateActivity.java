@@ -1,9 +1,7 @@
 package com.lake.tahoe.activities;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,17 +10,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
-import com.lake.tahoe.channels.UserUpdateChannel;
+import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.Currency;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.CurrencyTextWatcher;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseException;
-import com.parse.SaveCallback;
 
 
 public class RequestCreateActivity extends GoogleLocationServiceActivity {
@@ -34,8 +30,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 	TextView amt;
 	TextView description;
 
-	public static final int NEW_REQUEST = 0;
-
 	DynamicActionBar actionBar;
 
 	@Override
@@ -43,6 +37,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_create);
+
 		actionBar = new DynamicActionBar(RequestCreateActivity.this);
 
 		amt = (TextView) findViewById(R.id.rewardText);
@@ -69,7 +64,12 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 	private void convertToVendor() {
 		User user = User.getCurrentUser();
 		user.setType(User.Type.VENDOR);
-		AsyncStateUtil.saveAndStartActivity(user, this, RequestMapActivity.class, this);
+		user.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				ActivityUtil.startRequestMapActivity(RequestCreateActivity.this);
+				ActivityUtil.transitionFade(RequestCreateActivity.this);
+			}
+		});
 	}
 
 
@@ -87,7 +87,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 		request = new Request(Request.State.OPEN);
 		request.setTitle(titleText.toString());
 
-		int amount = (int) Currency.getAmountInCents(amtText.toString());
+		int amount = Currency.getAmountInCents(amtText.toString());
 		if (amount > 0) request.setCents(amount);
 
 		CharSequence descriptionText = amt.getText();
@@ -95,38 +95,13 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 			request.setDescription(descriptionText.toString());
 
 		request.setClient(User.getCurrentUser());
-		request.saveEventually(new OnRequestCreated());
-
-	}
-
-	class OnRequestCreated extends SaveCallback {
-		@Override public void done(ParseException e) {
-
-			if (e != null) {
-				onError(e);
-				return;
+		request.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				ActivityUtil.startRequestOpenActivity(RequestCreateActivity.this);
+				ActivityUtil.transitionRight(RequestCreateActivity.this);
 			}
+		});
 
-			UserUpdateChannel.publish(
-				RequestCreateActivity.this,
-				User.getCurrentUser(),
-				RequestCreateActivity.this
-			);
-
-			Intent i = new Intent(RequestCreateActivity.this, RequestOpenActivity.class);
-			startActivityForResult(i, NEW_REQUEST);
-
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == NEW_REQUEST && resultCode == RESULT_CANCELED) {
-			Log.d("debug", "Cancelling the request");
-			request.setState(Request.State.CANCELLED);
-			request.saveEventually();
-		}
 	}
 
 	protected void onGooglePlayServicesReady() {

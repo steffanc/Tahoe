@@ -1,20 +1,21 @@
 package com.lake.tahoe.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.parse.ParseFacebookUtils;
 
-public class DelegateActivity extends Activity implements ModelCallback<Request> {
+public class DelegateActivity extends TahoeActivity implements ModelCallback<Request> {
 
 	User currentUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ActivityUtil.transitionFade(this);
 	}
 
 	@Override
@@ -27,7 +28,8 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 
 		// if not logged in, then redirect to the login activity
 		if (currentUser == null || !ParseFacebookUtils.isLinked(currentUser)) {
-			startLoginActivity();
+			ActivityUtil.startLoginActivity(this);
+			ActivityUtil.transitionFade(this);
 			return;
 		}
 
@@ -40,55 +42,21 @@ public class DelegateActivity extends Activity implements ModelCallback<Request>
 	public void onModelFound(Request request) {
 		if (request.getState().equals(Request.State.OPEN) && currentUser.getType().equals(User.Type.CLIENT))
 			// Only clients can see this activity
-			startRequestOpenActivity();
+			ActivityUtil.startRequestOpenActivity(this);
 		else if (request.getState().equals(Request.State.ACTIVE))
-			startRequestActiveActivity();
+			ActivityUtil.startRequestActiveActivity(this, currentUser);
 		else if (request.getState().equals(Request.State.PENDING))
-			startRequestPendingActivity();
+			ActivityUtil.startRequestPendingActivity(this, currentUser);
+		else
+			showMessage(getString(R.string.invalid_state));
+		ActivityUtil.transitionFade(this);
 	}
 
 	@Override
 	public void onModelError(Throwable t) {
 		// no request found, drop into first view
-		if (currentUser.getType().equals(User.Type.VENDOR))
-			startRequestMapActivity();
-		else
-			startRequestCreateActivity();
-	}
-
-	private void startRequestPendingActivity() {
-		//TODO Both clients and vendors can see a subclass of this activity
-		if (currentUser.getType().equals(User.Type.VENDOR))
-			startActivity(new Intent(this, RequestPendingVendorActivity.class));
-		else
-			startActivity(new Intent(this, RequestPendingClientActivity.class));
-	}
-
-	private void startRequestOpenActivity() {
-		//TODO Only clients can see this activity
-		startActivity(new Intent(this, RequestOpenActivity.class));
-	}
-
-	private void startRequestActiveActivity() {
-		//TODO Both clients and vendors can see a subclass of this activity
-		if (currentUser.getType().equals(User.Type.VENDOR)) {
-			startActivity(new Intent(this, RequestActiveVendorActivity.class));
-		} else {
-			startActivity(new Intent(this, RequestActiveClientActivity.class));
-		}
-
-	}
-
-	private void startRequestCreateActivity() {
-		startActivity(new Intent(this, RequestCreateActivity.class));
-	}
-
-	private void startRequestMapActivity() {
-		startActivity(new Intent(this, RequestMapActivity.class));
-	}
-
-	public void startLoginActivity() {
-		startActivity(new Intent(this, LoginActivity.class));
+		ActivityUtil.startFirstActivity(this, currentUser);
+		ActivityUtil.transitionFade(this);
 	}
 
 }

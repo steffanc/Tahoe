@@ -11,8 +11,9 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.lake.tahoe.R;
+import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.ManifestReader;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -77,14 +78,16 @@ public class LoginActivity extends TahoeActivity implements View.OnClickListener
 	}
 
 	private void applyGraphData(GraphUser graphUser) {
-		User currentUser = User.getCurrentUser();
+		final User currentUser = User.getCurrentUser();
 		currentUser.setFacebookId(graphUser.getId());
 		currentUser.setName(graphUser.getFirstName());
 		currentUser.setEmail((String) graphUser.getProperty("email"));
-		if (currentUser.getType().equals(User.Type.CLIENT))
-			AsyncStateUtil.saveAndStartActivity(currentUser, this, RequestCreateActivity.class, this);
-		else
-			AsyncStateUtil.saveAndStartActivity(currentUser, this, RequestMapActivity.class, this);
+		currentUser.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				ActivityUtil.startFirstActivity(LoginActivity.this, currentUser);
+				ActivityUtil.transitionFade(LoginActivity.this);
+			}
+		});
 	}
 
 	@Override

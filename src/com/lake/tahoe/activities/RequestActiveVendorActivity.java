@@ -3,9 +3,10 @@ package com.lake.tahoe.activities;
 import android.os.Bundle;
 import android.view.View;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 
 public class RequestActiveVendorActivity extends RequestActiveActivity implements ModelCallback<Request> {
 	Request request;
@@ -26,7 +27,11 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 		String title = String.format("%s | %s", request.getDisplayDollars(), request.getTitle());
 		getDynamicActionBar().setTitle(title);
 
-		getDynamicActionBar().setCancelAction(AsyncStateUtil.finishOnClick(this));
+		getDynamicActionBar().setCancelAction(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				finish();
+			}
+		});
 
 		getDynamicActionBar().setAcceptAction(new View.OnClickListener() {
 			@Override public void onClick(View v) {
@@ -35,9 +40,20 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 		});
 	}
 
+	@Override
+	public void finish() {
+		super.finish();
+		ActivityUtil.transitionRight(this);
+	}
+
 	public void completeRequest() {
 		request.setState(Request.State.PENDING);
-		AsyncStateUtil.saveAndStartActivity(request, this, RequestPendingVendorActivity.class, this);
+		request.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				ActivityUtil.startRequestPendingActivity(RequestActiveVendorActivity.this, User.getCurrentUser());
+				ActivityUtil.transitionFade(RequestActiveVendorActivity.this);
+			}
+		});
 	}
 
 	@Override

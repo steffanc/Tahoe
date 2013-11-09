@@ -1,11 +1,11 @@
 package com.lake.tahoe.channels;
 
 import android.content.Context;
+import com.lake.tahoe.activities.TahoeActivity;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.receivers.JsonDataReceiver;
-import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.PushUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,13 +57,13 @@ public class RequestUpdateChannel implements
 		return PushUtil.subscribe(context, CHANNEL_NAME, new RequestUpdateChannel(handler));
 	}
 
-	public static void publish(Context context, Request request, HandlesErrors errorHandler) {
+	public static void publish(Request request, TahoeActivity activity) {
 		try {
 			JSONObject payload = new JSONObject();
 			payload.put(OBJECT_ID_KEY, request.getObjectId());
-			PushUtil.publish(context, CHANNEL_NAME, payload);
+			PushUtil.publish(activity, CHANNEL_NAME, payload);
 		} catch (JSONException e) {
-			errorHandler.onError(e);
+			activity.onError(e);
 		}
 	}
 

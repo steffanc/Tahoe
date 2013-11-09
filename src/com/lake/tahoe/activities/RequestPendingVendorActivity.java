@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.Request;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 
 /**
  * Created on 11/5/13.
@@ -33,7 +33,8 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 	}
 
 	public void startMapActivity() {
-		AsyncStateUtil.startActivity(this, RequestMapActivity.class);
+		ActivityUtil.startRequestMapActivity(this);
+		ActivityUtil.transitionFade(this);
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 		if (request.getState().equals(Request.State.FULFILLED))
 			showRequestComplete();
 		else
-			onError(new IllegalStateException("Illegal Request State: " + request.getState().toString()));
+			onError(new IllegalStateException(request.getState().name()));
 	}
 
 	public void showRequestComplete() {
@@ -66,7 +67,7 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 	public void abortRequest() {
 		pendingRequest.setVendor(null);
 		pendingRequest.setState(Request.State.OPEN);
-		AsyncStateUtil.saveAndStartActivity(pendingRequest, this, RequestMapActivity.class, this);
+		startMapActivity();
 	}
 
 }

@@ -13,10 +13,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
@@ -35,9 +36,6 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
 	IconGenerator iconGenerator = new IconGenerator(this);
 	boolean mapReadyToPan = false;
-
-	final int DETAIL_REQUEST = 0;
-	public String REQUEST_ID = "requestId";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,26 +56,27 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	private void convertToClient() {
 		User user = User.getCurrentUser();
 		user.setType(User.Type.CLIENT);
-		AsyncStateUtil.saveAndStartActivity(user, this, RequestCreateActivity.class, this);
+		user.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				ActivityUtil.startRequestCreateActivity(RequestMapActivity.this);
+				ActivityUtil.transitionFade(RequestMapActivity.this);
+			}
+		});
 	}
 
 	@Override
 	public void onModelFound(Request request) {
-
-		if (request.getClient() == null) {
-			onError(new IllegalStateException("Request does not have a Client"));
-
-		} else {
-
-			Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(request.getClient(),
-					iconGenerator, SpeechBubble.ColorType.BLACK));
-			markerRequestMap.put(marker, request);
-		}
+		Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
+			request.getClient(),
+			iconGenerator,
+			SpeechBubble.ColorType.BLACK
+		));
+		markerRequestMap.put(marker, request);
 	}
 
 	@Override
 	public void onModelError(Throwable e) {
-		RequestMapActivity.this.onError(e);
+		onError(e);
 	}
 
 	@Override
@@ -161,19 +160,19 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 			actionBar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
 			actionBar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
 			actionBar.setRightArrowAction(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					launchDetailActivityIntent(request);
+				@Override public void onClick(View v) {
+					startRequestDetailActivity(request);
 				}
 			});
 			return true;
 		}
 	}
 
-	public void launchDetailActivityIntent(Request request) {
-		Intent i = new Intent(RequestMapActivity.this, RequestDetailActivity.class);
-		i.putExtra(REQUEST_ID, request.getObjectId());
-		startActivityForResult(i, DETAIL_REQUEST);
+	public void startRequestDetailActivity(Request request) {
+		Intent i = ActivityUtil.newIntent(this, RequestDetailActivity.class);
+		i.putExtra(RequestDetailActivity.REQUEST_ID, request.getObjectId());
+		startActivity(i);
+		ActivityUtil.transitionRight(this);
 	}
 
 	@Override
