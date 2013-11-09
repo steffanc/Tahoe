@@ -128,9 +128,11 @@ public class User extends ParseUser {
 	}
 
 	public void saveAndPublish(final TahoeActivity activity, final PublishedCallback callback) {
+		activity.showBlocker(true);
 		final User user = this;
 		this.saveInBackground(new SaveCallback() {
 			@Override public void done(ParseException e) {
+				activity.showBlocker(false);
 				UserUpdateChannel.publish(user, activity);
 				if (callback != null)
 					callback.onPublished();
