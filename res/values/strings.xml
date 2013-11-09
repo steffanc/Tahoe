@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Tahoe</string>
+	<string name="app_name">OddJob</string>
 	<string name="gps_dialog_title">Location Updates</string>
 	<string name="select_client">Select a Client</string>
 	<string name="what_you_want">What are you looking for\?</string>
