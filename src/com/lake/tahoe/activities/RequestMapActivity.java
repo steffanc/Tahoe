@@ -9,7 +9,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.handlers.UserUpdateChannel;
@@ -20,6 +19,7 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 
@@ -32,7 +32,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	Marker marker;
 	DynamicActionBar actionBar;
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
-	IconGenerator iconGenerator = new IconGenerator(this);
+	SpeechBubbleIconGenerator iconGenerator = new SpeechBubbleIconGenerator(this);
 	boolean mapReadyToPan = false;
 
 	@Override

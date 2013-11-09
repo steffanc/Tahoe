@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
@@ -18,13 +18,14 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 import com.parse.ParsePush;
 
 public class RequestDetailActivity extends GoogleLocationServiceActivity implements PushUtil.HandlesPublish {
 	ProfilePictureView profilePictureView;
 	GoogleMap map;
 	Request request;
-	IconGenerator iconGenerator = new IconGenerator(this);
+	SpeechBubbleIconGenerator iconGenerator = new SpeechBubbleIconGenerator(this);
 	DynamicActionBar actionBar;
 
 	public final static String REQUEST_ID = "requestId";

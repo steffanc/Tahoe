@@ -3,11 +3,11 @@ package com.lake.tahoe.activities;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.handlers.RequestUpdateChannel;
@@ -18,6 +18,7 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 import com.parse.ParsePush;
 
 public class RequestOpenActivity extends GoogleLocationServiceActivity implements
@@ -27,7 +28,7 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 	GoogleMap map;
 	Marker marker;
-	IconGenerator iconGenerator;
+	SpeechBubbleIconGenerator iconGenerator;
 	DynamicActionBar actionBar;
 	boolean mapReadyToPan = false;
 	Request openRequest;
@@ -126,7 +127,7 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
 
-		iconGenerator = new IconGenerator(RequestOpenActivity.this);
+		iconGenerator = new SpeechBubbleIconGenerator(RequestOpenActivity.this);
 
 		ModelCallback<User> markerFactoryCallback = new ModelCallback<User>() {
 
@@ -156,7 +157,7 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 			marker = map.addMarker(
 				MapUtil.getSpeechBubbleMarkerOptions(position,
 					getResources().getString(R.string.you),
-					iconGenerator, SpeechBubble.ColorType.PURPLE
+						iconGenerator, SpeechBubble.ColorType.PURPLE
 				));
 			MapUtil.panAndZoomToLocation(map, location, MapUtil.DEFAULT_ZOOM_LEVEL);
 		} else if (marker != null && !marker.getPosition().equals(position)) {
