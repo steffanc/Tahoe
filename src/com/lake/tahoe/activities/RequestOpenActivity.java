@@ -1,6 +1,5 @@
 package com.lake.tahoe.activities;
 
-import android.content.BroadcastReceiver;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +10,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.callbacks.PublishedCallback;
-import com.lake.tahoe.channels.RequestUpdateChannel;
+import com.lake.tahoe.handlers.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
@@ -20,16 +18,18 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParsePush;
 
 public class RequestOpenActivity extends GoogleLocationServiceActivity implements
-		RequestUpdateChannel.HandlesRequestUpdates, ModelCallback<Request> {
+		RequestUpdateChannel.HandlesRequestUpdates,
+		PushUtil.CanRegisterReciever, PushUtil.HandlesPublish,
+		ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
 	IconGenerator iconGenerator;
 	DynamicActionBar actionBar;
 	boolean mapReadyToPan = false;
-	BroadcastReceiver subscription;
 	Request openRequest;
 
 	@Override
@@ -48,16 +48,13 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 	@Override
 	protected void onStart() {
 		super.onStart();
-		subscription = RequestUpdateChannel.subscribe(this, this);
+		RequestUpdateChannel.subscribe(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (subscription != null) {
-			PushUtil.unsubscribe(this, subscription);
-			subscription = null;
-		}
+		RequestUpdateChannel.unsubscribe(this);
 	}
 
 	@Override
@@ -80,22 +77,22 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 	protected void onOpenRequest(Request request) {
 		openRequest = request;
 		actionBar.setCancelAction(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+			@Override public void onClick(View v) {
 				cancelRequest();
 			}
 		});
 	}
 
 	public void cancelRequest() {
-		PushUtil.unsubscribe(this, subscription);
-		subscription = null;
+		RequestUpdateChannel.unsubscribe(this);
 		openRequest.setState(Request.State.CANCELLED);
-		openRequest.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
-				finish();
-			}
-		});
+		toggleBlocker(true);
+		openRequest.saveAndPublish(this);
+	}
+
+	@Override
+	public void onPublished(ParsePush push) {
+		finish();
 	}
 
 	@Override

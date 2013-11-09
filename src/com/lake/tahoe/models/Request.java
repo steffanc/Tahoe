@@ -1,20 +1,17 @@
 package com.lake.tahoe.models;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.lake.tahoe.activities.TahoeActivity;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
-import com.lake.tahoe.callbacks.PublishedCallback;
-import com.lake.tahoe.channels.RequestUpdateChannel;
-import com.parse.*;
+import com.lake.tahoe.utils.PushUtil;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.paypal.android.sdk.payments.PayPalPayment;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-/**
- * Created by steffan on 10/21/13.
- */
 @ParseClassName("Request")
 public class Request extends ParseObject {
 
@@ -136,21 +133,12 @@ public class Request extends ParseObject {
 		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
 	}
 
-	public void saveAndPublish(final TahoeActivity activity, final PublishedCallback callback) {
-		final Request request = this;
-		activity.showBlocker(true);
-		this.saveInBackground(new SaveCallback() {
-			@Override public void done(ParseException e) {
-				activity.showBlocker(false);
-				RequestUpdateChannel.publish(request, activity);
-				if (callback != null)
-					callback.onPublished();
-			}
-		});
+	public void saveAndPublish(PushUtil.HandlesPublish handler) {
+		PushUtil.saveAndPublish(this, handler);
 	}
 
-	public void saveAndPublish(final TahoeActivity activity) {
-		saveAndPublish(activity, null);
+	public void saveAndPublish() {
+		PushUtil.saveAndPublish(this);
 	}
 
 }

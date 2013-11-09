@@ -3,12 +3,14 @@ package com.lake.tahoe.activities;
 import android.os.Bundle;
 import android.view.View;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
+import com.lake.tahoe.utils.PushUtil;
+import com.parse.ParsePush;
 
-public class RequestActiveVendorActivity extends RequestActiveActivity implements ModelCallback<Request> {
+public class RequestActiveVendorActivity extends RequestActiveActivity implements
+		ModelCallback<Request> {
 	Request request;
 
 	@Override
@@ -29,7 +31,7 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 
 		getDynamicActionBar().setCancelAction(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				finish();
+				abortRequest();
 			}
 		});
 
@@ -40,18 +42,36 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 		});
 	}
 
+	public void abortRequest() {
+		request.setVendor(null);
+		request.setState(Request.State.OPEN);
+		request.saveAndPublish(new PushUtil.HandlesPublish() {
+			@Override public void onPublished(ParsePush push) {
+				finish();
+			}
+			@Override public void onError(Throwable t) {
+				RequestActiveVendorActivity.this.onError(t);
+			}
+		});
+		finish();
+	}
+
 	@Override
 	public void finish() {
 		super.finish();
-		ActivityUtil.transitionRight(this);
+		ActivityUtil.transitionLeft(this);
 	}
 
 	public void completeRequest() {
+		toggleBlocker(true);
 		request.setState(Request.State.PENDING);
-		request.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
+		request.saveAndPublish(new PushUtil.HandlesPublish() {
+			@Override public void onPublished(ParsePush push) {
 				ActivityUtil.startRequestPendingActivity(RequestActiveVendorActivity.this, User.getCurrentUser());
 				ActivityUtil.transitionFade(RequestActiveVendorActivity.this);
+			}
+			@Override public void onError(Throwable t) {
+				RequestActiveVendorActivity.this.onError(t);
 			}
 		});
 	}

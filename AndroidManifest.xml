@@ -85,10 +85,6 @@
 			android:name="com.parse.API_KEY"
 			android:value="4VNTMfSQ7O8PRzyocxOBJxPvGAYapjrqFVpyCnrN" />
 
-		<meta-data
-			android:name="com.parse.REST_API_KEY"
-			android:value="wczlFkXofHP9lmL87QD1O7Uq2NbCKwe40qvBhQVH" />
-
 		<!-- http://stackoverflow.com/questions/2154945/how-to-force-a-meta-data-value-to-type-string -->
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"

@@ -11,15 +11,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParsePush;
 
-public class RequestDetailActivity extends GoogleLocationServiceActivity {
+public class RequestDetailActivity extends GoogleLocationServiceActivity implements PushUtil.HandlesPublish {
 	ProfilePictureView profilePictureView;
 	GoogleMap map;
 	Request request;
@@ -56,12 +57,14 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity {
 	public void activateRequest() {
 		request.setState(Request.State.ACTIVE);
 		request.setVendor(User.getCurrentUser());
-		request.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
-				ActivityUtil.startRequestActiveActivity(RequestDetailActivity.this, User.getCurrentUser());
-				ActivityUtil.transitionLeft(RequestDetailActivity.this);
-			}
-		});
+		toggleBlocker(true);
+		request.saveAndPublish(this);
+	}
+
+	@Override
+	public void onPublished(ParsePush push) {
+		ActivityUtil.startRequestActiveActivity(this, User.getCurrentUser());
+		ActivityUtil.transitionRight(this);
 	}
 
 	public void updateRequestDetail() {

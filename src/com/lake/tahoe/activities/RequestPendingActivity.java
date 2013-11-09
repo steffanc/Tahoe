@@ -1,16 +1,14 @@
 package com.lake.tahoe.activities;
 
-import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.channels.RequestUpdateChannel;
+import com.lake.tahoe.handlers.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
-import com.lake.tahoe.utils.PushUtil;
 
 /**
  * Created on 11/5/13.
@@ -18,8 +16,6 @@ import com.lake.tahoe.utils.PushUtil;
 public abstract class RequestPendingActivity extends TahoeActivity implements
 		RequestUpdateChannel.HandlesRequestUpdates,
 		ModelCallback<Request> {
-
-	BroadcastReceiver subscription;
 
 	protected TextView tvSurText;
 	protected TextView tvSubText;
@@ -52,16 +48,13 @@ public abstract class RequestPendingActivity extends TahoeActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		subscription = RequestUpdateChannel.subscribe(this, this);
+		RequestUpdateChannel.subscribe(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (subscription != null) {
-			PushUtil.unsubscribe(this, subscription);
-			subscription = null;
-		}
+		RequestUpdateChannel.unsubscribe(this);
 	}
 
 	@Override
