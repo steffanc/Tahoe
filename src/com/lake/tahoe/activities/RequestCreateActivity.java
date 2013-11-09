@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,13 +16,19 @@ import com.lake.tahoe.R;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.*;
+import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.Currency;
+import com.lake.tahoe.utils.ErrorUtil;
+import com.lake.tahoe.utils.HandlesErrors;
+import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.views.CurrencyTextWatcher;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
 import java.util.InputMismatchException;
+
 
 public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
 
@@ -34,16 +41,19 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 
 	public static final int NEW_REQUEST = 0;
 
+	DynamicActionBar actionBar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_create);
-		DynamicActionBar actionBar = new DynamicActionBar(RequestCreateActivity.this);
+		actionBar = new DynamicActionBar(RequestCreateActivity.this);
 
 		amt = (TextView) findViewById(R.id.rewardText);
 		title = (TextView) findViewById(R.id.wantText);
 		description = (TextView) findViewById(R.id.anythingElseText);
+		amt.addTextChangedListener(new CurrencyTextWatcher());
 
 		actionBar.setTitle(getString(R.string.create_a_request));
 
@@ -58,13 +68,15 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 				convertToVendor();
 			}
 		});
-
 	}
 
 	private void convertToVendor() {
 		User user = User.getCurrentUser();
 		user.setType(User.Type.VENDOR);
 		AsyncStateUtil.saveAndStartActivity(user, this, RequestMapActivity.class, this);
+
+		TextView amt = (TextView) findViewById(R.id.rewardText);
+		amt.addTextChangedListener(new CurrencyTextWatcher());
 	}
 
 
