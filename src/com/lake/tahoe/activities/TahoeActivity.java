@@ -18,7 +18,7 @@ public class TahoeActivity extends FragmentActivity implements HandlesErrors {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		blockerDialog = new BlockerDialog(this);
+		blockerDialog = new BlockerDialog(this, R.style.DialogBlocker);
 	}
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {

@@ -16,11 +16,14 @@ public class BlockerDialog extends Dialog {
 		super(ctx);
 	}
 
+	public BlockerDialog(Context ctx, int style) {
+		super(ctx, style);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_blocker); // progress dialog without text
 	}
-
 }
