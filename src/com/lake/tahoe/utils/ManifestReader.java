@@ -1,12 +1,9 @@
 package com.lake.tahoe.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * Created by rhu on 11/2/13.

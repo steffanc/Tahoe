@@ -1,12 +1,7 @@
 package com.lake.tahoe.utils;
 
-import com.parse.codec.binary.StringUtils;
-
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * Created by rhu on 11/3/13.

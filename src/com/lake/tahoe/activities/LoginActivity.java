@@ -1,6 +1,5 @@
 package com.lake.tahoe.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,8 +13,6 @@ import com.facebook.model.GraphUser;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.AsyncStateUtil;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.ManifestReader;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -26,7 +23,7 @@ import java.util.Arrays;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
-public class LoginActivity extends Activity implements HandlesErrors, View.OnClickListener {
+public class LoginActivity extends TahoeActivity implements View.OnClickListener {
 
 	View btnLogin, pbLoading;
 
@@ -90,14 +87,11 @@ public class LoginActivity extends Activity implements HandlesErrors, View.OnCli
 			AsyncStateUtil.saveAndStartActivity(currentUser, this, RequestMapActivity.class, this);
 	}
 
-	/**
-	 * TODO: Make this better. Show something on the login page
-	 */
 	@Override
 	public void onError(Throwable t) {
+		super.onError(t);
 		pbLoading.setVisibility(View.INVISIBLE);
 		btnLogin.setVisibility(View.VISIBLE);
-		ErrorUtil.log(this, t);
 	}
 
 }

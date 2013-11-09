@@ -19,4 +19,5 @@
 	<string name="create_a_request">Create a Request</string>
 	<string name="missing_required_fields">Please enter a title and amount for your request</string>
 	<string name="payment_received">Payment Received!</string>
+	<string name="error_format">Error: %s</string>
 </resources>

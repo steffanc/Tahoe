@@ -15,11 +15,14 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.*;
+import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
-public class RequestOpenActivity extends GoogleLocationServiceActivity implements HandlesErrors, RequestUpdateChannel.HandlesRequestUpdates, ModelCallback<Request> {
+public class RequestOpenActivity extends GoogleLocationServiceActivity implements
+		RequestUpdateChannel.HandlesRequestUpdates, ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
@@ -142,11 +145,6 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 		mapReadyToPan = true;
 
-	}
-
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
 	}
 
 	@Override

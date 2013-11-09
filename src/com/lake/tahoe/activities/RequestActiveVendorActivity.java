@@ -6,7 +6,6 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.AsyncStateUtil;
-import com.lake.tahoe.utils.ErrorUtil;
 
 public class RequestActiveVendorActivity extends RequestActiveActivity implements ModelCallback<Request> {
 	Request request;
@@ -54,11 +53,6 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 	@Override
 	protected void onLocationTrackingFailed(Throwable t) {
 		onError(t);
-	}
-
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
 	}
 
 }

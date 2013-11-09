@@ -48,15 +48,15 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".activities.LoginActivity" android:theme="@style/NoActionBar" />
+		<activity android:name=".activities.LoginActivity" android:theme="@style/NoActionBarActivity" />
 		<activity android:name=".activities.RequestCreateActivity" />
 		<activity android:name=".activities.RequestOpenActivity" />
 		<activity android:name=".activities.RequestMapActivity" />
 		<activity android:name=".activities.RequestDetailActivity" />
 		<activity android:name=".activities.RequestActiveVendorActivity" />
 		<activity android:name=".activities.RequestActiveClientActivity" />
-		<activity android:name=".activities.RequestPendingClientActivity" android:theme="@style/NoActionBar" />
-		<activity android:name=".activities.RequestPendingVendorActivity" android:theme="@style/NoActionBar" />
+		<activity android:name=".activities.RequestPendingClientActivity" android:theme="@style/NoActionBarActivity" />
+		<activity android:name=".activities.RequestPendingVendorActivity" android:theme="@style/NoActionBarActivity" />
 
 		<!-- external activities -->
 

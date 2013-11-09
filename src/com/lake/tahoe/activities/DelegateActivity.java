@@ -3,7 +3,6 @@ package com.lake.tahoe.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;

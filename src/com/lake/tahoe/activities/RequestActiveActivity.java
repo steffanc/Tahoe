@@ -9,8 +9,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
@@ -18,7 +16,7 @@ import com.lake.tahoe.widgets.SpeechBubble;
 /**
  * Created by steffan on 11/3/13.
  */
-public abstract class RequestActiveActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+public abstract class RequestActiveActivity extends GoogleLocationServiceActivity {
 
 	GoogleMap map;
 	DynamicActionBar actionBar;
@@ -76,9 +74,5 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 		onError(t);
 	}
 
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
-	}
 }
 
