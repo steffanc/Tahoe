@@ -11,29 +11,26 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.lake.tahoe.R;
-import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.ManifestReader;
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
+import com.lake.tahoe.utils.PushUtil;
+import com.parse.*;
 
 import java.util.Arrays;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
-public class LoginActivity extends TahoeActivity implements View.OnClickListener {
+public class LoginActivity extends TahoeActivity implements
+		View.OnClickListener, PushUtil.HandlesPublish {
 
-	View btnLogin, pbLoading;
+	View btnLogin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		btnLogin = findViewById(R.id.btnLogin);
-		pbLoading = findViewById(R.id.pbLoading);
 		btnLogin.setOnClickListener(this);
 		animate(btnLogin).alpha(1).setStartDelay(1500).setDuration(1000).setInterpolator(new AccelerateInterpolator()).start();
 		animate(findViewById(R.id.tvOdd)).translationYBy(160).setDuration(1300).setInterpolator(new OvershootInterpolator()).start();
@@ -43,15 +40,15 @@ public class LoginActivity extends TahoeActivity implements View.OnClickListener
 
 	@Override
 	public void onClick(View v) {
-		// TODO: Show a spinner, or at least disable the button. Right now it hangs out for a bit when the user returns.
+		toggleBlocker(true);
 		String fbPermissions = (String) ManifestReader.getPackageMetaData(getApplicationContext(), "com.facebook.sdk.PERMISSIONS");
 		ParseFacebookUtils.logIn(Arrays.asList(fbPermissions.split(",")), this, new OnLogIn());
-		pbLoading.setVisibility(View.VISIBLE);
 		btnLogin.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		toggleBlocker(true);
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -82,18 +79,19 @@ public class LoginActivity extends TahoeActivity implements View.OnClickListener
 		currentUser.setFacebookId(graphUser.getId());
 		currentUser.setName(graphUser.getFirstName());
 		currentUser.setEmail((String) graphUser.getProperty("email"));
-		currentUser.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
-				ActivityUtil.startFirstActivity(LoginActivity.this, currentUser);
-				ActivityUtil.transitionFade(LoginActivity.this);
-			}
-		});
+		PushUtil.saveAndPublish(currentUser, this);
+	}
+
+	@Override
+	public void onPublished(ParsePush push) {
+		ActivityUtil.startFirstActivity(this, User.getCurrentUser());
+		ActivityUtil.transitionFade(this);
 	}
 
 	@Override
 	public void onError(Throwable t) {
 		super.onError(t);
-		pbLoading.setVisibility(View.INVISIBLE);
+		toggleBlocker(false);
 		btnLogin.setVisibility(View.VISIBLE);
 	}
 

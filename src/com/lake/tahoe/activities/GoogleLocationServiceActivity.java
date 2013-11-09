@@ -78,7 +78,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 				return;
 
 		user.setLocation(location.getLatitude(), location.getLongitude());
-		user.saveAndPublish(this);
+		user.saveAndPublish();
 
 	}
 

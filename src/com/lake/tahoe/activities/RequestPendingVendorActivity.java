@@ -5,11 +5,13 @@ import android.view.View;
 import com.lake.tahoe.R;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.utils.ActivityUtil;
+import com.lake.tahoe.utils.PushUtil;
+import com.parse.ParsePush;
 
 /**
  * Created on 11/5/13.
  */
-public class RequestPendingVendorActivity extends RequestPendingActivity {
+public class RequestPendingVendorActivity extends RequestPendingActivity implements PushUtil.HandlesPublish {
 
 	Request pendingRequest;
 
@@ -67,7 +69,12 @@ public class RequestPendingVendorActivity extends RequestPendingActivity {
 	public void abortRequest() {
 		pendingRequest.setVendor(null);
 		pendingRequest.setState(Request.State.OPEN);
-		startMapActivity();
+		pendingRequest.saveAndPublish(this);
 	}
 
+	@Override
+	public void onPublished(ParsePush push) {
+		ActivityUtil.startRequestOpenActivity(this);
+		ActivityUtil.transitionLeft(this);
+	}
 }

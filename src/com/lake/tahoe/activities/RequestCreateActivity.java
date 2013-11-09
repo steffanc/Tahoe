@@ -10,15 +10,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
-import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.Currency;
 import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.CurrencyTextWatcher;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParsePush;
 
 
 public class RequestCreateActivity extends GoogleLocationServiceActivity {
@@ -64,14 +65,17 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 	private void convertToVendor() {
 		User user = User.getCurrentUser();
 		user.setType(User.Type.VENDOR);
-		user.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
+		toggleBlocker(true);
+		user.saveAndPublish(new PushUtil.HandlesPublish() {
+			@Override public void onPublished(ParsePush push) {
 				ActivityUtil.startRequestMapActivity(RequestCreateActivity.this);
 				ActivityUtil.transitionFade(RequestCreateActivity.this);
 			}
+			@Override public void onError(Throwable t) {
+				RequestCreateActivity.this.onError(t);
+			}
 		});
 	}
-
 
 	public void createRequest() {
 
@@ -95,10 +99,14 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 			request.setDescription(descriptionText.toString());
 
 		request.setClient(User.getCurrentUser());
-		request.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
+		toggleBlocker(true);
+		request.saveAndPublish(new PushUtil.HandlesPublish() {
+			@Override public void onPublished(ParsePush push) {
 				ActivityUtil.startRequestOpenActivity(RequestCreateActivity.this);
 				ActivityUtil.transitionRight(RequestCreateActivity.this);
+			}
+			@Override public void onError(Throwable t) {
+				RequestCreateActivity.this.onError(t);
 			}
 		});
 

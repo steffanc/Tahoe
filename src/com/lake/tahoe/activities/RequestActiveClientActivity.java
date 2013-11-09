@@ -1,20 +1,17 @@
 package com.lake.tahoe.activities;
 
-import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.channels.RequestUpdateChannel;
+import com.lake.tahoe.handlers.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
-import com.lake.tahoe.utils.PushUtil;
 
 public class RequestActiveClientActivity extends RequestActiveActivity implements
 		ModelCallback<Request>,
 		RequestUpdateChannel.HandlesRequestUpdates {
 
-	BroadcastReceiver subscription;
 	Request currentRequest;
 
 	@Override
@@ -49,16 +46,13 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 	@Override
 	protected void onStart() {
 		super.onStart();
-		subscription = RequestUpdateChannel.subscribe(this, this);
+		RequestUpdateChannel.subscribe(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (subscription != null) {
-			PushUtil.unsubscribe(this, subscription);
-			subscription = null;
-		}
+		RequestUpdateChannel.unsubscribe(this);
 	}
 
 	@Override

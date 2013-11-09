@@ -1,6 +1,5 @@
 package com.lake.tahoe.activities;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,8 +12,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
-import com.lake.tahoe.callbacks.PublishedCallback;
-import com.lake.tahoe.channels.UserUpdateChannel;
+import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
@@ -22,17 +20,17 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
 
 import java.util.HashMap;
 
 public class RequestMapActivity extends GoogleLocationServiceActivity implements
-		UserUpdateChannel.HandlesUserUpdates, ModelCallback<Request> {
+		UserUpdateChannel.HandlesUserUpdates, PushUtil.HandlesPublish, ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
 	DynamicActionBar actionBar;
-	BroadcastReceiver subscription;
 	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
 	IconGenerator iconGenerator = new IconGenerator(this);
 	boolean mapReadyToPan = false;
@@ -56,12 +54,14 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	private void convertToClient() {
 		User user = User.getCurrentUser();
 		user.setType(User.Type.CLIENT);
-		user.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
-				ActivityUtil.startRequestCreateActivity(RequestMapActivity.this);
-				ActivityUtil.transitionFade(RequestMapActivity.this);
-			}
-		});
+		toggleBlocker(true);
+		user.saveAndPublish(this);
+	}
+
+	@Override
+	public void onPublished(ParsePush push) {
+		ActivityUtil.startRequestCreateActivity(this);
+		ActivityUtil.transitionFade(this);
 	}
 
 	@Override
@@ -82,16 +82,13 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		subscription = UserUpdateChannel.subscribe(this, this);
+		UserUpdateChannel.subscribe(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (subscription != null) {
-			PushUtil.unsubscribe(this, subscription);
-			subscription = null;
-		}
+		UserUpdateChannel.unsubscribe(this);
 	}
 
 	@Override

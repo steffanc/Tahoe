@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.lake.tahoe.R;
-import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.ManifestReader;
+import com.lake.tahoe.utils.PushUtil;
+import com.parse.ParsePush;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
@@ -18,7 +19,7 @@ import java.security.InvalidParameterException;
 /**
  * Created on 11/5/13.
  */
-public class RequestPendingClientActivity extends RequestPendingActivity {
+public class RequestPendingClientActivity extends RequestPendingActivity implements PushUtil.HandlesPublish {
 
 	private static final int PAYPAL_PAYMENT_REQUEST_CODE = 12345;
 
@@ -130,11 +131,13 @@ public class RequestPendingClientActivity extends RequestPendingActivity {
 
 	public void fulfillRequest() {
 		pendingRequest.setState(Request.State.FULFILLED);
-		pendingRequest.saveAndPublish(this, new PublishedCallback() {
-			@Override public void onPublished() {
-				requestFulfilled();
-			}
-		});
+		toggleBlocker(true);
+		pendingRequest.saveAndPublish(this);
+	}
+
+	@Override
+	public void onPublished(ParsePush push) {
+		requestFulfilled();
 	}
 
 	public void requestFulfilled() {

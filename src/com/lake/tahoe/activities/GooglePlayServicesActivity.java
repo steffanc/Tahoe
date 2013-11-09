@@ -1,5 +1,6 @@
 package com.lake.tahoe.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -32,12 +33,20 @@ public abstract class GooglePlayServicesActivity extends TahoeActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == GOOGLE_PLAY_SERVICES_REQUEST_CODE) {
-			if (resultCode == Activity.RESULT_OK) onGooglePlayServicesReady();
-			else onGooglePlayServicesError(new GooglePlayServicesNotAvailableException(resultCode));
+			if (resultCode == Activity.RESULT_OK) {
+				ActionBar bar = getActionBar();
+				if (bar != null) bar.show();
+				onGooglePlayServicesReady();
+			} else {
+				onGooglePlayServicesError(new GooglePlayServicesNotAvailableException(resultCode));
+			}
 		}
 	}
 
 	protected void spawnGooglePlayDialog(int resultCode) {
+
+		ActionBar bar = getActionBar();
+		if (bar != null) bar.hide();
 
 		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
 			resultCode, this, GOOGLE_PLAY_SERVICES_REQUEST_CODE

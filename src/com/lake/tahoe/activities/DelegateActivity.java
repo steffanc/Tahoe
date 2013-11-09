@@ -22,6 +22,7 @@ public class DelegateActivity extends TahoeActivity implements ModelCallback<Req
 	protected void onResume() {
 
 		super.onResume();
+		toggleBlocker(true);
 
 		// check if user is logged in
 		currentUser = User.getCurrentUser();

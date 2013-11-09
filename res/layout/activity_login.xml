@@ -30,14 +30,6 @@
 
 	</LinearLayout>
 
-	<ProgressBar
-		android:id="@+id/pbLoading"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:layout_centerInParent="true"
-		android:indeterminate="true"
-		android:visibility="invisible" />
-
 	<com.facebook.widget.LoginButton
 			android:id="@+id/btnLogin"
 			android:layout_width="wrap_content"
