@@ -8,7 +8,7 @@
 	<string name="anything_else">Anything else\?</string>
 	<string name="you_owe">You Owe %s</string>
 	<string name="to_the_rescue">%s to the rescue!</string>
-	<string name="proceed_to_payment">Proceed To Payment </string>
+	<string name="proceed_to_payment">Proceed To Payment</string>
 	<string name="waiting_for_payment">Waiting For Payment</string>
 	<string name="create_request">Creating a Request</string>
 	<string name="waiting_for_vendors">Waiting for Vendors</string>
@@ -18,4 +18,5 @@
 	<string name="loading_details">Loading Details…</string>
 	<string name="create_a_request">Create a Request</string>
 	<string name="missing_required_fields">Please enter a title and amount for your request</string>
+	<string name="payment_received">Payment Received!</string>
 </resources>

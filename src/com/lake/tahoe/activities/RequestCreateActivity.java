@@ -82,7 +82,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		CharSequence titleText = title.getText();
 		CharSequence amtText = amt.getText();
 
-		if (titleText == null || amtText == null) {
+		if (titleText == null || amtText == null ||
+				titleText.toString().equals("") || amtText.toString().equals("")) {
 			onError(new InputMismatchException(getString(R.string.missing_required_fields)));
 			return;
 		}

@@ -1,7 +1,7 @@
-Tahoe
+OddJob
 =====
 
-Tahoe real time marketplace for Android
+For the things that need doing, and the people that can help.
 
 Setup instructions
 ------------------
