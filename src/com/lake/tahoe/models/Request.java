@@ -138,8 +138,10 @@ public class Request extends ParseObject {
 
 	public void saveAndPublish(final TahoeActivity activity, final PublishedCallback callback) {
 		final Request request = this;
+		activity.showBlocker(true);
 		this.saveInBackground(new SaveCallback() {
 			@Override public void done(ParseException e) {
+				activity.showBlocker(false);
 				RequestUpdateChannel.publish(request, activity);
 				if (callback != null)
 					callback.onPublished();

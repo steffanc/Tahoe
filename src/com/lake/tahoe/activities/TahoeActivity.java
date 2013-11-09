@@ -3,15 +3,23 @@ package com.lake.tahoe.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+
 import com.lake.tahoe.R;
+import com.lake.tahoe.dialogs.BlockerDialog;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.HandlesErrors;
+
 import net.simonvt.messagebar.MessageBar;
 
 public class TahoeActivity extends FragmentActivity implements HandlesErrors {
 
 	private MessageBar messageBar;
+	BlockerDialog blockerDialog;
 
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		blockerDialog = new BlockerDialog(this);
+	}
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		messageBar = new MessageBar(this);
@@ -20,6 +28,13 @@ public class TahoeActivity extends FragmentActivity implements HandlesErrors {
 
 	public void showMessage(String message) {
 		messageBar.show(message);
+	}
+
+	public void showBlocker(boolean show) {
+		if (show)
+			blockerDialog.show();
+		else
+			blockerDialog.hide();
 	}
 
 	@Override
