@@ -1,13 +1,13 @@
 package com.lake.tahoe.activities;
 
 import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.os.Bundle;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.PushUtil;
 
 public class RequestActiveClientActivity extends RequestActiveActivity implements
@@ -31,14 +31,14 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 
 		if (request.getState().equals(Request.State.PENDING))
 			startPendingActivity();
+		else
+			onError(new IllegalStateException(request.getState().name()));
 
 	}
 
 	protected void startPendingActivity() {
-		Intent i = new Intent(RequestActiveClientActivity.this, RequestPendingClientActivity.class);
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(i);
+		ActivityUtil.startRequestPendingActivity(this, User.getCurrentUser());
+		ActivityUtil.transitionFade(this);
 	}
 
 	@Override
@@ -71,7 +71,8 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 	public void onModelFound(final Request request) {
 
 		if (request == null || !request.getState().equals(Request.State.ACTIVE)) {
-			finish();
+			ActivityUtil.startDelegateActivity(this);
+			ActivityUtil.transitionFade(this);
 			return;
 		}
 

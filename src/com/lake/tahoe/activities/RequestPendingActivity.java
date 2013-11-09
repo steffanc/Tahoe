@@ -9,6 +9,7 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.PushUtil;
 
 /**
@@ -35,10 +36,6 @@ public abstract class RequestPendingActivity extends TahoeActivity implements
 		setContentView(R.layout.activity_request_pending);
 
 		User user = User.getCurrentUser();
-		if (user == null) {
-			finish();
-			return;
-		}
 
 		tvPay     = (TextView) findViewById(R.id.tvPay);
 		tvSubText = (TextView) findViewById(R.id.tvSubText);
@@ -73,9 +70,16 @@ public abstract class RequestPendingActivity extends TahoeActivity implements
 	}
 
 	@Override
+	public void finish() {
+		super.finish();
+		ActivityUtil.transitionFade(this);
+	}
+
+	@Override
 	public void onModelFound(Request request) {
-		if (!request.getState().equals(Request.State.PENDING)) finish();
-		else {
+		if (!request.getState().equals(Request.State.PENDING)) {
+			finish();
+		} else {
 			tvDollars.setText(request.getDisplayDollars());
 			onPendingRequest(request);
 		}
@@ -83,7 +87,7 @@ public abstract class RequestPendingActivity extends TahoeActivity implements
 
 	@Override
 	public void onModelError(Throwable t) {
-		finish();
+		onError(t);
 	}
 
 	protected abstract void onPendingRequest(Request request);

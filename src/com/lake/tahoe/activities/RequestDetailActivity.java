@@ -11,9 +11,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
@@ -25,7 +26,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity {
 	IconGenerator iconGenerator = new IconGenerator(this);
 	DynamicActionBar actionBar;
 
-	public static String REQUEST_ID = "requestId";
+	public final static String REQUEST_ID = "requestId";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,11 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity {
 		setContentView(R.layout.activity_request_detail);
 
 		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		actionBar.setCancelAction(AsyncStateUtil.finishOnClick(this));
+		actionBar.setCancelAction(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				finish();
+			}
+		});
 
 		actionBar.setAcceptAction(new View.OnClickListener() {
 			@Override public void onClick(View v) {
@@ -42,10 +47,21 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity {
 		});
 	}
 
+	@Override
+	public void finish() {
+		super.finish();
+		ActivityUtil.transitionLeft(this);
+	}
+
 	public void activateRequest() {
 		request.setState(Request.State.ACTIVE);
 		request.setVendor(User.getCurrentUser());
-		AsyncStateUtil.saveAndStartActivity(request, this, RequestActiveVendorActivity.class, this);
+		request.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				ActivityUtil.startRequestActiveActivity(RequestDetailActivity.this, User.getCurrentUser());
+				ActivityUtil.transitionLeft(RequestDetailActivity.this);
+			}
+		});
 	}
 
 	public void updateRequestDetail() {
@@ -85,16 +101,15 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity {
 		String requestId = i.getStringExtra(REQUEST_ID);
 		Request.getByObjectId(requestId, new ModelCallback<Request>() {
 
-			@Override
-			public void onModelFound(Request req) {
+			@Override public void onModelFound(Request req) {
 				request = req;
 				RequestDetailActivity.this.updateRequestDetail();
 			}
 
-			@Override
-			public void onModelError(Throwable e) {
-				RequestDetailActivity.this.onError(e);
+			@Override public void onModelError(Throwable e) {
+				onError(e);
 			}
+
 		});
 	}
 

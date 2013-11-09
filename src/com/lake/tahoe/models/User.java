@@ -1,13 +1,13 @@
 package com.lake.tahoe.models;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.lake.tahoe.activities.TahoeActivity;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelFindCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
-import com.parse.ParseClassName;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.lake.tahoe.callbacks.PublishedCallback;
+import com.lake.tahoe.channels.UserUpdateChannel;
+import com.parse.*;
 
 import java.util.ArrayList;
 
@@ -126,4 +126,20 @@ public class User extends ParseUser {
 
 		query.findInBackground(new ModelFindCallback<Request>(callback));
 	}
+
+	public void saveAndPublish(final TahoeActivity activity, final PublishedCallback callback) {
+		final User user = this;
+		this.saveInBackground(new SaveCallback() {
+			@Override public void done(ParseException e) {
+				UserUpdateChannel.publish(user, activity);
+				if (callback != null)
+					callback.onPublished();
+			}
+		});
+	}
+
+	public void saveAndPublish(final TahoeActivity activity) {
+		saveAndPublish(activity, null);
+	}
+
 }

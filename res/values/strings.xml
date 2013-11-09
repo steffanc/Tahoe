@@ -20,4 +20,6 @@
 	<string name="missing_required_fields">Please enter a title and amount for your request</string>
 	<string name="payment_received">Payment Received!</string>
 	<string name="error_format">Error: %s</string>
+	<string name="payment_complete">Payment Complete!</string>
+	<string name="invalid_state">Invalid State, Please Reload</string>
 </resources>

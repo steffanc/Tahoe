@@ -8,11 +8,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.User;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.SaveCallback;
 
 /**
  * Only subclass this activity if you want to track the current geo to the user
@@ -81,12 +78,7 @@ public abstract class GoogleLocationServiceActivity extends GooglePlayServicesAc
 				return;
 
 		user.setLocation(location.getLatitude(), location.getLongitude());
-		user.saveInBackground(new SaveCallback() {
-			@Override public void done(ParseException e) {
-				if (e != null) onLocationTrackingFailed(e);
-				else UserUpdateChannel.publish(GoogleLocationServiceActivity.this, user, null);
-			}
-		});
+		user.saveAndPublish(this);
 
 	}
 

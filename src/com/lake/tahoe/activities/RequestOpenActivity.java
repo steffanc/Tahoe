@@ -1,7 +1,6 @@
 package com.lake.tahoe.activities;
 
 import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +11,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.PublishedCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
@@ -39,11 +39,6 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 		User user = User.getCurrentUser();
 
-		if (user == null) {
-			finish();
-			return;
-		}
-
 		actionBar = new DynamicActionBar(RequestOpenActivity.this, getResources().getColor(R.color.black));
 		actionBar.setTitle(getString(R.string.waiting_for_vendors));
 
@@ -66,30 +61,41 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 	}
 
 	@Override
+	public void finish() {
+		super.finish();
+		ActivityUtil.transitionLeft(this);
+	}
+
+	@Override
 	public void onModelFound(Request request) {
-		if (!request.getState().equals(Request.State.OPEN))
-			finish();
-		else
-			onOpenRequest(request);
+		if (!request.getState().equals(Request.State.OPEN)) finish();
+		else onOpenRequest(request);
 	}
 
 	@Override
 	public void onModelError(Throwable t) {
-		finish();
+		onError(t);
 	}
 
 	protected void onOpenRequest(Request request) {
 		openRequest = request;
 		actionBar.setCancelAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 				cancelRequest();
 			}
 		});
 	}
 
 	public void cancelRequest() {
+		PushUtil.unsubscribe(this, subscription);
+		subscription = null;
 		openRequest.setState(Request.State.CANCELLED);
-		AsyncStateUtil.saveAndStartActivity(openRequest, this, RequestCreateActivity.class, this);
+		openRequest.saveAndPublish(this, new PublishedCallback() {
+			@Override public void onPublished() {
+				finish();
+			}
+		});
 	}
 
 	@Override
@@ -106,17 +112,15 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 		if (request.getState().equals(Request.State.OPEN))
 			return;
 
-		if (request.getState().equals(Request.State.ACTIVE)) {
+		if (request.getState().equals(Request.State.ACTIVE))
 			startRequestActiveActivity();
-		}
-		else {
-			onError(new IllegalStateException("Illegal Request State: " + request.getState().toString()));
-		}
+		else
+			onError(new IllegalStateException(request.getState().name()));
 	}
 
 	protected void startRequestActiveActivity() {
-		Intent i = new Intent(RequestOpenActivity.this, RequestActiveClientActivity.class);
-		startActivity(i);
+		ActivityUtil.startRequestActiveActivity(this, User.getCurrentUser());
+		ActivityUtil.transitionFade(this);
 	}
 
 	protected void onGooglePlayServicesReady() {
@@ -129,16 +133,15 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 		ModelCallback<User> markerFactoryCallback = new ModelCallback<User>() {
 
-			@Override
-			public void onModelFound(User user) {
+			@Override public void onModelFound(User user) {
 				map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(user.getGoogleMapsLocation(),
 						user.getName(), iconGenerator, SpeechBubble.ColorType.BLACK));
 			}
 
-			@Override
-			public void onModelError(Throwable e) {
-				RequestOpenActivity.this.onError(e);
+			@Override public void onModelError(Throwable e) {
+				onError(e);
 			}
+
 		};
 
 		User.getCurrentUser().findOthersByType(User.Type.VENDOR, markerFactoryCallback);

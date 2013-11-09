@@ -13,9 +13,6 @@ import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
-/**
- * Created by steffan on 11/3/13.
- */
 public abstract class RequestActiveActivity extends GoogleLocationServiceActivity {
 
 	GoogleMap map;
