@@ -74,9 +74,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		User user = User.getCurrentUser();
 		user.setType(User.Type.VENDOR);
 		AsyncStateUtil.saveAndStartActivity(user, this, RequestMapActivity.class, this);
-
-		TextView amt = (TextView) findViewById(R.id.rewardText);
-		amt.addTextChangedListener(new CurrencyTextWatcher());
 	}
 
 
@@ -93,8 +90,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		request = new Request(Request.State.OPEN);
 		request.setTitle(titleText.toString());
 
-		int amount = (int) Currency.getAmount(amtText.toString());
-		if (amount > 0) request.setCents(amount * 100);
+		int amount = (int) Currency.getAmountInCents(amtText.toString());
+		if (amount > 0) request.setCents(amount);
 
 		CharSequence descriptionText = amt.getText();
 		if (descriptionText != null)

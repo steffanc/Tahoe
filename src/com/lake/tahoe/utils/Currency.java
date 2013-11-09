@@ -1,6 +1,9 @@
 package com.lake.tahoe.utils;
 
+import com.parse.codec.binary.StringUtils;
+
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -20,14 +23,14 @@ public class Currency {
 		return numberFormat.format(amount);
 	}
 
-	public static float getAmount(String amtText) {
+	public static int getAmountInCents(String amtText) {
 		if (amtText == null || "".equals(amtText)) {
 			return 0;
 		}
 
 		NumberFormat nf = NumberFormat.getCurrencyInstance();
 		try {
-			return nf.parse(amtText).floatValue();
+			return (int) (nf.parse(amtText).floatValue() * 100);
 		} catch (ParseException e) {
 			return 0;
 		}
