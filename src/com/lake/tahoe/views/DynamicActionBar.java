@@ -3,6 +3,7 @@ package com.lake.tahoe.views;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,6 +69,18 @@ public class DynamicActionBar {
 	private void setAction(ImageView imageView, int drawableResourceId, View.OnClickListener listener) {
 		imageView.setImageDrawable(activity.getResources().getDrawable(drawableResourceId));
 		imageView.setOnClickListener(listener);
+		imageView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					v.setBackgroundColor(activity.getResources().getColor(R.color.light_blue));
+				}
+				else if (event.getAction() == MotionEvent.ACTION_UP) {
+					v.setBackgroundColor(0x00);
+				}
+				return false;
+			}
+		});
 	}
 
 }
