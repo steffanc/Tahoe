@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,8 +17,6 @@ import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.AsyncStateUtil;
 import com.lake.tahoe.utils.Currency;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.CurrencyTextWatcher;
 import com.lake.tahoe.views.DynamicActionBar;
@@ -27,10 +24,8 @@ import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
-import java.util.InputMismatchException;
 
-
-public class RequestCreateActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+public class RequestCreateActivity extends GoogleLocationServiceActivity {
 
 	GoogleMap map;
 	Marker marker;
@@ -58,7 +53,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 		actionBar.setTitle(getString(R.string.create_a_request));
 
 		actionBar.setAcceptAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 				createRequest();
 			}
 		});
@@ -84,7 +80,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 
 		if (titleText == null || amtText == null ||
 				titleText.toString().equals("") || amtText.toString().equals("")) {
-			onError(new InputMismatchException(getString(R.string.missing_required_fields)));
+			showMessage(getString(R.string.missing_required_fields));
 			return;
 		}
 
@@ -156,11 +152,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity impleme
 			marker.setPosition(position);
 		}
 		MapUtil.panAndZoomToLocation(map, location, MapUtil.DEFAULT_ZOOM_LEVEL);
-	}
-
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
 	}
 
 	@Override

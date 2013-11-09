@@ -16,7 +16,9 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.*;
+import com.lake.tahoe.utils.AsyncStateUtil;
+import com.lake.tahoe.utils.MapUtil;
+import com.lake.tahoe.utils.PushUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParseUser;
@@ -24,7 +26,7 @@ import com.parse.ParseUser;
 import java.util.HashMap;
 
 public class RequestMapActivity extends GoogleLocationServiceActivity implements
-		UserUpdateChannel.HandlesUserUpdates, HandlesErrors, ModelCallback<Request> {
+		UserUpdateChannel.HandlesUserUpdates, ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
@@ -159,7 +161,8 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 			actionBar.setTitle(request.getDisplayDollars() + " | " + request.getTitle());
 			actionBar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
 			actionBar.setRightArrowAction(new View.OnClickListener() {
-				@Override public void onClick(View v) {
+				@Override
+				public void onClick(View v) {
 					launchDetailActivityIntent(request);
 				}
 			});
@@ -183,8 +186,4 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		onError(t);
 	}
 
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
-	}
 }

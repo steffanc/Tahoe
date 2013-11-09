@@ -1,6 +1,5 @@
 package com.lake.tahoe.activities;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -10,15 +9,12 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.PushUtil;
 
 /**
  * Created on 11/5/13.
  */
-public abstract class RequestPendingActivity extends Activity implements
-		HandlesErrors,
+public abstract class RequestPendingActivity extends TahoeActivity implements
 		RequestUpdateChannel.HandlesRequestUpdates,
 		ModelCallback<Request> {
 
@@ -88,11 +84,6 @@ public abstract class RequestPendingActivity extends Activity implements
 	@Override
 	public void onModelError(Throwable t) {
 		finish();
-	}
-
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
 	}
 
 	protected abstract void onPendingRequest(Request request);

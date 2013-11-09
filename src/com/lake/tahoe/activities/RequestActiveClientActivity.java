@@ -8,10 +8,11 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.channels.RequestUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
-import com.lake.tahoe.utils.ErrorUtil;
 import com.lake.tahoe.utils.PushUtil;
 
-public class RequestActiveClientActivity extends RequestActiveActivity implements ModelCallback<Request>, RequestUpdateChannel.HandlesRequestUpdates {
+public class RequestActiveClientActivity extends RequestActiveActivity implements
+		ModelCallback<Request>,
+		RequestUpdateChannel.HandlesRequestUpdates {
 
 	BroadcastReceiver subscription;
 	Request currentRequest;
@@ -103,8 +104,4 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 		onError(t);
 	}
 
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
-	}
 }

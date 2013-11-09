@@ -14,13 +14,11 @@ import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.AsyncStateUtil;
-import com.lake.tahoe.utils.ErrorUtil;
-import com.lake.tahoe.utils.HandlesErrors;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
-public class RequestDetailActivity extends GoogleLocationServiceActivity implements HandlesErrors {
+public class RequestDetailActivity extends GoogleLocationServiceActivity {
 	ProfilePictureView profilePictureView;
 	GoogleMap map;
 	Request request;
@@ -110,8 +108,4 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		onError(t);
 	}
 
-	@Override
-	public void onError(Throwable t) {
-		ErrorUtil.log(this, t);
-	}
 }
