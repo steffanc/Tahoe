@@ -117,17 +117,6 @@ public class User extends ParseUser {
 		query.getFirstInBackground(new ModelGetCallback<Request>(callback));
 	}
 
-	public void findNearbyRequests(Request.State requestState, ModelCallback<Request> callback) {
-		ParseQuery<Request> query = Request.getRequestQuery();
-
-		// FIXME -- join on user location for proximity querying too
-		query.whereContains("state", requestState.toString());
-		query.whereExists("client");
-		query.include("client");
-
-		query.findInBackground(new ModelFindCallback<Request>(callback));
-	}
-
 	public void saveAndPublish(PushUtil.HandlesPublish handler) {
 		PushUtil.saveAndPublish(this, handler);
 	}

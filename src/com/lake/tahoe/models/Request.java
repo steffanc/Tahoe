@@ -2,6 +2,7 @@ package com.lake.tahoe.models;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.callbacks.ModelFindCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
 import com.lake.tahoe.utils.PushUtil;
 import com.parse.ParseClassName;
@@ -122,6 +123,18 @@ public class Request extends ParseObject {
 
 	public static ParseQuery<Request> getRequestQuery() {
 		return ParseQuery.getQuery(Request.class);
+	}
+
+	public static void findNearbyRequests(Request.State requestState, User user, ModelCallback<Request> callback) {
+		ParseQuery<Request> query = Request.getRequestQuery();
+
+		// FIXME -- join on user location for proximity querying too
+		query.whereContains("state", requestState.toString());
+		query.whereExists("client");
+		query.include("client");
+		if (user != null)
+			query.whereNotEqualTo("client", user);  // exclude self requests
+		query.findInBackground(new ModelFindCallback<Request>(callback));
 	}
 
 	public static void getByObjectId(String requestId, ModelCallback<Request> callback) {
