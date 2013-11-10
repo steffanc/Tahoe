@@ -10,7 +10,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
 import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
@@ -18,7 +17,7 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.parse.ParseException;
+import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 
 import java.text.DecimalFormat;
 
@@ -28,11 +27,11 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 	GoogleMap map;
 	DynamicActionBar actionBar;
 	ProfilePictureView profilePictureView;
-	IconGenerator iconGenerator = new IconGenerator(this);
+	SpeechBubbleIconGenerator iconGenerator = new SpeechBubbleIconGenerator(this);
 
-	Request request = null;
-	Marker currentUserMarker = null;
-	Marker remoteUserMarker = null;
+	Request request;
+	Marker currentUserMarker;
+	Marker remoteUserMarker;
 
 	TextView tvDistance;
 
