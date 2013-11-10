@@ -25,6 +25,7 @@ public class ActivityUtil {
 	public static void startRequestDetailActivity(Context ctx, Request request) {
 		Intent i = ActivityUtil.newIntent(ctx, RequestDetailActivity.class);
 		i.putExtra(RequestDetailActivity.REQUEST_ID, request.getObjectId());
+		i.putExtra(RequestDetailActivity.REQUEST_STATE, request.getState().toString());
 		ctx.startActivity(i);
 		ActivityUtil.transitionRight((Activity)ctx);
 	}
