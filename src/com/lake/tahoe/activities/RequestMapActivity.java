@@ -166,10 +166,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	}
 
 	public void startRequestDetailActivity(Request request) {
-		Intent i = ActivityUtil.newIntent(this, RequestDetailActivity.class);
-		i.putExtra(RequestDetailActivity.REQUEST_ID, request.getObjectId());
-		startActivity(i);
-		ActivityUtil.transitionRight(this);
+		ActivityUtil.startRequestDetailActivity(this, request);
 	}
 
 	@Override

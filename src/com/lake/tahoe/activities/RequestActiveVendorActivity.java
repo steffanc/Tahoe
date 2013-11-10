@@ -1,5 +1,7 @@
 package com.lake.tahoe.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -33,9 +35,10 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 				abortRequest();
 			}
 		});
-		getDynamicActionBar().setAcceptAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				completeRequest();
+		getDynamicActionBar().setRightArrowAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ActivityUtil.startRequestDetailActivity(RequestActiveVendorActivity.this, request);
 			}
 		});
 	}
@@ -111,6 +114,5 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 	protected void onLocationTrackingFailed(Throwable t) {
 		onError(t);
 	}
-
 }
 
