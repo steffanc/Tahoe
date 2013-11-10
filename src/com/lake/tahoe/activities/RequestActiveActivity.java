@@ -89,7 +89,7 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 			double feet = MapUtil.convertMilesToFeet(miles);
 			DecimalFormat df = new DecimalFormat("0.00");
 			String distanceStr = df.format(feet);
-			tvDistance.setText(distanceStr + "ft");
+			tvDistance.setText(distanceStr + getResources().getString(R.string.ft));
 		}
 	}
 
