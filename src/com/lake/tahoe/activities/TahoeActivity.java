@@ -34,7 +34,7 @@ public class TahoeActivity extends FragmentActivity implements HandlesErrors {
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
-		messageBar    = new MessageBar(this);
+		messageBar = new MessageBar(this);
 		super.onPostCreate(savedInstanceState);
 	}
 

@@ -1,9 +1,11 @@
 package com.lake.tahoe.activities;
 
+import android.location.Location;
 import android.os.Bundle;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.handlers.RequestUpdateChannel;
+import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
@@ -12,25 +14,21 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 		ModelCallback<Request>,
 		RequestUpdateChannel.HandlesRequestUpdates {
 
-	Request currentRequest;
-
 	@Override
-	public void onRequestUpdated(Request request) {
-
-		if (request == null)
+	public void onRequestUpdated(Request _request) {
+		if (_request == null)
 			return;
 
-		if (!request.getObjectId().equals(currentRequest.getObjectId()))
+		if (!_request.getObjectId().equals(request.getObjectId()))
 			return;
 
-		if (request.getState().equals(Request.State.ACTIVE))
+		if (_request.getState().equals(Request.State.ACTIVE))
 			return;
 
-		if (request.getState().equals(Request.State.PENDING))
+		if (_request.getState().equals(Request.State.PENDING))
 			startPendingActivity();
 		else
-			onError(new IllegalStateException(request.getState().name()));
-
+			onError(new IllegalStateException(_request.getState().name()));
 	}
 
 	protected void startPendingActivity() {
@@ -62,30 +60,49 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 	}
 
 	@Override
-	public void onModelFound(final Request request) {
-
+	public void onModelFound(final Request _request) {
+		request = _request;
 		if (request == null || !request.getState().equals(Request.State.ACTIVE)) {
 			ActivityUtil.startDelegateActivity(this);
 			ActivityUtil.transitionFade(this);
 			return;
 		}
 
-		currentRequest = request;
-		User vendor = request.getVendor();
-		createViews(vendor);
-		createMapViews(vendor);
-
 		if (request.getVendor() == null) {
 			onError(new IllegalStateException("Bad request with no vendor"));
 		} else {
+			createViews(request.getVendor());
+			createMapViews(request.getVendor());
 			String title = String.format(getString(R.string.to_the_rescue, request.getVendor().getName()));
 			getDynamicActionBar().setTitle(title);
 		}
-
 	}
 
 	@Override
 	public void onModelError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		super.onLocationChanged(location);
+		if (request != null) {
+			updateUserDistance(User.getCurrentUser(), request.getVendor());
+		}
+	}
+
+	@Override
+	public void onUserUpdated(User user) {
+		if (user == null || request == null)
+			return;
+		if (user.getObjectId().equals(request.getVendor().getObjectId())) {
+			updateUserDistance(User.getCurrentUser(), user);
+			updateRemoteUserMarker(user);
+		}
+	}
+
+	@Override
+	public void onUserUpdateError(Throwable t) {
 		onError(t);
 	}
 

@@ -136,4 +136,7 @@ public class User extends ParseUser {
 		PushUtil.saveAndPublish(this);
 	}
 
+	public double calculateDistance(User user) {
+		return getLocation().distanceInMilesTo(user.getLocation());
+	}
 }

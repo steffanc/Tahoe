@@ -1,7 +1,9 @@
 package com.lake.tahoe.activities;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
@@ -11,7 +13,6 @@ import com.parse.ParsePush;
 
 public class RequestActiveVendorActivity extends RequestActiveActivity implements
 		ModelCallback<Request> {
-	Request request;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,19 +23,16 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 	@Override
 	public void onModelFound(Request _request) {
 		request = _request;
-		User client = request.getClient();
-		createViews(client);
-		createMapViews(client);
+		createViews(request.getClient());
+		createMapViews(request.getClient());
 
 		String title = String.format("%s | %s", request.getDisplayDollars(), request.getTitle());
 		getDynamicActionBar().setTitle(title);
-
 		getDynamicActionBar().setCancelAction(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				abortRequest();
 			}
 		});
-
 		getDynamicActionBar().setAcceptAction(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				completeRequest();
@@ -78,6 +76,29 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 
 	@Override
 	public void onModelError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		super.onLocationChanged(location);
+		if (request != null) {
+			updateUserDistance(User.getCurrentUser(), request.getClient());
+		}
+	}
+
+	@Override
+	public void onUserUpdated(User user) {
+		if (user == null || request == null)
+			return;
+		if (user.getObjectId().equals(request.getClient().getObjectId())) {
+			updateUserDistance(User.getCurrentUser(), user);
+			updateRemoteUserMarker(user);
+		}
+	}
+
+	@Override
+	public void onUserUpdateError(Throwable t) {
 		onError(t);
 	}
 
