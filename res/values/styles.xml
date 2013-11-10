@@ -82,7 +82,7 @@
 	</style>
 
 	<style name="Header" parent="RobotoHeadline">
-		<item name="android:textSize">24sp</item>
+		<item name="android:textSize">20sp</item>
 	</style>
 
 	<style name="MapSnippet">
