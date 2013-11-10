@@ -88,6 +88,21 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 	}
 
 	@Override
+	public void onUserUpdated(User user) {
+		if (user == null || request == null)
+			return;
+		if (user.getObjectId().equals(request.getClient().getObjectId())) {
+			updateUserDistance(User.getCurrentUser(), user);
+			updateRemoteUserMarker(user);
+		}
+	}
+
+	@Override
+	public void onUserUpdateError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
 	protected void onGooglePlayServicesError(Throwable t) {
 		onError(t);
 	}

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.handlers.RequestUpdateChannel;
+import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
@@ -88,6 +89,21 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 		if (request != null) {
 			updateUserDistance(User.getCurrentUser(), request.getVendor());
 		}
+	}
+
+	@Override
+	public void onUserUpdated(User user) {
+		if (user == null || request == null)
+			return;
+		if (user.getObjectId().equals(request.getVendor().getObjectId())) {
+			updateUserDistance(User.getCurrentUser(), user);
+			updateRemoteUserMarker(user);
+		}
+	}
+
+	@Override
+	public void onUserUpdateError(Throwable t) {
+		onError(t);
 	}
 
 	@Override
