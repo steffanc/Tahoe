@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import com.lake.tahoe.R;
 import com.lake.tahoe.activities.*;
+import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 
 public class ActivityUtil {
@@ -19,6 +20,13 @@ public class ActivityUtil {
 
 	public static Intent newIntent(Context from, Class<? extends Activity> to) {
 		return newIntent().setComponent(new ComponentName(from, to));
+	}
+
+	public static void startRequestDetailActivity(Context ctx, Request request) {
+		Intent i = ActivityUtil.newIntent(ctx, RequestDetailActivity.class);
+		i.putExtra(RequestDetailActivity.REQUEST_ID, request.getObjectId());
+		ctx.startActivity(i);
+		ActivityUtil.transitionRight((Activity)ctx);
 	}
 
 	public static void startRequestPendingActivity(Context ctx, User user) {

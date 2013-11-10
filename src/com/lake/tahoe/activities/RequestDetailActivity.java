@@ -35,7 +35,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		setContentView(R.layout.activity_request_detail);
 
 		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		actionBar.setCancelAction(new View.OnClickListener() {
+		actionBar.setLeftArrowAction(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				finish();
 			}
