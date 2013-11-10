@@ -1,24 +1,35 @@
 package com.lake.tahoe.activities;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.TextView;
+
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
+import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 
-public abstract class RequestActiveActivity extends GoogleLocationServiceActivity {
+import java.text.DecimalFormat;
 
+public abstract class RequestActiveActivity extends GoogleLocationServiceActivity {
 	GoogleMap map;
 	DynamicActionBar actionBar;
 	ProfilePictureView profilePictureView;
 	IconGenerator iconGenerator = new IconGenerator(this);
+
+	Request request = null;
+	Marker userMarker = null;
+
+	TextView tvDistance;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +51,7 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 		tvName.setText(user.getName());
 
 		// TODO calculate the real distance of users
-		TextView tvDistance = (TextView) findViewById(R.id.tvDistance);
-		tvDistance.setText("0.56mi");
+		tvDistance = (TextView) findViewById(R.id.tvDistance);
 	}
 
 	@Override
@@ -59,6 +69,32 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 		);
 		map.addMarker(markerOptions);
 		MapUtil.panAndZoomToUser(map, user, MapUtil.DEFAULT_ZOOM_LEVEL);
+	}
+
+	protected void updateUserDistance(User user1, User user2) {
+		if (user1 != null && user2 != null) {
+			double miles = user1.calculateDistance(user2);
+			double feet = MapUtil.convertMilesToFeet(miles);
+			DecimalFormat df = new DecimalFormat("0.00");
+			String distanceStr = df.format(feet);
+			tvDistance.setText(distanceStr + "ft");
+		}
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		super.onLocationChanged(location);
+		LatLng position = MapUtil.locationToLatLng(location);
+		if (userMarker == null) {
+			userMarker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
+					position,
+					getResources().getString(R.string.you),
+					iconGenerator,
+					SpeechBubble.ColorType.PURPLE
+			));
+		} else if (!userMarker.getPosition().equals(position)) {
+			userMarker.setPosition(position);
+		}
 	}
 
 	@Override
