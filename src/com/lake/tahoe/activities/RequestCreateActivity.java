@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -81,6 +82,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 
 		CharSequence titleText = title.getText();
 		CharSequence amtText = amt.getText();
+		CharSequence descriptionText = description.getText();
 
 		if (titleText == null || amtText == null ||
 				titleText.toString().equals("") || amtText.toString().equals("")) {
@@ -94,7 +96,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 		int amount = Currency.getAmountInCents(amtText.toString());
 		if (amount > 0) request.setCents(amount);
 
-		CharSequence descriptionText = amt.getText();
 		if (descriptionText != null)
 			request.setDescription(descriptionText.toString());
 
@@ -123,6 +124,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 	@Override
 	public void onLocationChanged(Location location) {
 		super.onLocationChanged(location);
+
 		IconGenerator iconGenerator = new IconGenerator(this);
 		LatLng position = MapUtil.locationToLatLng(location);
 		if (marker == null) {
