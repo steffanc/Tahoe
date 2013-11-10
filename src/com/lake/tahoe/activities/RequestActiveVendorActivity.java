@@ -1,11 +1,11 @@
 package com.lake.tahoe.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
@@ -16,10 +16,29 @@ import com.parse.ParsePush;
 public class RequestActiveVendorActivity extends RequestActiveActivity implements
 		ModelCallback<Request> {
 
+	ImageView ivCheck;
+	ImageView ivCancel;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		User.getCurrentUser().getUnfinishedRequest(this);
+
+
+		ivCheck = (ImageView) findViewById(R.id.ivCheck);
+		ivCheck.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				completeRequest();
+			}
+		});
+
+		ivCancel = (ImageView) findViewById(R.id.ivCancel);
+		ivCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				abortRequest();
+			}
+		});
 	}
 
 	@Override
@@ -30,11 +49,6 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 
 		String title = String.format("%s | %s", request.getDisplayDollars(), request.getTitle());
 		getDynamicActionBar().setTitle(title);
-		getDynamicActionBar().setCancelAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				abortRequest();
-			}
-		});
 		getDynamicActionBar().setRightArrowAction(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -95,6 +109,7 @@ public class RequestActiveVendorActivity extends RequestActiveActivity implement
 		if (user == null || request == null)
 			return;
 		if (user.getObjectId().equals(request.getClient().getObjectId())) {
+			request.setClient(user);
 			updateUserDistance(User.getCurrentUser(), user);
 			updateRemoteUserMarker(user);
 		}

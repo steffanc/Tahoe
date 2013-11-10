@@ -96,6 +96,7 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 		if (user == null || request == null)
 			return;
 		if (user.getObjectId().equals(request.getVendor().getObjectId())) {
+			request.setVendor(user);
 			updateUserDistance(User.getCurrentUser(), user);
 			updateRemoteUserMarker(user);
 		}

@@ -1,5 +1,6 @@
 package com.lake.tahoe.utils;
 
+import android.content.Context;
 import android.location.Location;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -7,10 +8,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
+import com.lake.tahoe.R;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
+
+import java.text.DecimalFormat;
 
 /**
  * Created on 11/3/13.
@@ -52,7 +57,16 @@ public class MapUtil {
 		return markerOptions;
 	}
 
-	public static double convertMilesToFeet(double miles) {
-		return miles * 5280;
+	public static String getMapDisplayDistance(Context ctx, double miles) {
+		double distance = miles;
+		String unit = ctx.getResources().getString(R.string.mi);
+
+		double feet = miles * 5280;
+		if (feet < 500) {
+			distance = feet;
+			unit = ctx.getResources().getString(R.string.ft);
+		}
+		DecimalFormat df = new DecimalFormat("0.00");
+		return df.format(distance).concat(unit);
 	}
 }
