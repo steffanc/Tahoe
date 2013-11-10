@@ -67,7 +67,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	public void onModelFound(Request request) {
 		Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
-			request.getClient(),
+			request,
 			iconGenerator,
 			SpeechBubble.ColorType.BLACK
 		));
