@@ -1,8 +1,11 @@
 package com.lake.tahoe.activities;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
@@ -16,6 +19,7 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
+import com.lake.tahoe.views.CustomTextView;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
@@ -29,6 +33,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	DynamicActionBar actionBar;
 
 	public final static String REQUEST_ID = "requestId";
+	public final static String REQUEST_STATE = "requestState";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +42,26 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 
 		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
 		actionBar.setLeftArrowAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 				finish();
 			}
 		});
 
-		actionBar.setAcceptAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				activateRequest();
-			}
-		});
+		String state = getIntent().getStringExtra(REQUEST_STATE);
+		if (state.equals(Request.State.OPEN.toString())) {
+			actionBar.setAcceptAction(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					activateRequest();
+				}
+			});
+		} else if (state.equals(Request.State.ACTIVE.toString())) {
+			int backgroundColor = getResources().getColor(R.color.light_blue);
+			actionBar.setBackgroundColor(backgroundColor);
+			RelativeLayout rl = (RelativeLayout) findViewById(R.id.rlParent);
+			rl.setBackgroundColor(backgroundColor);
+		}
 	}
 
 	@Override
