@@ -29,21 +29,51 @@
 			android:paddingLeft="10dp"
 			android:background="@color/light_blue">
 
-			<com.lake.tahoe.views.CustomTextView
-				android:id="@+id/tvName"
-				style="@style/Headline4"
+			<LinearLayout
+				android:id="@+id/llNameCheck"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 				android:gravity="center_vertical"
 				android:layout_weight="1"
+				android:orientation="horizontal">
+
+				<com.lake.tahoe.views.CustomTextView
+					android:id="@+id/tvName"
+					style="@style/Headline4"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.80"/>
+
+				<ImageView
+					android:id="@+id/ivCheck"
+					android:src="@drawable/navigation_accept"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.20"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/llDistX"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_width="match_parent" />
+				android:gravity="center_vertical"
+				android:layout_weight="1"
+				android:orientation="horizontal">
 
 			<com.lake.tahoe.views.CustomTextView
 				android:id="@+id/tvDistance"
-				style="@style/Headline2"
-				android:gravity="center_vertical"
-				android:layout_weight="1"
+				style="@style/Headline3"
 				android:layout_height="wrap_content"
-				android:layout_width="match_parent" />
+				android:layout_width="wrap_content"
+				android:layout_weight="0.80" />
+
+				<ImageView
+					android:id="@+id/ivCancel"
+					android:src="@drawable/navigation_cancel"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.20"/>
+			</LinearLayout>
 
 		</LinearLayout>
 	</LinearLayout>
