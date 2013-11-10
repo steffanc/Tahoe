@@ -8,14 +8,9 @@ import java.text.ParseException;
  */
 public class Currency {
 
-	public static String getDisplayDollars(double cents) {
+	public static String getDisplayDollars(int cents) {
 		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-		return numberFormat.format(cents / 100);
-	}
-
-	public static String getDisplayDollars(float amount) {
-		NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-		return numberFormat.format(amount);
+		return numberFormat.format(cents / 100.0);
 	}
 
 	public static int getAmountInCents(String amtText) {

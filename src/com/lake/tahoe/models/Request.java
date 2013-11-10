@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.callbacks.ModelFindCallback;
 import com.lake.tahoe.callbacks.ModelGetCallback;
+import com.lake.tahoe.utils.Currency;
 import com.lake.tahoe.utils.PushUtil;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -92,12 +93,12 @@ public class Request extends ParseObject {
 	}
 
 	public String getDisplayDollars() {
-		// TODO potentially move this helper to a separate currency class for reusability
-		return NumberFormat.getCurrencyInstance().format(getDollars());
+		return Currency.getDisplayDollars(getCents());
 	}
 
 	public BigDecimal getDollars() {
-		return new BigDecimal(getCents() / 100.0);
+		BigDecimal dollars = new BigDecimal(getCents() / 100.0);
+		return dollars.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public PayPalPayment getPaypalPayment() {
