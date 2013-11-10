@@ -67,7 +67,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	public void onModelFound(Request request) {
 		Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
-			request.getClient(),
+			request,
 			iconGenerator,
 			SpeechBubble.ColorType.BLACK
 		));
@@ -115,7 +115,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		map.setOnMarkerClickListener(new OnMarkerClick());
 
 		User user = (User) ParseUser.getCurrentUser();
-		user.findNearbyRequests(Request.State.OPEN, this);
+		Request.findNearbyRequests(Request.State.OPEN, user, this);
 
 		mapReadyToPan = true;
 

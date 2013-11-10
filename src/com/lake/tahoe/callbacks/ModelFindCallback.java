@@ -16,8 +16,10 @@ public class ModelFindCallback<T extends ParseObject> extends FindCallback<T> {
 
 	@Override
 	public void done(List<T> models, ParseException e) {
-		if (e != null)
+		if (e != null || models == null) {
 			callback.onModelError(e);
+			return;
+		}
 		for (T model : models)
 			callback.onModelFound(model);
 	}
