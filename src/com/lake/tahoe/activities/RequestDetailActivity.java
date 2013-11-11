@@ -1,8 +1,10 @@
 package com.lake.tahoe.activities;
 
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
@@ -29,6 +31,7 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	DynamicActionBar actionBar;
 
 	public final static String REQUEST_ID = "requestId";
+	public final static String REQUEST_STATE = "requestState";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +39,27 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		setContentView(R.layout.activity_request_detail);
 
 		actionBar = new DynamicActionBar(this, getResources().getColor(R.color.black));
-		actionBar.setCancelAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+		actionBar.setLeftArrowAction(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				finish();
 			}
 		});
 
-		actionBar.setAcceptAction(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				activateRequest();
-			}
-		});
+		Request.State state = (Request.State) getIntent().getSerializableExtra(REQUEST_STATE);
+		if (state.equals(Request.State.OPEN)) {
+			actionBar.setAcceptAction(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					activateRequest();
+				}
+			});
+		} else if (state.equals(Request.State.ACTIVE)) {
+			int backgroundColor = getResources().getColor(R.color.light_blue);
+			actionBar.setBackgroundColor(backgroundColor);
+			RelativeLayout rl = (RelativeLayout) findViewById(R.id.rlParent);
+			rl.setBackgroundColor(backgroundColor);
+		}
 	}
 
 	@Override
@@ -78,8 +91,8 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		TextView tvCost = (TextView) findViewById(R.id.tvCost);
 		tvCost.setText(request.getDisplayDollars());
 
-		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-		tvTitle.setText(request.getTitle());
+		TextView tvRequestTitle = (TextView) findViewById(R.id.tvRequestTitle);
+		tvRequestTitle.setText(request.getTitle());
 
 		TextView tvDescription = (TextView) findViewById(R.id.tvDescription);
 		tvDescription.setText(request.getDescription());

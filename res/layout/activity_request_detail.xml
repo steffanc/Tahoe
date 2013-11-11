@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rlParent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -33,14 +34,14 @@
 
 		<com.lake.tahoe.views.CustomTextView
 			android:id="@+id/tvCost"
-			style="@style/Headline4"
+			style="@style/LightHeadline2"
 			android:layout_height="match_parent"
 			android:layout_width="150dp"
 			android:gravity="center"/>
 
 		<com.lake.tahoe.views.CustomTextView
-			android:id="@+id/tvTitle"
-			style="@style/Headline4"
+			android:id="@+id/tvRequestTitle"
+			style="@style/LightHeadline4"
 			android:layout_height="match_parent"
 			android:layout_width="fill_parent"
 			android:gravity="center"/>
@@ -49,11 +50,11 @@
 
 	<com.lake.tahoe.views.CustomTextView
 		android:id="@+id/tvDescription"
-		style="@style/Headline4"
+		style="@style/LightHeadline4"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
 		android:layout_below="@+id/llSummary"/>
 
 </RelativeLayout>

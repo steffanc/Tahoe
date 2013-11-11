@@ -17,7 +17,6 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 
 import java.text.DecimalFormat;
 
@@ -85,10 +84,8 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 	protected void updateUserDistance(User user1, User user2) {
 		if (user1 != null && user2 != null) {
 			double miles = user1.calculateDistance(user2);
-			double feet = MapUtil.convertMilesToFeet(miles);
-			DecimalFormat df = new DecimalFormat("0.00");
-			String distanceStr = df.format(feet);
-			tvDistance.setText(distanceStr + getResources().getString(R.string.ft));
+			String displayDistance = MapUtil.getMapDisplayDistance(this, miles);
+			tvDistance.setText(displayDistance);
 		}
 	}
 

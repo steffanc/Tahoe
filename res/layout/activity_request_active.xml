@@ -8,7 +8,9 @@
 		android:id="@+id/map"
 		class="com.google.android.gms.maps.SupportMapFragment"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/llClientInfo"
+		android:layout_alignParentTop="true"/>
 
 	<LinearLayout
 		android:id="@+id/llClientInfo"
@@ -29,21 +31,51 @@
 			android:paddingLeft="10dp"
 			android:background="@color/light_blue">
 
-			<com.lake.tahoe.views.CustomTextView
-				android:id="@+id/tvName"
-				style="@style/Headline4"
+			<LinearLayout
+				android:id="@+id/llNameCheck"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 				android:gravity="center_vertical"
 				android:layout_weight="1"
-				android:layout_height="wrap_content"
-				android:layout_width="match_parent" />
+				android:orientation="horizontal">
 
-			<com.lake.tahoe.views.CustomTextView
-				android:id="@+id/tvDistance"
-				style="@style/Headline2"
+				<com.lake.tahoe.views.CustomTextView
+					android:id="@+id/tvName"
+					style="@style/LightHeadline3"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.85"/>
+
+				<ImageView
+					android:id="@+id/ivCheck"
+					android:src="@drawable/navigation_accept"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.15"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/llDistX"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 				android:gravity="center_vertical"
 				android:layout_weight="1"
-				android:layout_height="wrap_content"
-				android:layout_width="match_parent" />
+				android:orientation="horizontal">
+
+				<com.lake.tahoe.views.CustomTextView
+					android:id="@+id/tvDistance"
+					style="@style/LightHeadline2"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.85" />
+
+				<ImageView
+					android:id="@+id/ivCancel"
+					android:src="@drawable/navigation_cancel"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.15"/>
+			</LinearLayout>
 
 		</LinearLayout>
 	</LinearLayout>

@@ -158,18 +158,14 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 			actionBar.setBackgroundColor(getResources().getColor(R.color.dark_blue));
 			actionBar.setRightArrowAction(new View.OnClickListener() {
 				@Override public void onClick(View v) {
-					startRequestDetailActivity(request);
+					ActivityUtil.startRequestDetailActivity(
+							RequestMapActivity.this,
+							request
+					);
 				}
 			});
 			return true;
 		}
-	}
-
-	public void startRequestDetailActivity(Request request) {
-		Intent i = ActivityUtil.newIntent(this, RequestDetailActivity.class);
-		i.putExtra(RequestDetailActivity.REQUEST_ID, request.getObjectId());
-		startActivity(i);
-		ActivityUtil.transitionRight(this);
 	}
 
 	@Override
