@@ -52,17 +52,12 @@
 		<item name="fontAssetName">Roboto/Roboto-Regular</item>
 	</style>
 
-	<style name="RobotoThin">
-		<item name="fontAssetName">Roboto/Roboto-Thin</item>
+	<style name="RobotoLight">
+		<item name="fontAssetName">Roboto/Roboto-Light</item>
 	</style>
 
 	<style name="RobotoHeadline" parent="Roboto">
 		<item name="android:textColor">@color/white</item>
-	</style>
-
-	<style name="RobotoThinHeadline" parent="RobotoThin">
-		<item name="android:textColor">@color/white</item>
-		<item name="android:textSize">25sp</item>
 	</style>
 
 	<style name="Headline1" parent="RobotoHeadline">
@@ -78,6 +73,26 @@
 	</style>
 
 	<style name="Headline4" parent="RobotoHeadline">
+		<item name="android:textSize">25sp</item>
+	</style>
+
+	<style name="RobotoLightHeadline" parent="RobotoLight">
+		<item name="android:textColor">@color/white</item>
+	</style>
+
+	<style name="LightHeadline1" parent="RobotoLightHeadline">
+		<item name="android:textSize">72sp</item>
+	</style>
+
+	<style name="LightHeadline2" parent="RobotoLightHeadline">
+		<item name="android:textSize">40sp</item>
+	</style>
+
+	<style name="LightHeadline3" parent="RobotoLightHeadline">
+		<item name="android:textSize">36sp</item>
+	</style>
+
+	<style name="LightHeadline4" parent="RobotoLightHeadline">
 		<item name="android:textSize">25sp</item>
 	</style>
 

@@ -41,17 +41,17 @@
 
 				<com.lake.tahoe.views.CustomTextView
 					android:id="@+id/tvName"
-					style="@style/Headline4"
+					style="@style/LightHeadline3"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
-					android:layout_weight="0.80"/>
+					android:layout_weight="0.85"/>
 
 				<ImageView
 					android:id="@+id/ivCheck"
 					android:src="@drawable/navigation_accept"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
-					android:layout_weight="0.20"/>
+					android:layout_weight="0.15"/>
 			</LinearLayout>
 
 			<LinearLayout
@@ -62,19 +62,19 @@
 				android:layout_weight="1"
 				android:orientation="horizontal">
 
-			<com.lake.tahoe.views.CustomTextView
-				android:id="@+id/tvDistance"
-				style="@style/Headline3"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				android:layout_weight="0.80" />
+				<com.lake.tahoe.views.CustomTextView
+					android:id="@+id/tvDistance"
+					style="@style/LightHeadline2"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_weight="0.85" />
 
 				<ImageView
 					android:id="@+id/ivCancel"
 					android:src="@drawable/navigation_cancel"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
-					android:layout_weight="0.20"/>
+					android:layout_weight="0.15"/>
 			</LinearLayout>
 
 		</LinearLayout>
