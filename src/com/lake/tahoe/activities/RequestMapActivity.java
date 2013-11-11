@@ -45,14 +45,20 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		setContentView(R.layout.activity_request_map);
 
 		actionBar = new DynamicActionBar(this);
-		actionBar.setTitle(getResources().getString(R.string.select_client));
-
 		actionBar.setLeftAction(R.drawable.ic_action_client_mode, new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				convertToClient();
 			}
 		});
 
+		setUpActionBar();
+	}
+
+	public void setUpActionBar() {
+		actionBar.setTitle(getResources().getString(R.string.select_client));
+		actionBar.setBackgroundColor(getResources().getColor(R.color.black));
+		actionBar.toggleLeftAction(View.VISIBLE);
+		actionBar.toggleRightAction(View.INVISIBLE);
 	}
 
 	private void convertToClient() {
@@ -152,6 +158,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		map = fragment.getMap();
 		map.setMyLocationEnabled(true);
 		map.setOnMarkerClickListener(new OnMarkerClick());
+		map.setOnMapClickListener(new OnMapClick());
 
 		User user = (User) ParseUser.getCurrentUser();
 		Request.findNearbyRequests(Request.State.OPEN, user, this);
@@ -203,7 +210,16 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 					);
 				}
 			});
+			actionBar.toggleLeftAction(View.INVISIBLE);
+			actionBar.toggleRightAction(View.VISIBLE);
 			return true;
+		}
+	}
+
+	private class OnMapClick implements GoogleMap.OnMapClickListener {
+		@Override
+		public void onMapClick(LatLng point) {
+			setUpActionBar();
 		}
 	}
 

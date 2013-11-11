@@ -3,6 +3,7 @@ package com.lake.tahoe.views;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.opengl.Visibility;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -64,6 +65,14 @@ public class DynamicActionBar {
 
 	public void setRightAction(int drawableResourceId, View.OnClickListener listener) {
 		setAction(ivRight, drawableResourceId, listener);
+	}
+
+	public void toggleLeftAction(int visibilityId) {
+		 ivLeft.setVisibility(visibilityId);
+	}
+
+	public void toggleRightAction(int visibilityId) {
+		ivRight.setVisibility(visibilityId);
 	}
 
 	private void setAction(ImageView imageView, int drawableResourceId, View.OnClickListener listener) {
