@@ -2,10 +2,12 @@ package com.lake.tahoe.activities;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
 import com.lake.tahoe.handlers.RequestUpdateChannel;
-import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
@@ -57,6 +59,10 @@ public class RequestActiveClientActivity extends RequestActiveActivity implement
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		User.getCurrentUser().getUnfinishedRequest(this);
+		ImageView ivCheck = (ImageView) findViewById(R.id.ivCheck);
+		ivCheck.setVisibility(View.INVISIBLE);
+		ImageView ivCancel = (ImageView) findViewById(R.id.ivCancel);
+		ivCancel.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
