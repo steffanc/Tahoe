@@ -118,12 +118,14 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
+		RequestUpdateChannel.subscribe(this);
 		UserUpdateChannel.subscribe(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		RequestUpdateChannel.unsubscribe(this);
 		UserUpdateChannel.unsubscribe(this);
 	}
 
