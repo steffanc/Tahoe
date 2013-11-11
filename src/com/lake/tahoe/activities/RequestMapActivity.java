@@ -72,7 +72,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	public void onRequestUpdated(Request request) {
 		if (request == null)
 			return;
-		if (!request.getObjectId().equals(Request.State.OPEN))
+		if (!request.getState().equals(Request.State.OPEN))
 			return;
 
 		generateMarkerForRequest(request);
