@@ -2,7 +2,6 @@ package com.lake.tahoe.activities;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -12,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.handlers.RequestUpdateChannel;
 import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
@@ -27,6 +27,7 @@ import com.parse.ParseUser;
 import java.util.Hashtable;
 
 public class RequestMapActivity extends GoogleLocationServiceActivity implements
+		RequestUpdateChannel.HandlesRequestUpdates,
 		UserUpdateChannel.HandlesUserUpdates, PushUtil.HandlesPublish, ModelCallback<Request> {
 
 	GoogleMap map;
@@ -68,7 +69,26 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	}
 
 	@Override
+	public void onRequestUpdated(Request request) {
+		if (request == null)
+			return;
+		if (!request.getObjectId().equals(Request.State.OPEN))
+			return;
+
+		generateMarkerForRequest(request);
+	}
+
+	@Override
+	public void onRequestUpdateError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
 	public void onModelFound(Request request) {
+		generateMarkerForRequest(request);
+	}
+
+	void generateMarkerForRequest(Request request) {
 		User client = request.getClient();
 
 		if (client == null) {
@@ -81,10 +101,10 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 		if (marker != null) {
 			marker.setPosition(request.getGoogleMapsLocation());
 		} else {
-		  marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
-				request,
-				iconGenerator,
-				SpeechBubble.ColorType.BLACK));
+			marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
+					request,
+					iconGenerator,
+					SpeechBubble.ColorType.BLACK));
 		}
 		userMarkerMap.put(client, marker);
 		markerRequestMap.put(marker, request);
