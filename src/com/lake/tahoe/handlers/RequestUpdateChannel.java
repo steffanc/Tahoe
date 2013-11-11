@@ -5,6 +5,8 @@ import com.lake.tahoe.callbacks.ModelGetCallback;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.receivers.JsonDataReceiver;
 import com.lake.tahoe.utils.PushUtil;
+import com.parse.ParseQuery;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +35,11 @@ public class RequestUpdateChannel implements
 	public void onJsonData(JSONObject data) {
 		try {
 			String requestObjectId = data.getString(PushUtil.KEY_OBJECT_ID);
-			Request.getRequestQuery().getInBackground(requestObjectId, new ModelGetCallback<Request>(this));
+			// FIXME -- use the getObjectById() method in Request.
+			ParseQuery<Request> query = Request.getRequestQuery();
+			query.include("client");
+			query.include("vendor");
+			query.getInBackground(requestObjectId, new ModelGetCallback<Request>(this));
 		} catch (JSONException e) {
 			handler.onRequestUpdateError(e);
 		}
