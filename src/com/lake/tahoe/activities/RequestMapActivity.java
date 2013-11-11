@@ -1,9 +1,9 @@
 package com.lake.tahoe.activities;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.lake.tahoe.R;
 import com.lake.tahoe.callbacks.ModelCallback;
+import com.lake.tahoe.handlers.RequestUpdateChannel;
 import com.lake.tahoe.handlers.UserUpdateChannel;
 import com.lake.tahoe.models.Request;
 import com.lake.tahoe.models.User;
@@ -23,15 +24,18 @@ import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 
 public class RequestMapActivity extends GoogleLocationServiceActivity implements
+		RequestUpdateChannel.HandlesRequestUpdates,
 		UserUpdateChannel.HandlesUserUpdates, PushUtil.HandlesPublish, ModelCallback<Request> {
 
 	GoogleMap map;
 	Marker marker;
 	DynamicActionBar actionBar;
-	HashMap<Marker, Request> markerRequestMap = new HashMap<Marker, Request>();
+	Hashtable<Marker, Request> markerRequestMap = new Hashtable<Marker, Request>();
+	Hashtable<User, Marker> userMarkerMap = new Hashtable<User, Marker>();
+
 	SpeechBubbleIconGenerator iconGenerator = new SpeechBubbleIconGenerator(this);
 	boolean mapReadyToPan = false;
 
@@ -65,12 +69,44 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	}
 
 	@Override
+	public void onRequestUpdated(Request request) {
+		if (request == null)
+			return;
+		if (!request.getObjectId().equals(Request.State.OPEN))
+			return;
+
+		generateMarkerForRequest(request);
+	}
+
+	@Override
+	public void onRequestUpdateError(Throwable t) {
+		onError(t);
+	}
+
+	@Override
 	public void onModelFound(Request request) {
-		Marker marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
-			request,
-			iconGenerator,
-			SpeechBubble.ColorType.BLACK
-		));
+		generateMarkerForRequest(request);
+	}
+
+	void generateMarkerForRequest(Request request) {
+		User client = request.getClient();
+
+		if (client == null) {
+			this.onError(new IllegalStateException("Client was null"));
+			return;
+		}
+
+		Marker marker = userMarkerMap.get(client);
+
+		if (marker != null) {
+			marker.setPosition(request.getGoogleMapsLocation());
+		} else {
+			marker = map.addMarker(MapUtil.getSpeechBubbleMarkerOptions(
+					request,
+					iconGenerator,
+					SpeechBubble.ColorType.BLACK));
+		}
+		userMarkerMap.put(client, marker);
 		markerRequestMap.put(marker, request);
 	}
 
