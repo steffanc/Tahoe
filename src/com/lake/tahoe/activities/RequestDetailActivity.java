@@ -1,6 +1,7 @@
 package com.lake.tahoe.activities;
 
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -45,15 +46,15 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 			}
 		});
 
-		String state = getIntent().getStringExtra(REQUEST_STATE);
-		if (state.equals(Request.State.OPEN.toString())) {
+		Request.State state = (Request.State) getIntent().getSerializableExtra(REQUEST_STATE);
+		if (state.equals(Request.State.OPEN)) {
 			actionBar.setAcceptAction(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					activateRequest();
 				}
 			});
-		} else if (state.equals(Request.State.ACTIVE.toString())) {
+		} else if (state.equals(Request.State.ACTIVE)) {
 			int backgroundColor = getResources().getColor(R.color.light_blue);
 			actionBar.setBackgroundColor(backgroundColor);
 			RelativeLayout rl = (RelativeLayout) findViewById(R.id.rlParent);
