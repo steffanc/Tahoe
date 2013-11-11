@@ -1,9 +1,11 @@
 package com.lake.tahoe.widgets;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 
 import com.google.maps.android.ui.IconGenerator;
 import com.lake.tahoe.R;
+import com.lake.tahoe.views.CustomTextView;
 
 /**
  * Created by rhu on 11/9/13.
@@ -24,13 +26,23 @@ public class SpeechBubbleIconGenerator extends IconGenerator {
 			case STYLE_BLACK:
 			case STYLE_BLUE:
 			case STYLE_PURPLE:
-				return R.style.Bubble_TextAppearance_Light;
+				return R.style.Bubble_TextAppearance_Light_Roboto;
 		}
 	}
 
 	public void setStyle(int style) {
 		setBackground(mContext.getResources().getDrawable(getBackground(style)));
-		setTextAppearance(mContext, getTextStyle(style));
+
+		int textStyle = getTextStyle(style);
+
+		setTextAppearance(mContext, textStyle);
+		setCustomFont(textStyle);
+	}
+
+	public void setCustomFont(int textStyle) {
+		int[] attrs = {R.attr.fontAssetName};
+		TypedArray ta = mContext.obtainStyledAttributes(textStyle, attrs);
+		CustomTextView.applyAttributes(mContext, ta, mTextView);
 	}
 
 	private static int getBackground(int style) {

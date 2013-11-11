@@ -43,7 +43,7 @@ public class IconGenerator {
 
     private ViewGroup mContainer;
     private RotationLayout mRotationLayout;
-    private TextView mTextView;
+    protected TextView mTextView;
     private View mContentView;
 
     private int mRotation;

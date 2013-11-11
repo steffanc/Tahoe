@@ -35,6 +35,11 @@ public class CustomTextView extends TextView {
 
 	public static void applyAttributes(Context context, TextView v, AttributeSet attrs) {
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
+
+		applyAttributes(context, a, v);
+	}
+
+	public static void applyAttributes(Context context, TypedArray a, TextView v) {
 		final int N = a.getIndexCount();
 		for (int i = 0; i < N; i++) {
 			int attr = a.getIndex(i);
