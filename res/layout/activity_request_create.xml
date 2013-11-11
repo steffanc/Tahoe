@@ -19,12 +19,17 @@
 			class="com.google.android.gms.maps.SupportMapFragment"/>
 
 		<com.lake.tahoe.views.CustomEditText
+			android:layout_marginTop="10dp"
+			style="@style/CreateRequestItem"
+			android:background="@null"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/what_you_want"
 			android:id="@+id/wantText"/>
 
 		<com.lake.tahoe.views.CustomEditText
+			style="@style/CreateRequestItem"
+			android:background="@null"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/whats_the_reward"
@@ -34,6 +39,8 @@
 
 
 		<com.lake.tahoe.views.CustomEditText
+			style="@style/CreateRequestItem"
+			android:background="@null"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/anything_else"
