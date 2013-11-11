@@ -17,6 +17,8 @@ import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 
 import java.text.DecimalFormat;
 
+import java.text.DecimalFormat;
+
 /**
  * Created on 11/3/13.
  */
