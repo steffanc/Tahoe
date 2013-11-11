@@ -34,7 +34,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	Marker marker;
 	DynamicActionBar actionBar;
 	Hashtable<Marker, Request> markerRequestMap = new Hashtable<Marker, Request>();
-	Hashtable<User, Marker> userMarkerMap = new Hashtable<User, Marker>();
+	Hashtable<String, Marker> userMarkerMap = new Hashtable<String, Marker>();
 
 	SpeechBubbleIconGenerator iconGenerator = new SpeechBubbleIconGenerator(this);
 	boolean mapReadyToPan = false;
@@ -72,7 +72,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	public void onRequestUpdated(Request request) {
 		if (request == null)
 			return;
-		if (!request.getObjectId().equals(Request.State.OPEN))
+		if (!request.getState().equals(Request.State.OPEN))
 			return;
 
 		generateMarkerForRequest(request);
@@ -90,13 +90,14 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 
 	void generateMarkerForRequest(Request request) {
 		User client = request.getClient();
+		String clientId = client.getObjectId();
 
 		if (client == null) {
 			this.onError(new IllegalStateException("Client was null"));
 			return;
 		}
 
-		Marker marker = userMarkerMap.get(client);
+		Marker marker = userMarkerMap.get(clientId);
 
 		if (marker != null) {
 			marker.setPosition(request.getGoogleMapsLocation());
@@ -106,7 +107,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 					iconGenerator,
 					SpeechBubble.ColorType.BLACK));
 		}
-		userMarkerMap.put(client, marker);
+		userMarkerMap.put(clientId, marker);
 		markerRequestMap.put(marker, request);
 	}
 
