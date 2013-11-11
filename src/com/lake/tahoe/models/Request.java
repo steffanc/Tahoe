@@ -135,6 +135,13 @@ public class Request extends ParseObject {
 		query.include("client");
 		if (user != null)
 			query.whereNotEqualTo("client", user);  // exclude self requests
+
+		// Exclude vendors -- see caveats about this query.
+		// https://www.parse.com/docs/android_guide#queries
+		ParseQuery<User> queryUser = User.getUserQuery();
+		queryUser.whereEqualTo("type", User.Type.CLIENT.toString());
+		query.whereMatchesQuery("client", queryUser);
+
 		query.findInBackground(new ModelFindCallback<Request>(callback));
 	}
 
