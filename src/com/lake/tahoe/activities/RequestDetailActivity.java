@@ -1,12 +1,11 @@
 package com.lake.tahoe.activities;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -19,7 +18,6 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.utils.PushUtil;
-import com.lake.tahoe.views.CustomTextView;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
 import com.parse.ParsePush;
@@ -92,8 +90,8 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 		TextView tvCost = (TextView) findViewById(R.id.tvCost);
 		tvCost.setText(request.getDisplayDollars());
 
-		TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-		tvTitle.setText(request.getTitle());
+		TextView tvRequestTitle = (TextView) findViewById(R.id.tvRequestTitle);
+		tvRequestTitle.setText(request.getTitle());
 
 		TextView tvDescription = (TextView) findViewById(R.id.tvDescription);
 		tvDescription.setText(request.getDescription());

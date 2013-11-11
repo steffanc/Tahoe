@@ -37,7 +37,7 @@
 
 		<com.lake.tahoe.views.CustomTextView
 				android:id="@+id/tvSurText"
-				style="@style/RobotoThinHeadline"
+				style="@style/LightHeadline4"
 				android:gravity="center_horizontal"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
@@ -51,7 +51,7 @@
 
 		<com.lake.tahoe.views.CustomTextView
 				android:id="@+id/tvSubText"
-				style="@style/RobotoThinHeadline"
+				style="@style/LightHeadline4"
 				android:gravity="center_horizontal"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
@@ -60,7 +60,7 @@
 
 	<TextView
 			android:id="@+id/tvPay"
-			style="@style/RobotoThinHeadline"
+			style="@style/LightHeadline4"
 			android:gravity="center_horizontal|top"
 			android:layout_marginBottom="20dp"
 			android:paddingLeft="20dp"
