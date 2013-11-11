@@ -49,7 +49,7 @@ public class DelegateActivity extends TahoeActivity implements ModelCallback<Req
 		else if (request.getState().equals(Request.State.PENDING))
 			ActivityUtil.startRequestPendingActivity(this, currentUser);
 		else
-			showMessage(getString(R.string.invalid_state));
+			ActivityUtil.startFirstActivity(this, currentUser);
 		ActivityUtil.transitionFade(this);
 	}
 
