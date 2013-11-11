@@ -17,26 +17,6 @@
 		<!-- All customizations that are NOT specific to a particular API-level can go here. -->
 	</style>
 
-	<style name="MapMarker">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textSize">16sp</item>
-		<item name="android:textColor">#FFFFFF</item>
-		<item name="android:gravity">center_vertical|center_horizontal</item>
-	</style>
-
-	<style name="VendorMapMarker" parent="MapMarker">
-		<item name="android:background">@drawable/purple_tooltip</item>
-	</style>
-
-	<style name="ClientMapMarker" parent="MapMarker">
-		<item name="android:background">@drawable/black_tooltip</item>
-	</style>
-
-	<style name="YouMapMarker" parent="MapMarker">
-		<item name="android:background">@drawable/blue_tooltip</item>
-	</style>
-
 	<style name="FBProfilePicture">
 		<item name="android:layout_width">150dp</item>
 		<item name="android:layout_height">match_parent</item>
@@ -133,6 +113,10 @@
 		<item name="android:windowExitAnimation">@android:anim/fade_out</item>
 	</style>
 
+	<style name="CreateRequestItem" parent="RobotoLight">
+		<item name="android:background">@null</item>
+		<item name="android:padding">5dp</item>
+	</style>
 
 </resources>
 

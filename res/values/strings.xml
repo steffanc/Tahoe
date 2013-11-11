@@ -5,7 +5,7 @@
 	<string name="select_client">Select a Client</string>
 	<string name="what_you_want">What are you looking for\?</string>
 	<string name="whats_the_reward">What\'s the reward?</string>
-	<string name="anything_else">Anything else\?</string>
+	<string name="anything_else">Anything else to add\?</string>
 	<string name="you_owe">You Owe %s</string>
 	<string name="to_the_rescue">%s to the rescue!</string>
 	<string name="proceed_to_payment">Proceed To Payment</string>
