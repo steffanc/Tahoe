@@ -17,8 +17,7 @@ import com.lake.tahoe.models.User;
 import com.lake.tahoe.utils.MapUtil;
 import com.lake.tahoe.views.DynamicActionBar;
 import com.lake.tahoe.widgets.SpeechBubble;
-
-import java.text.DecimalFormat;
+import com.lake.tahoe.widgets.SpeechBubbleIconGenerator;
 
 public abstract class RequestActiveActivity extends GoogleLocationServiceActivity implements
 	UserUpdateChannel.HandlesUserUpdates {
