@@ -115,6 +115,7 @@
 
 	<style name="CreateRequestItem" parent="RobotoLight">
 		<item name="android:background">@null</item>
+		<item name="android:textColor">@color/edit_text</item>
 		<item name="android:padding">5dp</item>
 	</style>
 
