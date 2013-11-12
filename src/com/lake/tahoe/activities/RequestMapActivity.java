@@ -119,7 +119,7 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 
 	@Override
 	public void onModelError(Throwable e) {
-		onError(e);
+		// ignore requests if we can't load the details
 	}
 
 	@Override

@@ -3,13 +3,10 @@ package com.lake.tahoe.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-
 import com.lake.tahoe.R;
 import com.lake.tahoe.dialogs.BlockerDialog;
 import com.lake.tahoe.utils.ActivityUtil;
 import com.lake.tahoe.utils.HandlesErrors;
-import com.parse.ParseException;
-
 import net.simonvt.messagebar.MessageBar;
 
 public class TahoeActivity extends FragmentActivity implements HandlesErrors {
@@ -52,26 +49,12 @@ public class TahoeActivity extends FragmentActivity implements HandlesErrors {
 
 	@Override
 	public void onError(Throwable t) {
-		String errorFormat = getString(R.string.error_format);
-
 		String PREFIX = "OddJobError";
-
-		// Suppress no results found for query exception.
-		// Don't throw stack traces either since they often come from getUnfinishedRequest()
-		// on location changes.
-		if(t instanceof ParseException) {
-			ParseException e = (ParseException) t;
-			if (e.getCode() == ParseException.OBJECT_NOT_FOUND) {
-				Log.e(PREFIX, "No results found for query...ignoring.");
-				return;
-			}
-		}
+		String errorFormat = getString(R.string.error_format);
 		Log.e(PREFIX, getLocalClassName(), t);
 		showMessage(String.format(errorFormat, t.getLocalizedMessage()));
-
-		if (t instanceof IllegalStateException) {
+		if (this instanceof DelegateActivity)
 			refreshState();
-		}
 	}
 
 	public void refreshState() {
