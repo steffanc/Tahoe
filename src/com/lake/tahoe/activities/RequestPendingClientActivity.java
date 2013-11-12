@@ -130,8 +130,8 @@ public class RequestPendingClientActivity extends RequestPendingActivity impleme
 	}
 
 	public void fulfillRequest() {
-		pendingRequest.setState(Request.State.FULFILLED);
 		toggleBlocker(true);
+		pendingRequest.setState(Request.State.FULFILLED);
 		pendingRequest.saveAndPublish(this);
 	}
 
@@ -141,6 +141,7 @@ public class RequestPendingClientActivity extends RequestPendingActivity impleme
 	}
 
 	public void requestFulfilled() {
+		toggleBlocker(false);
 		tvSurText.setText("");
 		ivCheck.setVisibility(View.VISIBLE);
 		tvPay.setVisibility(View.INVISIBLE);

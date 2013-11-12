@@ -65,15 +65,15 @@
 	</style>
 
 	<style name="LightHeadline2" parent="RobotoLightHeadline">
-		<item name="android:textSize">40sp</item>
+		<item name="android:textSize">32sp</item>
 	</style>
 
 	<style name="LightHeadline3" parent="RobotoLightHeadline">
-		<item name="android:textSize">36sp</item>
+		<item name="android:textSize">28sp</item>
 	</style>
 
 	<style name="LightHeadline4" parent="RobotoLightHeadline">
-		<item name="android:textSize">25sp</item>
+		<item name="android:textSize">24sp</item>
 	</style>
 
 	<style name="Header" parent="RobotoHeadline">

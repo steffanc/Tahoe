@@ -110,7 +110,6 @@ public class RequestDetailActivity extends GoogleLocationServiceActivity impleme
 	protected void onGooglePlayServicesReady() {
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
 

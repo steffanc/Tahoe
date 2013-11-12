@@ -50,8 +50,7 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 		actionBar.setTitle(getString(R.string.create_a_request));
 
 		actionBar.setAcceptAction(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+			@Override public void onClick(View v) {
 				createRequest();
 			}
 		});
@@ -90,6 +89,8 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 			return;
 		}
 
+		toggleBlocker(true);
+
 		request = new Request(Request.State.OPEN);
 		request.setTitle(titleText.toString());
 
@@ -100,7 +101,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 			request.setDescription(descriptionText.toString());
 
 		request.setClient(User.getCurrentUser());
-		toggleBlocker(true);
 		request.saveAndPublish(new PushUtil.HandlesPublish() {
 			@Override public void onPublished(ParsePush push) {
 				ActivityUtil.startRequestOpenActivity(RequestCreateActivity.this);
@@ -116,7 +116,6 @@ public class RequestCreateActivity extends GoogleLocationServiceActivity {
 	protected void onGooglePlayServicesReady() {
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setMyLocationButtonEnabled(false);
 	}

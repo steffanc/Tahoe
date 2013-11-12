@@ -95,13 +95,14 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	}
 
 	void generateMarkerForRequest(Request request) {
-		User client = request.getClient();
-		String clientId = client.getObjectId();
 
+		User client = request.getClient();
 		if (client == null) {
 			this.onError(new IllegalStateException("Client was null"));
 			return;
 		}
+
+		String clientId = client.getObjectId();
 
 		Marker marker = userMarkerMap.get(clientId);
 
@@ -156,7 +157,6 @@ public class RequestMapActivity extends GoogleLocationServiceActivity implements
 	protected void onGooglePlayServicesReady() {
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-		map.setMyLocationEnabled(true);
 		map.setOnMarkerClickListener(new OnMarkerClick());
 		map.setOnMapClickListener(new OnMapClick());
 

@@ -34,9 +34,12 @@ public class PushUtil {
 	}
 
 	public static <T extends ParseObject> void saveAndPublish(final T object, final HandlesPublish callback) {
+		if (callback == null) {
+			object.saveEventually();
+			return;
+		}
 		object.saveInBackground(new SaveCallback() {
-			@Override
-			public void done(ParseException e1) {
+			@Override public void done(ParseException e1) {
 				if (e1 != null) callback.onError(e1);
 				else try {
 					JSONObject payload = new JSONObject();

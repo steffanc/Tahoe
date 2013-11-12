@@ -60,7 +60,6 @@ public abstract class RequestActiveActivity extends GoogleLocationServiceActivit
 	protected void onGooglePlayServicesReady() {
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-		map.setMyLocationEnabled(true);
 	}
 
 	protected void createMapViews(User user) {

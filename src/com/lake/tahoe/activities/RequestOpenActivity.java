@@ -125,7 +125,6 @@ public class RequestOpenActivity extends GoogleLocationServiceActivity implement
 
 		SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = fragment.getMap();
-		map.setMyLocationEnabled(true);
 
 		iconGenerator = new SpeechBubbleIconGenerator(RequestOpenActivity.this);
 

@@ -48,7 +48,6 @@ public class LoginActivity extends TahoeActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		toggleBlocker(true);
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -56,6 +55,7 @@ public class LoginActivity extends TahoeActivity implements
 	private class OnLogIn extends LogInCallback {
 		@Override
 		public void done(ParseUser parseUser, ParseException e) {
+			toggleBlocker(true);
 			if (e == null) getGraphData();
 			else onError(e);
 		}
